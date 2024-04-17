@@ -15,6 +15,7 @@ use crate::v2::lu_dog::store::ObjectStore as LuDogStore;
 // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"enum_generic-struct-definition"}}}
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct EnumGeneric {
+    pub goober: Uuid,
     pub id: Uuid,
     pub name: String,
     /// R104: [`EnumGeneric`] 'parameterizes' [`Enumeration`]
@@ -28,7 +29,7 @@ impl EnumGeneric {
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"enum_generic-struct-impl-new"}}}
     /// Inter a new 'Enum Generic' in the store, and return it's `id`.
     pub fn new(
-        hack: Uuid,
+        goober: Uuid,
         name: String,
         woog_enum: &Rc<RefCell<Enumeration>>,
         next: Option<&Rc<RefCell<EnumGeneric>>>,
@@ -36,7 +37,7 @@ impl EnumGeneric {
     ) -> Rc<RefCell<EnumGeneric>> {
         let id = Uuid::new_v4();
         let new = Rc::new(RefCell::new(EnumGeneric {
-            hack,
+            goober,
             id,
             name,
             woog_enum: woog_enum.borrow().id,

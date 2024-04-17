@@ -16,6 +16,7 @@ use crate::v2::lu_dog_vec_tracy::store::ObjectStore as LuDogVecTracyStore;
 // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"enum_generic-struct-definition"}}}
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct EnumGeneric {
+    pub goober: Uuid,
     pub id: usize,
     pub name: String,
     /// R104: [`EnumGeneric`] 'parameterizes' [`Enumeration`]
@@ -29,7 +30,7 @@ impl EnumGeneric {
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"enum_generic-struct-impl-new"}}}
     /// Inter a new 'Enum Generic' in the store, and return it's `id`.
     pub fn new(
-        hack: Uuid,
+        goober: Uuid,
         name: String,
         woog_enum: &Rc<RefCell<Enumeration>>,
         next: Option<&Rc<RefCell<EnumGeneric>>>,
@@ -37,7 +38,7 @@ impl EnumGeneric {
     ) -> Rc<RefCell<EnumGeneric>> {
         store.inter_enum_generic(|id| {
             Rc::new(RefCell::new(EnumGeneric {
-                hack,
+                goober,
                 id,
                 name: name.to_owned(),
                 woog_enum: woog_enum.borrow().id,
@@ -123,7 +124,10 @@ impl EnumGeneric {
 // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"enum_generic-implementation"}}}
 impl PartialEq for EnumGeneric {
     fn eq(&self, other: &Self) -> bool {
-        self.name == other.name && self.woog_enum == other.woog_enum && self.next == other.next
+        self.goober == other.goober
+            && self.name == other.name
+            && self.woog_enum == other.woog_enum
+            && self.next == other.next
     }
 }
 // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
