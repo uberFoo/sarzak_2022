@@ -29,6 +29,7 @@ impl EnumGeneric {
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"enum_generic-struct-impl-new"}}}
     /// Inter a new 'Enum Generic' in the store, and return it's `id`.
     pub fn new(
+        hack: Uuid,
         name: String,
         woog_enum: &Rc<RefCell<Enumeration>>,
         next: Option<&Rc<RefCell<EnumGeneric>>>,
@@ -36,6 +37,7 @@ impl EnumGeneric {
     ) -> Rc<RefCell<EnumGeneric>> {
         store.inter_enum_generic(|id| {
             Rc::new(RefCell::new(EnumGeneric {
+                hack,
                 id,
                 name: name.to_owned(),
                 woog_enum: woog_enum.borrow().id,

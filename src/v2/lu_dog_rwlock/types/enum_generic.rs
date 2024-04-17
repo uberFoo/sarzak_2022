@@ -28,6 +28,7 @@ impl EnumGeneric {
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"enum_generic-struct-impl-new"}}}
     /// Inter a new 'Enum Generic' in the store, and return it's `id`.
     pub fn new(
+        hack: Uuid,
         name: String,
         woog_enum: &Arc<RwLock<Enumeration>>,
         next: Option<&Arc<RwLock<EnumGeneric>>>,
@@ -35,6 +36,7 @@ impl EnumGeneric {
     ) -> Arc<RwLock<EnumGeneric>> {
         let id = Uuid::new_v4();
         let new = Arc::new(RwLock::new(EnumGeneric {
+            hack,
             id,
             name,
             woog_enum: woog_enum.read().unwrap().id,

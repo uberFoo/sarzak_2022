@@ -717,11 +717,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Argument>>,
     {
         let _index = if let Some(_index) = self.argument_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.argument.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.argument.write().unwrap().push(None);
             _index
         };
@@ -741,11 +741,11 @@ impl ObjectStore {
         };
 
         if let Some(argument) = found {
-            log::debug!(target: "store", "found duplicate {argument:?}.");
+            tracing::debug!(target: "store", "found duplicate {argument:?}.");
             self.argument_free_list.lock().unwrap().push(_index);
             argument.clone()
         } else {
-            log::debug!(target: "store", "interring {argument:?}.");
+            tracing::debug!(target: "store", "interring {argument:?}.");
             self.argument.write().unwrap()[_index] = Some(argument.clone());
             argument
         }
@@ -765,7 +765,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_argument(&mut self, id: &usize) -> Option<Arc<RwLock<Argument>>> {
-        log::debug!(target: "store", "exorcising argument slot: {id}.");
+        tracing::debug!(target: "store", "exorcising argument slot: {id}.");
         let result = self.argument.write().unwrap()[*id].take();
         self.argument_free_list.lock().unwrap().push(*id);
         result
@@ -794,11 +794,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<AWait>>,
     {
         let _index = if let Some(_index) = self.a_wait_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.a_wait.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.a_wait.write().unwrap().push(None);
             _index
         };
@@ -818,11 +818,11 @@ impl ObjectStore {
         };
 
         if let Some(a_wait) = found {
-            log::debug!(target: "store", "found duplicate {a_wait:?}.");
+            tracing::debug!(target: "store", "found duplicate {a_wait:?}.");
             self.a_wait_free_list.lock().unwrap().push(_index);
             a_wait.clone()
         } else {
-            log::debug!(target: "store", "interring {a_wait:?}.");
+            tracing::debug!(target: "store", "interring {a_wait:?}.");
             self.a_wait.write().unwrap()[_index] = Some(a_wait.clone());
             a_wait
         }
@@ -842,7 +842,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_a_wait(&mut self, id: &usize) -> Option<Arc<RwLock<AWait>>> {
-        log::debug!(target: "store", "exorcising a_wait slot: {id}.");
+        tracing::debug!(target: "store", "exorcising a_wait slot: {id}.");
         let result = self.a_wait.write().unwrap()[*id].take();
         self.a_wait_free_list.lock().unwrap().push(*id);
         result
@@ -871,11 +871,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Binary>>,
     {
         let _index = if let Some(_index) = self.binary_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.binary.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.binary.write().unwrap().push(None);
             _index
         };
@@ -895,11 +895,11 @@ impl ObjectStore {
         };
 
         if let Some(binary) = found {
-            log::debug!(target: "store", "found duplicate {binary:?}.");
+            tracing::debug!(target: "store", "found duplicate {binary:?}.");
             self.binary_free_list.lock().unwrap().push(_index);
             binary.clone()
         } else {
-            log::debug!(target: "store", "interring {binary:?}.");
+            tracing::debug!(target: "store", "interring {binary:?}.");
             self.binary.write().unwrap()[_index] = Some(binary.clone());
             binary
         }
@@ -919,7 +919,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_binary(&mut self, id: &usize) -> Option<Arc<RwLock<Binary>>> {
-        log::debug!(target: "store", "exorcising binary slot: {id}.");
+        tracing::debug!(target: "store", "exorcising binary slot: {id}.");
         let result = self.binary.write().unwrap()[*id].take();
         self.binary_free_list.lock().unwrap().push(*id);
         result
@@ -948,11 +948,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Block>>,
     {
         let _index = if let Some(_index) = self.block_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.block.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.block.write().unwrap().push(None);
             _index
         };
@@ -972,11 +972,11 @@ impl ObjectStore {
         };
 
         if let Some(block) = found {
-            log::debug!(target: "store", "found duplicate {block:?}.");
+            tracing::debug!(target: "store", "found duplicate {block:?}.");
             self.block_free_list.lock().unwrap().push(_index);
             block.clone()
         } else {
-            log::debug!(target: "store", "interring {block:?}.");
+            tracing::debug!(target: "store", "interring {block:?}.");
             self.block.write().unwrap()[_index] = Some(block.clone());
             block
         }
@@ -996,7 +996,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_block(&mut self, id: &usize) -> Option<Arc<RwLock<Block>>> {
-        log::debug!(target: "store", "exorcising block slot: {id}.");
+        tracing::debug!(target: "store", "exorcising block slot: {id}.");
         let result = self.block.write().unwrap()[*id].take();
         self.block_free_list.lock().unwrap().push(*id);
         result
@@ -1025,11 +1025,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Body>>,
     {
         let _index = if let Some(_index) = self.body_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.body.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.body.write().unwrap().push(None);
             _index
         };
@@ -1049,11 +1049,11 @@ impl ObjectStore {
         };
 
         if let Some(body) = found {
-            log::debug!(target: "store", "found duplicate {body:?}.");
+            tracing::debug!(target: "store", "found duplicate {body:?}.");
             self.body_free_list.lock().unwrap().push(_index);
             body.clone()
         } else {
-            log::debug!(target: "store", "interring {body:?}.");
+            tracing::debug!(target: "store", "interring {body:?}.");
             self.body.write().unwrap()[_index] = Some(body.clone());
             body
         }
@@ -1073,7 +1073,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_body(&mut self, id: &usize) -> Option<Arc<RwLock<Body>>> {
-        log::debug!(target: "store", "exorcising body slot: {id}.");
+        tracing::debug!(target: "store", "exorcising body slot: {id}.");
         let result = self.body.write().unwrap()[*id].take();
         self.body_free_list.lock().unwrap().push(*id);
         result
@@ -1102,11 +1102,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<BooleanLiteral>>,
     {
         let _index = if let Some(_index) = self.boolean_literal_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.boolean_literal.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.boolean_literal.write().unwrap().push(None);
             _index
         };
@@ -1127,11 +1127,11 @@ impl ObjectStore {
         };
 
         if let Some(boolean_literal) = found {
-            log::debug!(target: "store", "found duplicate {boolean_literal:?}.");
+            tracing::debug!(target: "store", "found duplicate {boolean_literal:?}.");
             self.boolean_literal_free_list.lock().unwrap().push(_index);
             boolean_literal.clone()
         } else {
-            log::debug!(target: "store", "interring {boolean_literal:?}.");
+            tracing::debug!(target: "store", "interring {boolean_literal:?}.");
             self.boolean_literal.write().unwrap()[_index] = Some(boolean_literal.clone());
             boolean_literal
         }
@@ -1151,7 +1151,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_boolean_literal(&mut self, id: &usize) -> Option<Arc<RwLock<BooleanLiteral>>> {
-        log::debug!(target: "store", "exorcising boolean_literal slot: {id}.");
+        tracing::debug!(target: "store", "exorcising boolean_literal slot: {id}.");
         let result = self.boolean_literal.write().unwrap()[*id].take();
         self.boolean_literal_free_list.lock().unwrap().push(*id);
         result
@@ -1180,11 +1180,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<BooleanOperator>>,
     {
         let _index = if let Some(_index) = self.boolean_operator_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.boolean_operator.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.boolean_operator.write().unwrap().push(None);
             _index
         };
@@ -1205,11 +1205,11 @@ impl ObjectStore {
         };
 
         if let Some(boolean_operator) = found {
-            log::debug!(target: "store", "found duplicate {boolean_operator:?}.");
+            tracing::debug!(target: "store", "found duplicate {boolean_operator:?}.");
             self.boolean_operator_free_list.lock().unwrap().push(_index);
             boolean_operator.clone()
         } else {
-            log::debug!(target: "store", "interring {boolean_operator:?}.");
+            tracing::debug!(target: "store", "interring {boolean_operator:?}.");
             self.boolean_operator.write().unwrap()[_index] = Some(boolean_operator.clone());
             boolean_operator
         }
@@ -1232,7 +1232,7 @@ impl ObjectStore {
         &mut self,
         id: &usize,
     ) -> Option<Arc<RwLock<BooleanOperator>>> {
-        log::debug!(target: "store", "exorcising boolean_operator slot: {id}.");
+        tracing::debug!(target: "store", "exorcising boolean_operator slot: {id}.");
         let result = self.boolean_operator.write().unwrap()[*id].take();
         self.boolean_operator_free_list.lock().unwrap().push(*id);
         result
@@ -1261,11 +1261,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Call>>,
     {
         let _index = if let Some(_index) = self.call_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.call.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.call.write().unwrap().push(None);
             _index
         };
@@ -1285,11 +1285,11 @@ impl ObjectStore {
         };
 
         if let Some(call) = found {
-            log::debug!(target: "store", "found duplicate {call:?}.");
+            tracing::debug!(target: "store", "found duplicate {call:?}.");
             self.call_free_list.lock().unwrap().push(_index);
             call.clone()
         } else {
-            log::debug!(target: "store", "interring {call:?}.");
+            tracing::debug!(target: "store", "interring {call:?}.");
             self.call.write().unwrap()[_index] = Some(call.clone());
             call
         }
@@ -1309,7 +1309,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_call(&mut self, id: &usize) -> Option<Arc<RwLock<Call>>> {
-        log::debug!(target: "store", "exorcising call slot: {id}.");
+        tracing::debug!(target: "store", "exorcising call slot: {id}.");
         let result = self.call.write().unwrap()[*id].take();
         self.call_free_list.lock().unwrap().push(*id);
         result
@@ -1338,11 +1338,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<CharLiteral>>,
     {
         let _index = if let Some(_index) = self.char_literal_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.char_literal.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.char_literal.write().unwrap().push(None);
             _index
         };
@@ -1363,11 +1363,11 @@ impl ObjectStore {
         };
 
         if let Some(char_literal) = found {
-            log::debug!(target: "store", "found duplicate {char_literal:?}.");
+            tracing::debug!(target: "store", "found duplicate {char_literal:?}.");
             self.char_literal_free_list.lock().unwrap().push(_index);
             char_literal.clone()
         } else {
-            log::debug!(target: "store", "interring {char_literal:?}.");
+            tracing::debug!(target: "store", "interring {char_literal:?}.");
             self.char_literal.write().unwrap()[_index] = Some(char_literal.clone());
             char_literal
         }
@@ -1387,7 +1387,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_char_literal(&mut self, id: &usize) -> Option<Arc<RwLock<CharLiteral>>> {
-        log::debug!(target: "store", "exorcising char_literal slot: {id}.");
+        tracing::debug!(target: "store", "exorcising char_literal slot: {id}.");
         let result = self.char_literal.write().unwrap()[*id].take();
         self.char_literal_free_list.lock().unwrap().push(*id);
         result
@@ -1416,11 +1416,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Comparison>>,
     {
         let _index = if let Some(_index) = self.comparison_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.comparison.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.comparison.write().unwrap().push(None);
             _index
         };
@@ -1441,11 +1441,11 @@ impl ObjectStore {
         };
 
         if let Some(comparison) = found {
-            log::debug!(target: "store", "found duplicate {comparison:?}.");
+            tracing::debug!(target: "store", "found duplicate {comparison:?}.");
             self.comparison_free_list.lock().unwrap().push(_index);
             comparison.clone()
         } else {
-            log::debug!(target: "store", "interring {comparison:?}.");
+            tracing::debug!(target: "store", "interring {comparison:?}.");
             self.comparison.write().unwrap()[_index] = Some(comparison.clone());
             comparison
         }
@@ -1465,7 +1465,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_comparison(&mut self, id: &usize) -> Option<Arc<RwLock<Comparison>>> {
-        log::debug!(target: "store", "exorcising comparison slot: {id}.");
+        tracing::debug!(target: "store", "exorcising comparison slot: {id}.");
         let result = self.comparison.write().unwrap()[*id].take();
         self.comparison_free_list.lock().unwrap().push(*id);
         result
@@ -1494,11 +1494,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<DataStructure>>,
     {
         let _index = if let Some(_index) = self.data_structure_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.data_structure.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.data_structure.write().unwrap().push(None);
             _index
         };
@@ -1519,11 +1519,11 @@ impl ObjectStore {
         };
 
         if let Some(data_structure) = found {
-            log::debug!(target: "store", "found duplicate {data_structure:?}.");
+            tracing::debug!(target: "store", "found duplicate {data_structure:?}.");
             self.data_structure_free_list.lock().unwrap().push(_index);
             data_structure.clone()
         } else {
-            log::debug!(target: "store", "interring {data_structure:?}.");
+            tracing::debug!(target: "store", "interring {data_structure:?}.");
             self.data_structure.write().unwrap()[_index] = Some(data_structure.clone());
             data_structure
         }
@@ -1543,7 +1543,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_data_structure(&mut self, id: &usize) -> Option<Arc<RwLock<DataStructure>>> {
-        log::debug!(target: "store", "exorcising data_structure slot: {id}.");
+        tracing::debug!(target: "store", "exorcising data_structure slot: {id}.");
         let result = self.data_structure.write().unwrap()[*id].take();
         self.data_structure_free_list.lock().unwrap().push(*id);
         result
@@ -1575,11 +1575,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<DwarfSourceFile>>,
     {
         let _index = if let Some(_index) = self.dwarf_source_file_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.dwarf_source_file.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.dwarf_source_file.write().unwrap().push(None);
             _index
         };
@@ -1604,14 +1604,14 @@ impl ObjectStore {
         };
 
         if let Some(dwarf_source_file) = found {
-            log::debug!(target: "store", "found duplicate {dwarf_source_file:?}.");
+            tracing::debug!(target: "store", "found duplicate {dwarf_source_file:?}.");
             self.dwarf_source_file_free_list
                 .lock()
                 .unwrap()
                 .push(_index);
             dwarf_source_file.clone()
         } else {
-            log::debug!(target: "store", "interring {dwarf_source_file:?}.");
+            tracing::debug!(target: "store", "interring {dwarf_source_file:?}.");
             self.dwarf_source_file.write().unwrap()[_index] = Some(dwarf_source_file.clone());
             dwarf_source_file
         }
@@ -1634,7 +1634,7 @@ impl ObjectStore {
         &mut self,
         id: &usize,
     ) -> Option<Arc<RwLock<DwarfSourceFile>>> {
-        log::debug!(target: "store", "exorcising dwarf_source_file slot: {id}.");
+        tracing::debug!(target: "store", "exorcising dwarf_source_file slot: {id}.");
         let result = self.dwarf_source_file.write().unwrap()[*id].take();
         self.dwarf_source_file_free_list.lock().unwrap().push(*id);
         result
@@ -1665,11 +1665,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<EnumField>>,
     {
         let _index = if let Some(_index) = self.enum_field_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.enum_field.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.enum_field.write().unwrap().push(None);
             _index
         };
@@ -1690,11 +1690,11 @@ impl ObjectStore {
         };
 
         if let Some(enum_field) = found {
-            log::debug!(target: "store", "found duplicate {enum_field:?}.");
+            tracing::debug!(target: "store", "found duplicate {enum_field:?}.");
             self.enum_field_free_list.lock().unwrap().push(_index);
             enum_field.clone()
         } else {
-            log::debug!(target: "store", "interring {enum_field:?}.");
+            tracing::debug!(target: "store", "interring {enum_field:?}.");
             self.enum_field.write().unwrap()[_index] = Some(enum_field.clone());
             enum_field
         }
@@ -1714,7 +1714,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_enum_field(&mut self, id: &usize) -> Option<Arc<RwLock<EnumField>>> {
-        log::debug!(target: "store", "exorcising enum_field slot: {id}.");
+        tracing::debug!(target: "store", "exorcising enum_field slot: {id}.");
         let result = self.enum_field.write().unwrap()[*id].take();
         self.enum_field_free_list.lock().unwrap().push(*id);
         result
@@ -1743,11 +1743,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<EnumGeneric>>,
     {
         let _index = if let Some(_index) = self.enum_generic_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.enum_generic.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.enum_generic.write().unwrap().push(None);
             _index
         };
@@ -1768,11 +1768,11 @@ impl ObjectStore {
         };
 
         if let Some(enum_generic) = found {
-            log::debug!(target: "store", "found duplicate {enum_generic:?}.");
+            tracing::debug!(target: "store", "found duplicate {enum_generic:?}.");
             self.enum_generic_free_list.lock().unwrap().push(_index);
             enum_generic.clone()
         } else {
-            log::debug!(target: "store", "interring {enum_generic:?}.");
+            tracing::debug!(target: "store", "interring {enum_generic:?}.");
             self.enum_generic.write().unwrap()[_index] = Some(enum_generic.clone());
             enum_generic
         }
@@ -1792,7 +1792,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_enum_generic(&mut self, id: &usize) -> Option<Arc<RwLock<EnumGeneric>>> {
-        log::debug!(target: "store", "exorcising enum_generic slot: {id}.");
+        tracing::debug!(target: "store", "exorcising enum_generic slot: {id}.");
         let result = self.enum_generic.write().unwrap()[*id].take();
         self.enum_generic_free_list.lock().unwrap().push(*id);
         result
@@ -1821,11 +1821,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Enumeration>>,
     {
         let _index = if let Some(_index) = self.enumeration_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.enumeration.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.enumeration.write().unwrap().push(None);
             _index
         };
@@ -1846,11 +1846,11 @@ impl ObjectStore {
         };
 
         let enumeration = if let Some(enumeration) = found {
-            log::debug!(target: "store", "found duplicate {enumeration:?}.");
+            tracing::debug!(target: "store", "found duplicate {enumeration:?}.");
             self.enumeration_free_list.lock().unwrap().push(_index);
             enumeration.clone()
         } else {
-            log::debug!(target: "store", "interring {enumeration:?}.");
+            tracing::debug!(target: "store", "interring {enumeration:?}.");
             self.enumeration.write().unwrap()[_index] = Some(enumeration.clone());
             enumeration
         };
@@ -1875,7 +1875,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_enumeration(&mut self, id: &usize) -> Option<Arc<RwLock<Enumeration>>> {
-        log::debug!(target: "store", "exorcising enumeration slot: {id}.");
+        tracing::debug!(target: "store", "exorcising enumeration slot: {id}.");
         let result = self.enumeration.write().unwrap()[*id].take();
         self.enumeration_free_list.lock().unwrap().push(*id);
         result
@@ -1915,11 +1915,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Expression>>,
     {
         let _index = if let Some(_index) = self.expression_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.expression.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.expression.write().unwrap().push(None);
             _index
         };
@@ -1940,11 +1940,11 @@ impl ObjectStore {
         };
 
         if let Some(expression) = found {
-            log::debug!(target: "store", "found duplicate {expression:?}.");
+            tracing::debug!(target: "store", "found duplicate {expression:?}.");
             self.expression_free_list.lock().unwrap().push(_index);
             expression.clone()
         } else {
-            log::debug!(target: "store", "interring {expression:?}.");
+            tracing::debug!(target: "store", "interring {expression:?}.");
             self.expression.write().unwrap()[_index] = Some(expression.clone());
             expression
         }
@@ -1964,7 +1964,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_expression(&mut self, id: &usize) -> Option<Arc<RwLock<Expression>>> {
-        log::debug!(target: "store", "exorcising expression slot: {id}.");
+        tracing::debug!(target: "store", "exorcising expression slot: {id}.");
         let result = self.expression.write().unwrap()[*id].take();
         self.expression_free_list.lock().unwrap().push(*id);
         result
@@ -1993,11 +1993,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<ExpressionBit>>,
     {
         let _index = if let Some(_index) = self.expression_bit_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.expression_bit.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.expression_bit.write().unwrap().push(None);
             _index
         };
@@ -2018,11 +2018,11 @@ impl ObjectStore {
         };
 
         if let Some(expression_bit) = found {
-            log::debug!(target: "store", "found duplicate {expression_bit:?}.");
+            tracing::debug!(target: "store", "found duplicate {expression_bit:?}.");
             self.expression_bit_free_list.lock().unwrap().push(_index);
             expression_bit.clone()
         } else {
-            log::debug!(target: "store", "interring {expression_bit:?}.");
+            tracing::debug!(target: "store", "interring {expression_bit:?}.");
             self.expression_bit.write().unwrap()[_index] = Some(expression_bit.clone());
             expression_bit
         }
@@ -2042,7 +2042,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_expression_bit(&mut self, id: &usize) -> Option<Arc<RwLock<ExpressionBit>>> {
-        log::debug!(target: "store", "exorcising expression_bit slot: {id}.");
+        tracing::debug!(target: "store", "exorcising expression_bit slot: {id}.");
         let result = self.expression_bit.write().unwrap()[*id].take();
         self.expression_bit_free_list.lock().unwrap().push(*id);
         result
@@ -2075,11 +2075,11 @@ impl ObjectStore {
     {
         let _index = if let Some(_index) = self.expression_statement_free_list.lock().unwrap().pop()
         {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.expression_statement.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.expression_statement.write().unwrap().push(None);
             _index
         };
@@ -2104,14 +2104,14 @@ impl ObjectStore {
         };
 
         if let Some(expression_statement) = found {
-            log::debug!(target: "store", "found duplicate {expression_statement:?}.");
+            tracing::debug!(target: "store", "found duplicate {expression_statement:?}.");
             self.expression_statement_free_list
                 .lock()
                 .unwrap()
                 .push(_index);
             expression_statement.clone()
         } else {
-            log::debug!(target: "store", "interring {expression_statement:?}.");
+            tracing::debug!(target: "store", "interring {expression_statement:?}.");
             self.expression_statement.write().unwrap()[_index] = Some(expression_statement.clone());
             expression_statement
         }
@@ -2137,7 +2137,7 @@ impl ObjectStore {
         &mut self,
         id: &usize,
     ) -> Option<Arc<RwLock<ExpressionStatement>>> {
-        log::debug!(target: "store", "exorcising expression_statement slot: {id}.");
+        tracing::debug!(target: "store", "exorcising expression_statement slot: {id}.");
         let result = self.expression_statement.write().unwrap()[*id].take();
         self.expression_statement_free_list
             .lock()
@@ -2175,11 +2175,11 @@ impl ObjectStore {
     {
         let _index =
             if let Some(_index) = self.external_implementation_free_list.lock().unwrap().pop() {
-                log::trace!(target: "store", "recycling block {_index}.");
+                tracing::trace!(target: "store", "recycling block {_index}.");
                 _index
             } else {
                 let _index = self.external_implementation.read().unwrap().len();
-                log::trace!(target: "store", "allocating block {_index}.");
+                tracing::trace!(target: "store", "allocating block {_index}.");
                 self.external_implementation.write().unwrap().push(None);
                 _index
             };
@@ -2204,14 +2204,14 @@ impl ObjectStore {
         };
 
         if let Some(external_implementation) = found {
-            log::debug!(target: "store", "found duplicate {external_implementation:?}.");
+            tracing::debug!(target: "store", "found duplicate {external_implementation:?}.");
             self.external_implementation_free_list
                 .lock()
                 .unwrap()
                 .push(_index);
             external_implementation.clone()
         } else {
-            log::debug!(target: "store", "interring {external_implementation:?}.");
+            tracing::debug!(target: "store", "interring {external_implementation:?}.");
             self.external_implementation.write().unwrap()[_index] =
                 Some(external_implementation.clone());
             external_implementation
@@ -2238,7 +2238,7 @@ impl ObjectStore {
         &mut self,
         id: &usize,
     ) -> Option<Arc<RwLock<ExternalImplementation>>> {
-        log::debug!(target: "store", "exorcising external_implementation slot: {id}.");
+        tracing::debug!(target: "store", "exorcising external_implementation slot: {id}.");
         let result = self.external_implementation.write().unwrap()[*id].take();
         self.external_implementation_free_list
             .lock()
@@ -2272,11 +2272,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Field>>,
     {
         let _index = if let Some(_index) = self.field_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.field.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.field.write().unwrap().push(None);
             _index
         };
@@ -2296,11 +2296,11 @@ impl ObjectStore {
         };
 
         let field = if let Some(field) = found {
-            log::debug!(target: "store", "found duplicate {field:?}.");
+            tracing::debug!(target: "store", "found duplicate {field:?}.");
             self.field_free_list.lock().unwrap().push(_index);
             field.clone()
         } else {
-            log::debug!(target: "store", "interring {field:?}.");
+            tracing::debug!(target: "store", "interring {field:?}.");
             self.field.write().unwrap()[_index] = Some(field.clone());
             field
         };
@@ -2325,7 +2325,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_field(&mut self, id: &usize) -> Option<Arc<RwLock<Field>>> {
-        log::debug!(target: "store", "exorcising field slot: {id}.");
+        tracing::debug!(target: "store", "exorcising field slot: {id}.");
         let result = self.field.write().unwrap()[*id].take();
         self.field_free_list.lock().unwrap().push(*id);
         result
@@ -2365,11 +2365,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<FieldAccess>>,
     {
         let _index = if let Some(_index) = self.field_access_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.field_access.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.field_access.write().unwrap().push(None);
             _index
         };
@@ -2390,11 +2390,11 @@ impl ObjectStore {
         };
 
         if let Some(field_access) = found {
-            log::debug!(target: "store", "found duplicate {field_access:?}.");
+            tracing::debug!(target: "store", "found duplicate {field_access:?}.");
             self.field_access_free_list.lock().unwrap().push(_index);
             field_access.clone()
         } else {
-            log::debug!(target: "store", "interring {field_access:?}.");
+            tracing::debug!(target: "store", "interring {field_access:?}.");
             self.field_access.write().unwrap()[_index] = Some(field_access.clone());
             field_access
         }
@@ -2414,7 +2414,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_field_access(&mut self, id: &usize) -> Option<Arc<RwLock<FieldAccess>>> {
-        log::debug!(target: "store", "exorcising field_access slot: {id}.");
+        tracing::debug!(target: "store", "exorcising field_access slot: {id}.");
         let result = self.field_access.write().unwrap()[*id].take();
         self.field_access_free_list.lock().unwrap().push(*id);
         result
@@ -2447,11 +2447,11 @@ impl ObjectStore {
     {
         let _index = if let Some(_index) = self.field_access_target_free_list.lock().unwrap().pop()
         {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.field_access_target.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.field_access_target.write().unwrap().push(None);
             _index
         };
@@ -2476,14 +2476,14 @@ impl ObjectStore {
         };
 
         if let Some(field_access_target) = found {
-            log::debug!(target: "store", "found duplicate {field_access_target:?}.");
+            tracing::debug!(target: "store", "found duplicate {field_access_target:?}.");
             self.field_access_target_free_list
                 .lock()
                 .unwrap()
                 .push(_index);
             field_access_target.clone()
         } else {
-            log::debug!(target: "store", "interring {field_access_target:?}.");
+            tracing::debug!(target: "store", "interring {field_access_target:?}.");
             self.field_access_target.write().unwrap()[_index] = Some(field_access_target.clone());
             field_access_target
         }
@@ -2506,7 +2506,7 @@ impl ObjectStore {
         &mut self,
         id: &usize,
     ) -> Option<Arc<RwLock<FieldAccessTarget>>> {
-        log::debug!(target: "store", "exorcising field_access_target slot: {id}.");
+        tracing::debug!(target: "store", "exorcising field_access_target slot: {id}.");
         let result = self.field_access_target.write().unwrap()[*id].take();
         self.field_access_target_free_list.lock().unwrap().push(*id);
         result
@@ -2537,11 +2537,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<FieldExpression>>,
     {
         let _index = if let Some(_index) = self.field_expression_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.field_expression.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.field_expression.write().unwrap().push(None);
             _index
         };
@@ -2562,11 +2562,11 @@ impl ObjectStore {
         };
 
         if let Some(field_expression) = found {
-            log::debug!(target: "store", "found duplicate {field_expression:?}.");
+            tracing::debug!(target: "store", "found duplicate {field_expression:?}.");
             self.field_expression_free_list.lock().unwrap().push(_index);
             field_expression.clone()
         } else {
-            log::debug!(target: "store", "interring {field_expression:?}.");
+            tracing::debug!(target: "store", "interring {field_expression:?}.");
             self.field_expression.write().unwrap()[_index] = Some(field_expression.clone());
             field_expression
         }
@@ -2589,7 +2589,7 @@ impl ObjectStore {
         &mut self,
         id: &usize,
     ) -> Option<Arc<RwLock<FieldExpression>>> {
-        log::debug!(target: "store", "exorcising field_expression slot: {id}.");
+        tracing::debug!(target: "store", "exorcising field_expression slot: {id}.");
         let result = self.field_expression.write().unwrap()[*id].take();
         self.field_expression_free_list.lock().unwrap().push(*id);
         result
@@ -2618,11 +2618,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<FloatLiteral>>,
     {
         let _index = if let Some(_index) = self.float_literal_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.float_literal.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.float_literal.write().unwrap().push(None);
             _index
         };
@@ -2643,11 +2643,11 @@ impl ObjectStore {
         };
 
         if let Some(float_literal) = found {
-            log::debug!(target: "store", "found duplicate {float_literal:?}.");
+            tracing::debug!(target: "store", "found duplicate {float_literal:?}.");
             self.float_literal_free_list.lock().unwrap().push(_index);
             float_literal.clone()
         } else {
-            log::debug!(target: "store", "interring {float_literal:?}.");
+            tracing::debug!(target: "store", "interring {float_literal:?}.");
             self.float_literal.write().unwrap()[_index] = Some(float_literal.clone());
             float_literal
         }
@@ -2667,7 +2667,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_float_literal(&mut self, id: &usize) -> Option<Arc<RwLock<FloatLiteral>>> {
-        log::debug!(target: "store", "exorcising float_literal slot: {id}.");
+        tracing::debug!(target: "store", "exorcising float_literal slot: {id}.");
         let result = self.float_literal.write().unwrap()[*id].take();
         self.float_literal_free_list.lock().unwrap().push(*id);
         result
@@ -2696,11 +2696,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<ForLoop>>,
     {
         let _index = if let Some(_index) = self.for_loop_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.for_loop.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.for_loop.write().unwrap().push(None);
             _index
         };
@@ -2720,11 +2720,11 @@ impl ObjectStore {
         };
 
         if let Some(for_loop) = found {
-            log::debug!(target: "store", "found duplicate {for_loop:?}.");
+            tracing::debug!(target: "store", "found duplicate {for_loop:?}.");
             self.for_loop_free_list.lock().unwrap().push(_index);
             for_loop.clone()
         } else {
-            log::debug!(target: "store", "interring {for_loop:?}.");
+            tracing::debug!(target: "store", "interring {for_loop:?}.");
             self.for_loop.write().unwrap()[_index] = Some(for_loop.clone());
             for_loop
         }
@@ -2744,7 +2744,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_for_loop(&mut self, id: &usize) -> Option<Arc<RwLock<ForLoop>>> {
-        log::debug!(target: "store", "exorcising for_loop slot: {id}.");
+        tracing::debug!(target: "store", "exorcising for_loop slot: {id}.");
         let result = self.for_loop.write().unwrap()[*id].take();
         self.for_loop_free_list.lock().unwrap().push(*id);
         result
@@ -2773,11 +2773,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<FormatBit>>,
     {
         let _index = if let Some(_index) = self.format_bit_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.format_bit.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.format_bit.write().unwrap().push(None);
             _index
         };
@@ -2798,11 +2798,11 @@ impl ObjectStore {
         };
 
         if let Some(format_bit) = found {
-            log::debug!(target: "store", "found duplicate {format_bit:?}.");
+            tracing::debug!(target: "store", "found duplicate {format_bit:?}.");
             self.format_bit_free_list.lock().unwrap().push(_index);
             format_bit.clone()
         } else {
-            log::debug!(target: "store", "interring {format_bit:?}.");
+            tracing::debug!(target: "store", "interring {format_bit:?}.");
             self.format_bit.write().unwrap()[_index] = Some(format_bit.clone());
             format_bit
         }
@@ -2822,7 +2822,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_format_bit(&mut self, id: &usize) -> Option<Arc<RwLock<FormatBit>>> {
-        log::debug!(target: "store", "exorcising format_bit slot: {id}.");
+        tracing::debug!(target: "store", "exorcising format_bit slot: {id}.");
         let result = self.format_bit.write().unwrap()[*id].take();
         self.format_bit_free_list.lock().unwrap().push(*id);
         result
@@ -2851,11 +2851,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<FormatString>>,
     {
         let _index = if let Some(_index) = self.format_string_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.format_string.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.format_string.write().unwrap().push(None);
             _index
         };
@@ -2876,11 +2876,11 @@ impl ObjectStore {
         };
 
         if let Some(format_string) = found {
-            log::debug!(target: "store", "found duplicate {format_string:?}.");
+            tracing::debug!(target: "store", "found duplicate {format_string:?}.");
             self.format_string_free_list.lock().unwrap().push(_index);
             format_string.clone()
         } else {
-            log::debug!(target: "store", "interring {format_string:?}.");
+            tracing::debug!(target: "store", "interring {format_string:?}.");
             self.format_string.write().unwrap()[_index] = Some(format_string.clone());
             format_string
         }
@@ -2900,7 +2900,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_format_string(&mut self, id: &usize) -> Option<Arc<RwLock<FormatString>>> {
-        log::debug!(target: "store", "exorcising format_string slot: {id}.");
+        tracing::debug!(target: "store", "exorcising format_string slot: {id}.");
         let result = self.format_string.write().unwrap()[*id].take();
         self.format_string_free_list.lock().unwrap().push(*id);
         result
@@ -2929,11 +2929,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<FuncGeneric>>,
     {
         let _index = if let Some(_index) = self.func_generic_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.func_generic.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.func_generic.write().unwrap().push(None);
             _index
         };
@@ -2954,11 +2954,11 @@ impl ObjectStore {
         };
 
         if let Some(func_generic) = found {
-            log::debug!(target: "store", "found duplicate {func_generic:?}.");
+            tracing::debug!(target: "store", "found duplicate {func_generic:?}.");
             self.func_generic_free_list.lock().unwrap().push(_index);
             func_generic.clone()
         } else {
-            log::debug!(target: "store", "interring {func_generic:?}.");
+            tracing::debug!(target: "store", "interring {func_generic:?}.");
             self.func_generic.write().unwrap()[_index] = Some(func_generic.clone());
             func_generic
         }
@@ -2978,7 +2978,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_func_generic(&mut self, id: &usize) -> Option<Arc<RwLock<FuncGeneric>>> {
-        log::debug!(target: "store", "exorcising func_generic slot: {id}.");
+        tracing::debug!(target: "store", "exorcising func_generic slot: {id}.");
         let result = self.func_generic.write().unwrap()[*id].take();
         self.func_generic_free_list.lock().unwrap().push(*id);
         result
@@ -3007,11 +3007,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Function>>,
     {
         let _index = if let Some(_index) = self.function_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.function.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.function.write().unwrap().push(None);
             _index
         };
@@ -3031,11 +3031,11 @@ impl ObjectStore {
         };
 
         let function = if let Some(function) = found {
-            log::debug!(target: "store", "found duplicate {function:?}.");
+            tracing::debug!(target: "store", "found duplicate {function:?}.");
             self.function_free_list.lock().unwrap().push(_index);
             function.clone()
         } else {
-            log::debug!(target: "store", "interring {function:?}.");
+            tracing::debug!(target: "store", "interring {function:?}.");
             self.function.write().unwrap()[_index] = Some(function.clone());
             function
         };
@@ -3060,7 +3060,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_function(&mut self, id: &usize) -> Option<Arc<RwLock<Function>>> {
-        log::debug!(target: "store", "exorcising function slot: {id}.");
+        tracing::debug!(target: "store", "exorcising function slot: {id}.");
         let result = self.function.write().unwrap()[*id].take();
         self.function_free_list.lock().unwrap().push(*id);
         result
@@ -3100,11 +3100,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<FunctionCall>>,
     {
         let _index = if let Some(_index) = self.function_call_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.function_call.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.function_call.write().unwrap().push(None);
             _index
         };
@@ -3125,11 +3125,11 @@ impl ObjectStore {
         };
 
         if let Some(function_call) = found {
-            log::debug!(target: "store", "found duplicate {function_call:?}.");
+            tracing::debug!(target: "store", "found duplicate {function_call:?}.");
             self.function_call_free_list.lock().unwrap().push(_index);
             function_call.clone()
         } else {
-            log::debug!(target: "store", "interring {function_call:?}.");
+            tracing::debug!(target: "store", "interring {function_call:?}.");
             self.function_call.write().unwrap()[_index] = Some(function_call.clone());
             function_call
         }
@@ -3149,7 +3149,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_function_call(&mut self, id: &usize) -> Option<Arc<RwLock<FunctionCall>>> {
-        log::debug!(target: "store", "exorcising function_call slot: {id}.");
+        tracing::debug!(target: "store", "exorcising function_call slot: {id}.");
         let result = self.function_call.write().unwrap()[*id].take();
         self.function_call_free_list.lock().unwrap().push(*id);
         result
@@ -3178,11 +3178,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<XFuture>>,
     {
         let _index = if let Some(_index) = self.x_future_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.x_future.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.x_future.write().unwrap().push(None);
             _index
         };
@@ -3202,11 +3202,11 @@ impl ObjectStore {
         };
 
         if let Some(x_future) = found {
-            log::debug!(target: "store", "found duplicate {x_future:?}.");
+            tracing::debug!(target: "store", "found duplicate {x_future:?}.");
             self.x_future_free_list.lock().unwrap().push(_index);
             x_future.clone()
         } else {
-            log::debug!(target: "store", "interring {x_future:?}.");
+            tracing::debug!(target: "store", "interring {x_future:?}.");
             self.x_future.write().unwrap()[_index] = Some(x_future.clone());
             x_future
         }
@@ -3226,7 +3226,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_x_future(&mut self, id: &usize) -> Option<Arc<RwLock<XFuture>>> {
-        log::debug!(target: "store", "exorcising x_future slot: {id}.");
+        tracing::debug!(target: "store", "exorcising x_future slot: {id}.");
         let result = self.x_future.write().unwrap()[*id].take();
         self.x_future_free_list.lock().unwrap().push(*id);
         result
@@ -3255,11 +3255,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Grouped>>,
     {
         let _index = if let Some(_index) = self.grouped_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.grouped.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.grouped.write().unwrap().push(None);
             _index
         };
@@ -3279,11 +3279,11 @@ impl ObjectStore {
         };
 
         if let Some(grouped) = found {
-            log::debug!(target: "store", "found duplicate {grouped:?}.");
+            tracing::debug!(target: "store", "found duplicate {grouped:?}.");
             self.grouped_free_list.lock().unwrap().push(_index);
             grouped.clone()
         } else {
-            log::debug!(target: "store", "interring {grouped:?}.");
+            tracing::debug!(target: "store", "interring {grouped:?}.");
             self.grouped.write().unwrap()[_index] = Some(grouped.clone());
             grouped
         }
@@ -3303,7 +3303,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_grouped(&mut self, id: &usize) -> Option<Arc<RwLock<Grouped>>> {
-        log::debug!(target: "store", "exorcising grouped slot: {id}.");
+        tracing::debug!(target: "store", "exorcising grouped slot: {id}.");
         let result = self.grouped.write().unwrap()[*id].take();
         self.grouped_free_list.lock().unwrap().push(*id);
         result
@@ -3332,11 +3332,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<XIf>>,
     {
         let _index = if let Some(_index) = self.x_if_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.x_if.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.x_if.write().unwrap().push(None);
             _index
         };
@@ -3356,11 +3356,11 @@ impl ObjectStore {
         };
 
         if let Some(x_if) = found {
-            log::debug!(target: "store", "found duplicate {x_if:?}.");
+            tracing::debug!(target: "store", "found duplicate {x_if:?}.");
             self.x_if_free_list.lock().unwrap().push(_index);
             x_if.clone()
         } else {
-            log::debug!(target: "store", "interring {x_if:?}.");
+            tracing::debug!(target: "store", "interring {x_if:?}.");
             self.x_if.write().unwrap()[_index] = Some(x_if.clone());
             x_if
         }
@@ -3380,7 +3380,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_x_if(&mut self, id: &usize) -> Option<Arc<RwLock<XIf>>> {
-        log::debug!(target: "store", "exorcising x_if slot: {id}.");
+        tracing::debug!(target: "store", "exorcising x_if slot: {id}.");
         let result = self.x_if.write().unwrap()[*id].take();
         self.x_if_free_list.lock().unwrap().push(*id);
         result
@@ -3413,11 +3413,11 @@ impl ObjectStore {
     {
         let _index = if let Some(_index) = self.implementation_block_free_list.lock().unwrap().pop()
         {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.implementation_block.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.implementation_block.write().unwrap().push(None);
             _index
         };
@@ -3442,14 +3442,14 @@ impl ObjectStore {
         };
 
         if let Some(implementation_block) = found {
-            log::debug!(target: "store", "found duplicate {implementation_block:?}.");
+            tracing::debug!(target: "store", "found duplicate {implementation_block:?}.");
             self.implementation_block_free_list
                 .lock()
                 .unwrap()
                 .push(_index);
             implementation_block.clone()
         } else {
-            log::debug!(target: "store", "interring {implementation_block:?}.");
+            tracing::debug!(target: "store", "interring {implementation_block:?}.");
             self.implementation_block.write().unwrap()[_index] = Some(implementation_block.clone());
             implementation_block
         }
@@ -3475,7 +3475,7 @@ impl ObjectStore {
         &mut self,
         id: &usize,
     ) -> Option<Arc<RwLock<ImplementationBlock>>> {
-        log::debug!(target: "store", "exorcising implementation_block slot: {id}.");
+        tracing::debug!(target: "store", "exorcising implementation_block slot: {id}.");
         let result = self.implementation_block.write().unwrap()[*id].take();
         self.implementation_block_free_list
             .lock()
@@ -3509,11 +3509,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Import>>,
     {
         let _index = if let Some(_index) = self.import_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.import.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.import.write().unwrap().push(None);
             _index
         };
@@ -3533,11 +3533,11 @@ impl ObjectStore {
         };
 
         if let Some(import) = found {
-            log::debug!(target: "store", "found duplicate {import:?}.");
+            tracing::debug!(target: "store", "found duplicate {import:?}.");
             self.import_free_list.lock().unwrap().push(_index);
             import.clone()
         } else {
-            log::debug!(target: "store", "interring {import:?}.");
+            tracing::debug!(target: "store", "interring {import:?}.");
             self.import.write().unwrap()[_index] = Some(import.clone());
             import
         }
@@ -3557,7 +3557,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_import(&mut self, id: &usize) -> Option<Arc<RwLock<Import>>> {
-        log::debug!(target: "store", "exorcising import slot: {id}.");
+        tracing::debug!(target: "store", "exorcising import slot: {id}.");
         let result = self.import.write().unwrap()[*id].take();
         self.import_free_list.lock().unwrap().push(*id);
         result
@@ -3586,11 +3586,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Index>>,
     {
         let _index = if let Some(_index) = self.index_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.index.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.index.write().unwrap().push(None);
             _index
         };
@@ -3610,11 +3610,11 @@ impl ObjectStore {
         };
 
         if let Some(index) = found {
-            log::debug!(target: "store", "found duplicate {index:?}.");
+            tracing::debug!(target: "store", "found duplicate {index:?}.");
             self.index_free_list.lock().unwrap().push(_index);
             index.clone()
         } else {
-            log::debug!(target: "store", "interring {index:?}.");
+            tracing::debug!(target: "store", "interring {index:?}.");
             self.index.write().unwrap()[_index] = Some(index.clone());
             index
         }
@@ -3634,7 +3634,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_index(&mut self, id: &usize) -> Option<Arc<RwLock<Index>>> {
-        log::debug!(target: "store", "exorcising index slot: {id}.");
+        tracing::debug!(target: "store", "exorcising index slot: {id}.");
         let result = self.index.write().unwrap()[*id].take();
         self.index_free_list.lock().unwrap().push(*id);
         result
@@ -3663,11 +3663,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<IntegerLiteral>>,
     {
         let _index = if let Some(_index) = self.integer_literal_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.integer_literal.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.integer_literal.write().unwrap().push(None);
             _index
         };
@@ -3688,11 +3688,11 @@ impl ObjectStore {
         };
 
         if let Some(integer_literal) = found {
-            log::debug!(target: "store", "found duplicate {integer_literal:?}.");
+            tracing::debug!(target: "store", "found duplicate {integer_literal:?}.");
             self.integer_literal_free_list.lock().unwrap().push(_index);
             integer_literal.clone()
         } else {
-            log::debug!(target: "store", "interring {integer_literal:?}.");
+            tracing::debug!(target: "store", "interring {integer_literal:?}.");
             self.integer_literal.write().unwrap()[_index] = Some(integer_literal.clone());
             integer_literal
         }
@@ -3712,7 +3712,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_integer_literal(&mut self, id: &usize) -> Option<Arc<RwLock<IntegerLiteral>>> {
-        log::debug!(target: "store", "exorcising integer_literal slot: {id}.");
+        tracing::debug!(target: "store", "exorcising integer_literal slot: {id}.");
         let result = self.integer_literal.write().unwrap()[*id].take();
         self.integer_literal_free_list.lock().unwrap().push(*id);
         result
@@ -3741,11 +3741,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Item>>,
     {
         let _index = if let Some(_index) = self.item_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.item.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.item.write().unwrap().push(None);
             _index
         };
@@ -3765,11 +3765,11 @@ impl ObjectStore {
         };
 
         if let Some(item) = found {
-            log::debug!(target: "store", "found duplicate {item:?}.");
+            tracing::debug!(target: "store", "found duplicate {item:?}.");
             self.item_free_list.lock().unwrap().push(_index);
             item.clone()
         } else {
-            log::debug!(target: "store", "interring {item:?}.");
+            tracing::debug!(target: "store", "interring {item:?}.");
             self.item.write().unwrap()[_index] = Some(item.clone());
             item
         }
@@ -3789,7 +3789,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_item(&mut self, id: &usize) -> Option<Arc<RwLock<Item>>> {
-        log::debug!(target: "store", "exorcising item slot: {id}.");
+        tracing::debug!(target: "store", "exorcising item slot: {id}.");
         let result = self.item.write().unwrap()[*id].take();
         self.item_free_list.lock().unwrap().push(*id);
         result
@@ -3818,11 +3818,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Lambda>>,
     {
         let _index = if let Some(_index) = self.lambda_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.lambda.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.lambda.write().unwrap().push(None);
             _index
         };
@@ -3842,11 +3842,11 @@ impl ObjectStore {
         };
 
         if let Some(lambda) = found {
-            log::debug!(target: "store", "found duplicate {lambda:?}.");
+            tracing::debug!(target: "store", "found duplicate {lambda:?}.");
             self.lambda_free_list.lock().unwrap().push(_index);
             lambda.clone()
         } else {
-            log::debug!(target: "store", "interring {lambda:?}.");
+            tracing::debug!(target: "store", "interring {lambda:?}.");
             self.lambda.write().unwrap()[_index] = Some(lambda.clone());
             lambda
         }
@@ -3866,7 +3866,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_lambda(&mut self, id: &usize) -> Option<Arc<RwLock<Lambda>>> {
-        log::debug!(target: "store", "exorcising lambda slot: {id}.");
+        tracing::debug!(target: "store", "exorcising lambda slot: {id}.");
         let result = self.lambda.write().unwrap()[*id].take();
         self.lambda_free_list.lock().unwrap().push(*id);
         result
@@ -3895,11 +3895,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<LambdaParameter>>,
     {
         let _index = if let Some(_index) = self.lambda_parameter_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.lambda_parameter.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.lambda_parameter.write().unwrap().push(None);
             _index
         };
@@ -3920,11 +3920,11 @@ impl ObjectStore {
         };
 
         if let Some(lambda_parameter) = found {
-            log::debug!(target: "store", "found duplicate {lambda_parameter:?}.");
+            tracing::debug!(target: "store", "found duplicate {lambda_parameter:?}.");
             self.lambda_parameter_free_list.lock().unwrap().push(_index);
             lambda_parameter.clone()
         } else {
-            log::debug!(target: "store", "interring {lambda_parameter:?}.");
+            tracing::debug!(target: "store", "interring {lambda_parameter:?}.");
             self.lambda_parameter.write().unwrap()[_index] = Some(lambda_parameter.clone());
             lambda_parameter
         }
@@ -3947,7 +3947,7 @@ impl ObjectStore {
         &mut self,
         id: &usize,
     ) -> Option<Arc<RwLock<LambdaParameter>>> {
-        log::debug!(target: "store", "exorcising lambda_parameter slot: {id}.");
+        tracing::debug!(target: "store", "exorcising lambda_parameter slot: {id}.");
         let result = self.lambda_parameter.write().unwrap()[*id].take();
         self.lambda_parameter_free_list.lock().unwrap().push(*id);
         result
@@ -3976,11 +3976,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<LetStatement>>,
     {
         let _index = if let Some(_index) = self.let_statement_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.let_statement.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.let_statement.write().unwrap().push(None);
             _index
         };
@@ -4001,11 +4001,11 @@ impl ObjectStore {
         };
 
         if let Some(let_statement) = found {
-            log::debug!(target: "store", "found duplicate {let_statement:?}.");
+            tracing::debug!(target: "store", "found duplicate {let_statement:?}.");
             self.let_statement_free_list.lock().unwrap().push(_index);
             let_statement.clone()
         } else {
-            log::debug!(target: "store", "interring {let_statement:?}.");
+            tracing::debug!(target: "store", "interring {let_statement:?}.");
             self.let_statement.write().unwrap()[_index] = Some(let_statement.clone());
             let_statement
         }
@@ -4025,7 +4025,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_let_statement(&mut self, id: &usize) -> Option<Arc<RwLock<LetStatement>>> {
-        log::debug!(target: "store", "exorcising let_statement slot: {id}.");
+        tracing::debug!(target: "store", "exorcising let_statement slot: {id}.");
         let result = self.let_statement.write().unwrap()[*id].take();
         self.let_statement_free_list.lock().unwrap().push(*id);
         result
@@ -4054,11 +4054,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<List>>,
     {
         let _index = if let Some(_index) = self.list_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.list.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.list.write().unwrap().push(None);
             _index
         };
@@ -4078,11 +4078,11 @@ impl ObjectStore {
         };
 
         if let Some(list) = found {
-            log::debug!(target: "store", "found duplicate {list:?}.");
+            tracing::debug!(target: "store", "found duplicate {list:?}.");
             self.list_free_list.lock().unwrap().push(_index);
             list.clone()
         } else {
-            log::debug!(target: "store", "interring {list:?}.");
+            tracing::debug!(target: "store", "interring {list:?}.");
             self.list.write().unwrap()[_index] = Some(list.clone());
             list
         }
@@ -4102,7 +4102,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_list(&mut self, id: &usize) -> Option<Arc<RwLock<List>>> {
-        log::debug!(target: "store", "exorcising list slot: {id}.");
+        tracing::debug!(target: "store", "exorcising list slot: {id}.");
         let result = self.list.write().unwrap()[*id].take();
         self.list_free_list.lock().unwrap().push(*id);
         result
@@ -4131,11 +4131,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<ListElement>>,
     {
         let _index = if let Some(_index) = self.list_element_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.list_element.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.list_element.write().unwrap().push(None);
             _index
         };
@@ -4156,11 +4156,11 @@ impl ObjectStore {
         };
 
         if let Some(list_element) = found {
-            log::debug!(target: "store", "found duplicate {list_element:?}.");
+            tracing::debug!(target: "store", "found duplicate {list_element:?}.");
             self.list_element_free_list.lock().unwrap().push(_index);
             list_element.clone()
         } else {
-            log::debug!(target: "store", "interring {list_element:?}.");
+            tracing::debug!(target: "store", "interring {list_element:?}.");
             self.list_element.write().unwrap()[_index] = Some(list_element.clone());
             list_element
         }
@@ -4180,7 +4180,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_list_element(&mut self, id: &usize) -> Option<Arc<RwLock<ListElement>>> {
-        log::debug!(target: "store", "exorcising list_element slot: {id}.");
+        tracing::debug!(target: "store", "exorcising list_element slot: {id}.");
         let result = self.list_element.write().unwrap()[*id].take();
         self.list_element_free_list.lock().unwrap().push(*id);
         result
@@ -4209,11 +4209,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<ListExpression>>,
     {
         let _index = if let Some(_index) = self.list_expression_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.list_expression.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.list_expression.write().unwrap().push(None);
             _index
         };
@@ -4234,11 +4234,11 @@ impl ObjectStore {
         };
 
         if let Some(list_expression) = found {
-            log::debug!(target: "store", "found duplicate {list_expression:?}.");
+            tracing::debug!(target: "store", "found duplicate {list_expression:?}.");
             self.list_expression_free_list.lock().unwrap().push(_index);
             list_expression.clone()
         } else {
-            log::debug!(target: "store", "interring {list_expression:?}.");
+            tracing::debug!(target: "store", "interring {list_expression:?}.");
             self.list_expression.write().unwrap()[_index] = Some(list_expression.clone());
             list_expression
         }
@@ -4258,7 +4258,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_list_expression(&mut self, id: &usize) -> Option<Arc<RwLock<ListExpression>>> {
-        log::debug!(target: "store", "exorcising list_expression slot: {id}.");
+        tracing::debug!(target: "store", "exorcising list_expression slot: {id}.");
         let result = self.list_expression.write().unwrap()[*id].take();
         self.list_expression_free_list.lock().unwrap().push(*id);
         result
@@ -4287,11 +4287,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Literal>>,
     {
         let _index = if let Some(_index) = self.literal_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.literal.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.literal.write().unwrap().push(None);
             _index
         };
@@ -4311,11 +4311,11 @@ impl ObjectStore {
         };
 
         if let Some(literal) = found {
-            log::debug!(target: "store", "found duplicate {literal:?}.");
+            tracing::debug!(target: "store", "found duplicate {literal:?}.");
             self.literal_free_list.lock().unwrap().push(_index);
             literal.clone()
         } else {
-            log::debug!(target: "store", "interring {literal:?}.");
+            tracing::debug!(target: "store", "interring {literal:?}.");
             self.literal.write().unwrap()[_index] = Some(literal.clone());
             literal
         }
@@ -4335,7 +4335,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_literal(&mut self, id: &usize) -> Option<Arc<RwLock<Literal>>> {
-        log::debug!(target: "store", "exorcising literal slot: {id}.");
+        tracing::debug!(target: "store", "exorcising literal slot: {id}.");
         let result = self.literal.write().unwrap()[*id].take();
         self.literal_free_list.lock().unwrap().push(*id);
         result
@@ -4364,11 +4364,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<LocalVariable>>,
     {
         let _index = if let Some(_index) = self.local_variable_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.local_variable.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.local_variable.write().unwrap().push(None);
             _index
         };
@@ -4389,11 +4389,11 @@ impl ObjectStore {
         };
 
         if let Some(local_variable) = found {
-            log::debug!(target: "store", "found duplicate {local_variable:?}.");
+            tracing::debug!(target: "store", "found duplicate {local_variable:?}.");
             self.local_variable_free_list.lock().unwrap().push(_index);
             local_variable.clone()
         } else {
-            log::debug!(target: "store", "interring {local_variable:?}.");
+            tracing::debug!(target: "store", "interring {local_variable:?}.");
             self.local_variable.write().unwrap()[_index] = Some(local_variable.clone());
             local_variable
         }
@@ -4413,7 +4413,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_local_variable(&mut self, id: &usize) -> Option<Arc<RwLock<LocalVariable>>> {
-        log::debug!(target: "store", "exorcising local_variable slot: {id}.");
+        tracing::debug!(target: "store", "exorcising local_variable slot: {id}.");
         let result = self.local_variable.write().unwrap()[*id].take();
         self.local_variable_free_list.lock().unwrap().push(*id);
         result
@@ -4442,11 +4442,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<XMacro>>,
     {
         let _index = if let Some(_index) = self.x_macro_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.x_macro.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.x_macro.write().unwrap().push(None);
             _index
         };
@@ -4466,11 +4466,11 @@ impl ObjectStore {
         };
 
         if let Some(x_macro) = found {
-            log::debug!(target: "store", "found duplicate {x_macro:?}.");
+            tracing::debug!(target: "store", "found duplicate {x_macro:?}.");
             self.x_macro_free_list.lock().unwrap().push(_index);
             x_macro.clone()
         } else {
-            log::debug!(target: "store", "interring {x_macro:?}.");
+            tracing::debug!(target: "store", "interring {x_macro:?}.");
             self.x_macro.write().unwrap()[_index] = Some(x_macro.clone());
             x_macro
         }
@@ -4490,7 +4490,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_x_macro(&mut self, id: &usize) -> Option<Arc<RwLock<XMacro>>> {
-        log::debug!(target: "store", "exorcising x_macro slot: {id}.");
+        tracing::debug!(target: "store", "exorcising x_macro slot: {id}.");
         let result = self.x_macro.write().unwrap()[*id].take();
         self.x_macro_free_list.lock().unwrap().push(*id);
         result
@@ -4519,11 +4519,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<XMatch>>,
     {
         let _index = if let Some(_index) = self.x_match_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.x_match.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.x_match.write().unwrap().push(None);
             _index
         };
@@ -4543,11 +4543,11 @@ impl ObjectStore {
         };
 
         if let Some(x_match) = found {
-            log::debug!(target: "store", "found duplicate {x_match:?}.");
+            tracing::debug!(target: "store", "found duplicate {x_match:?}.");
             self.x_match_free_list.lock().unwrap().push(_index);
             x_match.clone()
         } else {
-            log::debug!(target: "store", "interring {x_match:?}.");
+            tracing::debug!(target: "store", "interring {x_match:?}.");
             self.x_match.write().unwrap()[_index] = Some(x_match.clone());
             x_match
         }
@@ -4567,7 +4567,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_x_match(&mut self, id: &usize) -> Option<Arc<RwLock<XMatch>>> {
-        log::debug!(target: "store", "exorcising x_match slot: {id}.");
+        tracing::debug!(target: "store", "exorcising x_match slot: {id}.");
         let result = self.x_match.write().unwrap()[*id].take();
         self.x_match_free_list.lock().unwrap().push(*id);
         result
@@ -4596,11 +4596,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<MethodCall>>,
     {
         let _index = if let Some(_index) = self.method_call_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.method_call.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.method_call.write().unwrap().push(None);
             _index
         };
@@ -4621,11 +4621,11 @@ impl ObjectStore {
         };
 
         if let Some(method_call) = found {
-            log::debug!(target: "store", "found duplicate {method_call:?}.");
+            tracing::debug!(target: "store", "found duplicate {method_call:?}.");
             self.method_call_free_list.lock().unwrap().push(_index);
             method_call.clone()
         } else {
-            log::debug!(target: "store", "interring {method_call:?}.");
+            tracing::debug!(target: "store", "interring {method_call:?}.");
             self.method_call.write().unwrap()[_index] = Some(method_call.clone());
             method_call
         }
@@ -4645,7 +4645,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_method_call(&mut self, id: &usize) -> Option<Arc<RwLock<MethodCall>>> {
-        log::debug!(target: "store", "exorcising method_call slot: {id}.");
+        tracing::debug!(target: "store", "exorcising method_call slot: {id}.");
         let result = self.method_call.write().unwrap()[*id].take();
         self.method_call_free_list.lock().unwrap().push(*id);
         result
@@ -4678,11 +4678,11 @@ impl ObjectStore {
     {
         let _index =
             if let Some(_index) = self.named_field_expression_free_list.lock().unwrap().pop() {
-                log::trace!(target: "store", "recycling block {_index}.");
+                tracing::trace!(target: "store", "recycling block {_index}.");
                 _index
             } else {
                 let _index = self.named_field_expression.read().unwrap().len();
-                log::trace!(target: "store", "allocating block {_index}.");
+                tracing::trace!(target: "store", "allocating block {_index}.");
                 self.named_field_expression.write().unwrap().push(None);
                 _index
             };
@@ -4707,14 +4707,14 @@ impl ObjectStore {
         };
 
         if let Some(named_field_expression) = found {
-            log::debug!(target: "store", "found duplicate {named_field_expression:?}.");
+            tracing::debug!(target: "store", "found duplicate {named_field_expression:?}.");
             self.named_field_expression_free_list
                 .lock()
                 .unwrap()
                 .push(_index);
             named_field_expression.clone()
         } else {
-            log::debug!(target: "store", "interring {named_field_expression:?}.");
+            tracing::debug!(target: "store", "interring {named_field_expression:?}.");
             self.named_field_expression.write().unwrap()[_index] =
                 Some(named_field_expression.clone());
             named_field_expression
@@ -4741,7 +4741,7 @@ impl ObjectStore {
         &mut self,
         id: &usize,
     ) -> Option<Arc<RwLock<NamedFieldExpression>>> {
-        log::debug!(target: "store", "exorcising named_field_expression slot: {id}.");
+        tracing::debug!(target: "store", "exorcising named_field_expression slot: {id}.");
         let result = self.named_field_expression.write().unwrap()[*id].take();
         self.named_field_expression_free_list
             .lock()
@@ -4775,11 +4775,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<ZObjectStore>>,
     {
         let _index = if let Some(_index) = self.z_object_store_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.z_object_store.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.z_object_store.write().unwrap().push(None);
             _index
         };
@@ -4800,11 +4800,11 @@ impl ObjectStore {
         };
 
         let z_object_store = if let Some(z_object_store) = found {
-            log::debug!(target: "store", "found duplicate {z_object_store:?}.");
+            tracing::debug!(target: "store", "found duplicate {z_object_store:?}.");
             self.z_object_store_free_list.lock().unwrap().push(_index);
             z_object_store.clone()
         } else {
-            log::debug!(target: "store", "interring {z_object_store:?}.");
+            tracing::debug!(target: "store", "interring {z_object_store:?}.");
             self.z_object_store.write().unwrap()[_index] = Some(z_object_store.clone());
             z_object_store
         };
@@ -4829,7 +4829,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_z_object_store(&mut self, id: &usize) -> Option<Arc<RwLock<ZObjectStore>>> {
-        log::debug!(target: "store", "exorcising z_object_store slot: {id}.");
+        tracing::debug!(target: "store", "exorcising z_object_store slot: {id}.");
         let result = self.z_object_store.write().unwrap()[*id].take();
         self.z_object_store_free_list.lock().unwrap().push(*id);
         result
@@ -4869,11 +4869,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<ObjectWrapper>>,
     {
         let _index = if let Some(_index) = self.object_wrapper_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.object_wrapper.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.object_wrapper.write().unwrap().push(None);
             _index
         };
@@ -4894,11 +4894,11 @@ impl ObjectStore {
         };
 
         if let Some(object_wrapper) = found {
-            log::debug!(target: "store", "found duplicate {object_wrapper:?}.");
+            tracing::debug!(target: "store", "found duplicate {object_wrapper:?}.");
             self.object_wrapper_free_list.lock().unwrap().push(_index);
             object_wrapper.clone()
         } else {
-            log::debug!(target: "store", "interring {object_wrapper:?}.");
+            tracing::debug!(target: "store", "interring {object_wrapper:?}.");
             self.object_wrapper.write().unwrap()[_index] = Some(object_wrapper.clone());
             object_wrapper
         }
@@ -4918,7 +4918,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_object_wrapper(&mut self, id: &usize) -> Option<Arc<RwLock<ObjectWrapper>>> {
-        log::debug!(target: "store", "exorcising object_wrapper slot: {id}.");
+        tracing::debug!(target: "store", "exorcising object_wrapper slot: {id}.");
         let result = self.object_wrapper.write().unwrap()[*id].take();
         self.object_wrapper_free_list.lock().unwrap().push(*id);
         result
@@ -4947,11 +4947,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Operator>>,
     {
         let _index = if let Some(_index) = self.operator_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.operator.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.operator.write().unwrap().push(None);
             _index
         };
@@ -4971,11 +4971,11 @@ impl ObjectStore {
         };
 
         if let Some(operator) = found {
-            log::debug!(target: "store", "found duplicate {operator:?}.");
+            tracing::debug!(target: "store", "found duplicate {operator:?}.");
             self.operator_free_list.lock().unwrap().push(_index);
             operator.clone()
         } else {
-            log::debug!(target: "store", "interring {operator:?}.");
+            tracing::debug!(target: "store", "interring {operator:?}.");
             self.operator.write().unwrap()[_index] = Some(operator.clone());
             operator
         }
@@ -4995,7 +4995,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_operator(&mut self, id: &usize) -> Option<Arc<RwLock<Operator>>> {
-        log::debug!(target: "store", "exorcising operator slot: {id}.");
+        tracing::debug!(target: "store", "exorcising operator slot: {id}.");
         let result = self.operator.write().unwrap()[*id].take();
         self.operator_free_list.lock().unwrap().push(*id);
         result
@@ -5024,11 +5024,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Parameter>>,
     {
         let _index = if let Some(_index) = self.parameter_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.parameter.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.parameter.write().unwrap().push(None);
             _index
         };
@@ -5048,11 +5048,11 @@ impl ObjectStore {
         };
 
         if let Some(parameter) = found {
-            log::debug!(target: "store", "found duplicate {parameter:?}.");
+            tracing::debug!(target: "store", "found duplicate {parameter:?}.");
             self.parameter_free_list.lock().unwrap().push(_index);
             parameter.clone()
         } else {
-            log::debug!(target: "store", "interring {parameter:?}.");
+            tracing::debug!(target: "store", "interring {parameter:?}.");
             self.parameter.write().unwrap()[_index] = Some(parameter.clone());
             parameter
         }
@@ -5072,7 +5072,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_parameter(&mut self, id: &usize) -> Option<Arc<RwLock<Parameter>>> {
-        log::debug!(target: "store", "exorcising parameter slot: {id}.");
+        tracing::debug!(target: "store", "exorcising parameter slot: {id}.");
         let result = self.parameter.write().unwrap()[*id].take();
         self.parameter_free_list.lock().unwrap().push(*id);
         result
@@ -5101,11 +5101,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<XPath>>,
     {
         let _index = if let Some(_index) = self.x_path_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.x_path.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.x_path.write().unwrap().push(None);
             _index
         };
@@ -5125,11 +5125,11 @@ impl ObjectStore {
         };
 
         if let Some(x_path) = found {
-            log::debug!(target: "store", "found duplicate {x_path:?}.");
+            tracing::debug!(target: "store", "found duplicate {x_path:?}.");
             self.x_path_free_list.lock().unwrap().push(_index);
             x_path.clone()
         } else {
-            log::debug!(target: "store", "interring {x_path:?}.");
+            tracing::debug!(target: "store", "interring {x_path:?}.");
             self.x_path.write().unwrap()[_index] = Some(x_path.clone());
             x_path
         }
@@ -5149,7 +5149,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_x_path(&mut self, id: &usize) -> Option<Arc<RwLock<XPath>>> {
-        log::debug!(target: "store", "exorcising x_path slot: {id}.");
+        tracing::debug!(target: "store", "exorcising x_path slot: {id}.");
         let result = self.x_path.write().unwrap()[*id].take();
         self.x_path_free_list.lock().unwrap().push(*id);
         result
@@ -5178,11 +5178,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<PathElement>>,
     {
         let _index = if let Some(_index) = self.path_element_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.path_element.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.path_element.write().unwrap().push(None);
             _index
         };
@@ -5203,11 +5203,11 @@ impl ObjectStore {
         };
 
         if let Some(path_element) = found {
-            log::debug!(target: "store", "found duplicate {path_element:?}.");
+            tracing::debug!(target: "store", "found duplicate {path_element:?}.");
             self.path_element_free_list.lock().unwrap().push(_index);
             path_element.clone()
         } else {
-            log::debug!(target: "store", "interring {path_element:?}.");
+            tracing::debug!(target: "store", "interring {path_element:?}.");
             self.path_element.write().unwrap()[_index] = Some(path_element.clone());
             path_element
         }
@@ -5227,7 +5227,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_path_element(&mut self, id: &usize) -> Option<Arc<RwLock<PathElement>>> {
-        log::debug!(target: "store", "exorcising path_element slot: {id}.");
+        tracing::debug!(target: "store", "exorcising path_element slot: {id}.");
         let result = self.path_element.write().unwrap()[*id].take();
         self.path_element_free_list.lock().unwrap().push(*id);
         result
@@ -5256,11 +5256,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Pattern>>,
     {
         let _index = if let Some(_index) = self.pattern_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.pattern.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.pattern.write().unwrap().push(None);
             _index
         };
@@ -5280,11 +5280,11 @@ impl ObjectStore {
         };
 
         if let Some(pattern) = found {
-            log::debug!(target: "store", "found duplicate {pattern:?}.");
+            tracing::debug!(target: "store", "found duplicate {pattern:?}.");
             self.pattern_free_list.lock().unwrap().push(_index);
             pattern.clone()
         } else {
-            log::debug!(target: "store", "interring {pattern:?}.");
+            tracing::debug!(target: "store", "interring {pattern:?}.");
             self.pattern.write().unwrap()[_index] = Some(pattern.clone());
             pattern
         }
@@ -5304,7 +5304,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_pattern(&mut self, id: &usize) -> Option<Arc<RwLock<Pattern>>> {
-        log::debug!(target: "store", "exorcising pattern slot: {id}.");
+        tracing::debug!(target: "store", "exorcising pattern slot: {id}.");
         let result = self.pattern.write().unwrap()[*id].take();
         self.pattern_free_list.lock().unwrap().push(*id);
         result
@@ -5333,11 +5333,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<XPlugin>>,
     {
         let _index = if let Some(_index) = self.x_plugin_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.x_plugin.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.x_plugin.write().unwrap().push(None);
             _index
         };
@@ -5357,11 +5357,11 @@ impl ObjectStore {
         };
 
         let x_plugin = if let Some(x_plugin) = found {
-            log::debug!(target: "store", "found duplicate {x_plugin:?}.");
+            tracing::debug!(target: "store", "found duplicate {x_plugin:?}.");
             self.x_plugin_free_list.lock().unwrap().push(_index);
             x_plugin.clone()
         } else {
-            log::debug!(target: "store", "interring {x_plugin:?}.");
+            tracing::debug!(target: "store", "interring {x_plugin:?}.");
             self.x_plugin.write().unwrap()[_index] = Some(x_plugin.clone());
             x_plugin
         };
@@ -5386,7 +5386,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_x_plugin(&mut self, id: &usize) -> Option<Arc<RwLock<XPlugin>>> {
-        log::debug!(target: "store", "exorcising x_plugin slot: {id}.");
+        tracing::debug!(target: "store", "exorcising x_plugin slot: {id}.");
         let result = self.x_plugin.write().unwrap()[*id].take();
         self.x_plugin_free_list.lock().unwrap().push(*id);
         result
@@ -5426,11 +5426,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<XPrint>>,
     {
         let _index = if let Some(_index) = self.x_print_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.x_print.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.x_print.write().unwrap().push(None);
             _index
         };
@@ -5450,11 +5450,11 @@ impl ObjectStore {
         };
 
         if let Some(x_print) = found {
-            log::debug!(target: "store", "found duplicate {x_print:?}.");
+            tracing::debug!(target: "store", "found duplicate {x_print:?}.");
             self.x_print_free_list.lock().unwrap().push(_index);
             x_print.clone()
         } else {
-            log::debug!(target: "store", "interring {x_print:?}.");
+            tracing::debug!(target: "store", "interring {x_print:?}.");
             self.x_print.write().unwrap()[_index] = Some(x_print.clone());
             x_print
         }
@@ -5474,7 +5474,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_x_print(&mut self, id: &usize) -> Option<Arc<RwLock<XPrint>>> {
-        log::debug!(target: "store", "exorcising x_print slot: {id}.");
+        tracing::debug!(target: "store", "exorcising x_print slot: {id}.");
         let result = self.x_print.write().unwrap()[*id].take();
         self.x_print_free_list.lock().unwrap().push(*id);
         result
@@ -5503,11 +5503,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<RangeExpression>>,
     {
         let _index = if let Some(_index) = self.range_expression_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.range_expression.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.range_expression.write().unwrap().push(None);
             _index
         };
@@ -5528,11 +5528,11 @@ impl ObjectStore {
         };
 
         if let Some(range_expression) = found {
-            log::debug!(target: "store", "found duplicate {range_expression:?}.");
+            tracing::debug!(target: "store", "found duplicate {range_expression:?}.");
             self.range_expression_free_list.lock().unwrap().push(_index);
             range_expression.clone()
         } else {
-            log::debug!(target: "store", "interring {range_expression:?}.");
+            tracing::debug!(target: "store", "interring {range_expression:?}.");
             self.range_expression.write().unwrap()[_index] = Some(range_expression.clone());
             range_expression
         }
@@ -5555,7 +5555,7 @@ impl ObjectStore {
         &mut self,
         id: &usize,
     ) -> Option<Arc<RwLock<RangeExpression>>> {
-        log::debug!(target: "store", "exorcising range_expression slot: {id}.");
+        tracing::debug!(target: "store", "exorcising range_expression slot: {id}.");
         let result = self.range_expression.write().unwrap()[*id].take();
         self.range_expression_free_list.lock().unwrap().push(*id);
         result
@@ -5584,11 +5584,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<ResultStatement>>,
     {
         let _index = if let Some(_index) = self.result_statement_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.result_statement.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.result_statement.write().unwrap().push(None);
             _index
         };
@@ -5609,11 +5609,11 @@ impl ObjectStore {
         };
 
         if let Some(result_statement) = found {
-            log::debug!(target: "store", "found duplicate {result_statement:?}.");
+            tracing::debug!(target: "store", "found duplicate {result_statement:?}.");
             self.result_statement_free_list.lock().unwrap().push(_index);
             result_statement.clone()
         } else {
-            log::debug!(target: "store", "interring {result_statement:?}.");
+            tracing::debug!(target: "store", "interring {result_statement:?}.");
             self.result_statement.write().unwrap()[_index] = Some(result_statement.clone());
             result_statement
         }
@@ -5636,7 +5636,7 @@ impl ObjectStore {
         &mut self,
         id: &usize,
     ) -> Option<Arc<RwLock<ResultStatement>>> {
-        log::debug!(target: "store", "exorcising result_statement slot: {id}.");
+        tracing::debug!(target: "store", "exorcising result_statement slot: {id}.");
         let result = self.result_statement.write().unwrap()[*id].take();
         self.result_statement_free_list.lock().unwrap().push(*id);
         result
@@ -5665,11 +5665,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<XReturn>>,
     {
         let _index = if let Some(_index) = self.x_return_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.x_return.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.x_return.write().unwrap().push(None);
             _index
         };
@@ -5689,11 +5689,11 @@ impl ObjectStore {
         };
 
         if let Some(x_return) = found {
-            log::debug!(target: "store", "found duplicate {x_return:?}.");
+            tracing::debug!(target: "store", "found duplicate {x_return:?}.");
             self.x_return_free_list.lock().unwrap().push(_index);
             x_return.clone()
         } else {
-            log::debug!(target: "store", "interring {x_return:?}.");
+            tracing::debug!(target: "store", "interring {x_return:?}.");
             self.x_return.write().unwrap()[_index] = Some(x_return.clone());
             x_return
         }
@@ -5713,7 +5713,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_x_return(&mut self, id: &usize) -> Option<Arc<RwLock<XReturn>>> {
-        log::debug!(target: "store", "exorcising x_return slot: {id}.");
+        tracing::debug!(target: "store", "exorcising x_return slot: {id}.");
         let result = self.x_return.write().unwrap()[*id].take();
         self.x_return_free_list.lock().unwrap().push(*id);
         result
@@ -5742,11 +5742,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Span>>,
     {
         let _index = if let Some(_index) = self.span_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.span.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.span.write().unwrap().push(None);
             _index
         };
@@ -5766,11 +5766,11 @@ impl ObjectStore {
         };
 
         if let Some(span) = found {
-            log::debug!(target: "store", "found duplicate {span:?}.");
+            tracing::debug!(target: "store", "found duplicate {span:?}.");
             self.span_free_list.lock().unwrap().push(_index);
             span.clone()
         } else {
-            log::debug!(target: "store", "interring {span:?}.");
+            tracing::debug!(target: "store", "interring {span:?}.");
             self.span.write().unwrap()[_index] = Some(span.clone());
             span
         }
@@ -5790,7 +5790,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_span(&mut self, id: &usize) -> Option<Arc<RwLock<Span>>> {
-        log::debug!(target: "store", "exorcising span slot: {id}.");
+        tracing::debug!(target: "store", "exorcising span slot: {id}.");
         let result = self.span.write().unwrap()[*id].take();
         self.span_free_list.lock().unwrap().push(*id);
         result
@@ -5819,11 +5819,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Statement>>,
     {
         let _index = if let Some(_index) = self.statement_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.statement.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.statement.write().unwrap().push(None);
             _index
         };
@@ -5843,11 +5843,11 @@ impl ObjectStore {
         };
 
         if let Some(statement) = found {
-            log::debug!(target: "store", "found duplicate {statement:?}.");
+            tracing::debug!(target: "store", "found duplicate {statement:?}.");
             self.statement_free_list.lock().unwrap().push(_index);
             statement.clone()
         } else {
-            log::debug!(target: "store", "interring {statement:?}.");
+            tracing::debug!(target: "store", "interring {statement:?}.");
             self.statement.write().unwrap()[_index] = Some(statement.clone());
             statement
         }
@@ -5867,7 +5867,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_statement(&mut self, id: &usize) -> Option<Arc<RwLock<Statement>>> {
-        log::debug!(target: "store", "exorcising statement slot: {id}.");
+        tracing::debug!(target: "store", "exorcising statement slot: {id}.");
         let result = self.statement.write().unwrap()[*id].take();
         self.statement_free_list.lock().unwrap().push(*id);
         result
@@ -5899,11 +5899,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<StaticMethodCall>>,
     {
         let _index = if let Some(_index) = self.static_method_call_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.static_method_call.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.static_method_call.write().unwrap().push(None);
             _index
         };
@@ -5928,14 +5928,14 @@ impl ObjectStore {
         };
 
         if let Some(static_method_call) = found {
-            log::debug!(target: "store", "found duplicate {static_method_call:?}.");
+            tracing::debug!(target: "store", "found duplicate {static_method_call:?}.");
             self.static_method_call_free_list
                 .lock()
                 .unwrap()
                 .push(_index);
             static_method_call.clone()
         } else {
-            log::debug!(target: "store", "interring {static_method_call:?}.");
+            tracing::debug!(target: "store", "interring {static_method_call:?}.");
             self.static_method_call.write().unwrap()[_index] = Some(static_method_call.clone());
             static_method_call
         }
@@ -5958,7 +5958,7 @@ impl ObjectStore {
         &mut self,
         id: &usize,
     ) -> Option<Arc<RwLock<StaticMethodCall>>> {
-        log::debug!(target: "store", "exorcising static_method_call slot: {id}.");
+        tracing::debug!(target: "store", "exorcising static_method_call slot: {id}.");
         let result = self.static_method_call.write().unwrap()[*id].take();
         self.static_method_call_free_list.lock().unwrap().push(*id);
         result
@@ -5989,11 +5989,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<StringBit>>,
     {
         let _index = if let Some(_index) = self.string_bit_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.string_bit.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.string_bit.write().unwrap().push(None);
             _index
         };
@@ -6014,11 +6014,11 @@ impl ObjectStore {
         };
 
         if let Some(string_bit) = found {
-            log::debug!(target: "store", "found duplicate {string_bit:?}.");
+            tracing::debug!(target: "store", "found duplicate {string_bit:?}.");
             self.string_bit_free_list.lock().unwrap().push(_index);
             string_bit.clone()
         } else {
-            log::debug!(target: "store", "interring {string_bit:?}.");
+            tracing::debug!(target: "store", "interring {string_bit:?}.");
             self.string_bit.write().unwrap()[_index] = Some(string_bit.clone());
             string_bit
         }
@@ -6038,7 +6038,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_string_bit(&mut self, id: &usize) -> Option<Arc<RwLock<StringBit>>> {
-        log::debug!(target: "store", "exorcising string_bit slot: {id}.");
+        tracing::debug!(target: "store", "exorcising string_bit slot: {id}.");
         let result = self.string_bit.write().unwrap()[*id].take();
         self.string_bit_free_list.lock().unwrap().push(*id);
         result
@@ -6067,11 +6067,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<StringLiteral>>,
     {
         let _index = if let Some(_index) = self.string_literal_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.string_literal.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.string_literal.write().unwrap().push(None);
             _index
         };
@@ -6092,11 +6092,11 @@ impl ObjectStore {
         };
 
         if let Some(string_literal) = found {
-            log::debug!(target: "store", "found duplicate {string_literal:?}.");
+            tracing::debug!(target: "store", "found duplicate {string_literal:?}.");
             self.string_literal_free_list.lock().unwrap().push(_index);
             string_literal.clone()
         } else {
-            log::debug!(target: "store", "interring {string_literal:?}.");
+            tracing::debug!(target: "store", "interring {string_literal:?}.");
             self.string_literal.write().unwrap()[_index] = Some(string_literal.clone());
             string_literal
         }
@@ -6116,7 +6116,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_string_literal(&mut self, id: &usize) -> Option<Arc<RwLock<StringLiteral>>> {
-        log::debug!(target: "store", "exorcising string_literal slot: {id}.");
+        tracing::debug!(target: "store", "exorcising string_literal slot: {id}.");
         let result = self.string_literal.write().unwrap()[*id].take();
         self.string_literal_free_list.lock().unwrap().push(*id);
         result
@@ -6145,11 +6145,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<WoogStruct>>,
     {
         let _index = if let Some(_index) = self.woog_struct_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.woog_struct.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.woog_struct.write().unwrap().push(None);
             _index
         };
@@ -6170,11 +6170,11 @@ impl ObjectStore {
         };
 
         let woog_struct = if let Some(woog_struct) = found {
-            log::debug!(target: "store", "found duplicate {woog_struct:?}.");
+            tracing::debug!(target: "store", "found duplicate {woog_struct:?}.");
             self.woog_struct_free_list.lock().unwrap().push(_index);
             woog_struct.clone()
         } else {
-            log::debug!(target: "store", "interring {woog_struct:?}.");
+            tracing::debug!(target: "store", "interring {woog_struct:?}.");
             self.woog_struct.write().unwrap()[_index] = Some(woog_struct.clone());
             woog_struct
         };
@@ -6199,7 +6199,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_woog_struct(&mut self, id: &usize) -> Option<Arc<RwLock<WoogStruct>>> {
-        log::debug!(target: "store", "exorcising woog_struct slot: {id}.");
+        tracing::debug!(target: "store", "exorcising woog_struct slot: {id}.");
         let result = self.woog_struct.write().unwrap()[*id].take();
         self.woog_struct_free_list.lock().unwrap().push(*id);
         result
@@ -6242,11 +6242,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<StructExpression>>,
     {
         let _index = if let Some(_index) = self.struct_expression_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.struct_expression.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.struct_expression.write().unwrap().push(None);
             _index
         };
@@ -6271,14 +6271,14 @@ impl ObjectStore {
         };
 
         if let Some(struct_expression) = found {
-            log::debug!(target: "store", "found duplicate {struct_expression:?}.");
+            tracing::debug!(target: "store", "found duplicate {struct_expression:?}.");
             self.struct_expression_free_list
                 .lock()
                 .unwrap()
                 .push(_index);
             struct_expression.clone()
         } else {
-            log::debug!(target: "store", "interring {struct_expression:?}.");
+            tracing::debug!(target: "store", "interring {struct_expression:?}.");
             self.struct_expression.write().unwrap()[_index] = Some(struct_expression.clone());
             struct_expression
         }
@@ -6301,7 +6301,7 @@ impl ObjectStore {
         &mut self,
         id: &usize,
     ) -> Option<Arc<RwLock<StructExpression>>> {
-        log::debug!(target: "store", "exorcising struct_expression slot: {id}.");
+        tracing::debug!(target: "store", "exorcising struct_expression slot: {id}.");
         let result = self.struct_expression.write().unwrap()[*id].take();
         self.struct_expression_free_list.lock().unwrap().push(*id);
         result
@@ -6332,11 +6332,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<StructField>>,
     {
         let _index = if let Some(_index) = self.struct_field_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.struct_field.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.struct_field.write().unwrap().push(None);
             _index
         };
@@ -6357,11 +6357,11 @@ impl ObjectStore {
         };
 
         if let Some(struct_field) = found {
-            log::debug!(target: "store", "found duplicate {struct_field:?}.");
+            tracing::debug!(target: "store", "found duplicate {struct_field:?}.");
             self.struct_field_free_list.lock().unwrap().push(_index);
             struct_field.clone()
         } else {
-            log::debug!(target: "store", "interring {struct_field:?}.");
+            tracing::debug!(target: "store", "interring {struct_field:?}.");
             self.struct_field.write().unwrap()[_index] = Some(struct_field.clone());
             struct_field
         }
@@ -6381,7 +6381,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_struct_field(&mut self, id: &usize) -> Option<Arc<RwLock<StructField>>> {
-        log::debug!(target: "store", "exorcising struct_field slot: {id}.");
+        tracing::debug!(target: "store", "exorcising struct_field slot: {id}.");
         let result = self.struct_field.write().unwrap()[*id].take();
         self.struct_field_free_list.lock().unwrap().push(*id);
         result
@@ -6410,11 +6410,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<StructGeneric>>,
     {
         let _index = if let Some(_index) = self.struct_generic_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.struct_generic.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.struct_generic.write().unwrap().push(None);
             _index
         };
@@ -6435,11 +6435,11 @@ impl ObjectStore {
         };
 
         if let Some(struct_generic) = found {
-            log::debug!(target: "store", "found duplicate {struct_generic:?}.");
+            tracing::debug!(target: "store", "found duplicate {struct_generic:?}.");
             self.struct_generic_free_list.lock().unwrap().push(_index);
             struct_generic.clone()
         } else {
-            log::debug!(target: "store", "interring {struct_generic:?}.");
+            tracing::debug!(target: "store", "interring {struct_generic:?}.");
             self.struct_generic.write().unwrap()[_index] = Some(struct_generic.clone());
             struct_generic
         }
@@ -6459,7 +6459,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_struct_generic(&mut self, id: &usize) -> Option<Arc<RwLock<StructGeneric>>> {
-        log::debug!(target: "store", "exorcising struct_generic slot: {id}.");
+        tracing::debug!(target: "store", "exorcising struct_generic slot: {id}.");
         let result = self.struct_generic.write().unwrap()[*id].take();
         self.struct_generic_free_list.lock().unwrap().push(*id);
         result
@@ -6488,11 +6488,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<TupleField>>,
     {
         let _index = if let Some(_index) = self.tuple_field_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.tuple_field.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.tuple_field.write().unwrap().push(None);
             _index
         };
@@ -6513,11 +6513,11 @@ impl ObjectStore {
         };
 
         if let Some(tuple_field) = found {
-            log::debug!(target: "store", "found duplicate {tuple_field:?}.");
+            tracing::debug!(target: "store", "found duplicate {tuple_field:?}.");
             self.tuple_field_free_list.lock().unwrap().push(_index);
             tuple_field.clone()
         } else {
-            log::debug!(target: "store", "interring {tuple_field:?}.");
+            tracing::debug!(target: "store", "interring {tuple_field:?}.");
             self.tuple_field.write().unwrap()[_index] = Some(tuple_field.clone());
             tuple_field
         }
@@ -6537,7 +6537,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_tuple_field(&mut self, id: &usize) -> Option<Arc<RwLock<TupleField>>> {
-        log::debug!(target: "store", "exorcising tuple_field slot: {id}.");
+        tracing::debug!(target: "store", "exorcising tuple_field slot: {id}.");
         let result = self.tuple_field.write().unwrap()[*id].take();
         self.tuple_field_free_list.lock().unwrap().push(*id);
         result
@@ -6566,11 +6566,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<TypeCast>>,
     {
         let _index = if let Some(_index) = self.type_cast_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.type_cast.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.type_cast.write().unwrap().push(None);
             _index
         };
@@ -6590,11 +6590,11 @@ impl ObjectStore {
         };
 
         if let Some(type_cast) = found {
-            log::debug!(target: "store", "found duplicate {type_cast:?}.");
+            tracing::debug!(target: "store", "found duplicate {type_cast:?}.");
             self.type_cast_free_list.lock().unwrap().push(_index);
             type_cast.clone()
         } else {
-            log::debug!(target: "store", "interring {type_cast:?}.");
+            tracing::debug!(target: "store", "interring {type_cast:?}.");
             self.type_cast.write().unwrap()[_index] = Some(type_cast.clone());
             type_cast
         }
@@ -6614,7 +6614,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_type_cast(&mut self, id: &usize) -> Option<Arc<RwLock<TypeCast>>> {
-        log::debug!(target: "store", "exorcising type_cast slot: {id}.");
+        tracing::debug!(target: "store", "exorcising type_cast slot: {id}.");
         let result = self.type_cast.write().unwrap()[*id].take();
         self.type_cast_free_list.lock().unwrap().push(*id);
         result
@@ -6643,11 +6643,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Unary>>,
     {
         let _index = if let Some(_index) = self.unary_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.unary.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.unary.write().unwrap().push(None);
             _index
         };
@@ -6667,11 +6667,11 @@ impl ObjectStore {
         };
 
         if let Some(unary) = found {
-            log::debug!(target: "store", "found duplicate {unary:?}.");
+            tracing::debug!(target: "store", "found duplicate {unary:?}.");
             self.unary_free_list.lock().unwrap().push(_index);
             unary.clone()
         } else {
-            log::debug!(target: "store", "interring {unary:?}.");
+            tracing::debug!(target: "store", "interring {unary:?}.");
             self.unary.write().unwrap()[_index] = Some(unary.clone());
             unary
         }
@@ -6691,7 +6691,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_unary(&mut self, id: &usize) -> Option<Arc<RwLock<Unary>>> {
-        log::debug!(target: "store", "exorcising unary slot: {id}.");
+        tracing::debug!(target: "store", "exorcising unary slot: {id}.");
         let result = self.unary.write().unwrap()[*id].take();
         self.unary_free_list.lock().unwrap().push(*id);
         result
@@ -6720,11 +6720,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Unit>>,
     {
         let _index = if let Some(_index) = self.unit_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.unit.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.unit.write().unwrap().push(None);
             _index
         };
@@ -6744,11 +6744,11 @@ impl ObjectStore {
         };
 
         if let Some(unit) = found {
-            log::debug!(target: "store", "found duplicate {unit:?}.");
+            tracing::debug!(target: "store", "found duplicate {unit:?}.");
             self.unit_free_list.lock().unwrap().push(_index);
             unit.clone()
         } else {
-            log::debug!(target: "store", "interring {unit:?}.");
+            tracing::debug!(target: "store", "interring {unit:?}.");
             self.unit.write().unwrap()[_index] = Some(unit.clone());
             unit
         }
@@ -6768,7 +6768,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_unit(&mut self, id: &usize) -> Option<Arc<RwLock<Unit>>> {
-        log::debug!(target: "store", "exorcising unit slot: {id}.");
+        tracing::debug!(target: "store", "exorcising unit slot: {id}.");
         let result = self.unit.write().unwrap()[*id].take();
         self.unit_free_list.lock().unwrap().push(*id);
         result
@@ -6805,11 +6805,11 @@ impl ObjectStore {
             .unwrap()
             .pop()
         {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.unnamed_field_expression.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.unnamed_field_expression.write().unwrap().push(None);
             _index
         };
@@ -6834,14 +6834,14 @@ impl ObjectStore {
         };
 
         if let Some(unnamed_field_expression) = found {
-            log::debug!(target: "store", "found duplicate {unnamed_field_expression:?}.");
+            tracing::debug!(target: "store", "found duplicate {unnamed_field_expression:?}.");
             self.unnamed_field_expression_free_list
                 .lock()
                 .unwrap()
                 .push(_index);
             unnamed_field_expression.clone()
         } else {
-            log::debug!(target: "store", "interring {unnamed_field_expression:?}.");
+            tracing::debug!(target: "store", "interring {unnamed_field_expression:?}.");
             self.unnamed_field_expression.write().unwrap()[_index] =
                 Some(unnamed_field_expression.clone());
             unnamed_field_expression
@@ -6868,7 +6868,7 @@ impl ObjectStore {
         &mut self,
         id: &usize,
     ) -> Option<Arc<RwLock<UnnamedFieldExpression>>> {
-        log::debug!(target: "store", "exorcising unnamed_field_expression slot: {id}.");
+        tracing::debug!(target: "store", "exorcising unnamed_field_expression slot: {id}.");
         let result = self.unnamed_field_expression.write().unwrap()[*id].take();
         self.unnamed_field_expression_free_list
             .lock()
@@ -6902,11 +6902,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<XValue>>,
     {
         let _index = if let Some(_index) = self.x_value_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.x_value.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.x_value.write().unwrap().push(None);
             _index
         };
@@ -6926,11 +6926,11 @@ impl ObjectStore {
         };
 
         if let Some(x_value) = found {
-            log::debug!(target: "store", "found duplicate {x_value:?}.");
+            tracing::debug!(target: "store", "found duplicate {x_value:?}.");
             self.x_value_free_list.lock().unwrap().push(_index);
             x_value.clone()
         } else {
-            log::debug!(target: "store", "interring {x_value:?}.");
+            tracing::debug!(target: "store", "interring {x_value:?}.");
             self.x_value.write().unwrap()[_index] = Some(x_value.clone());
             x_value
         }
@@ -6950,7 +6950,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_x_value(&mut self, id: &usize) -> Option<Arc<RwLock<XValue>>> {
-        log::debug!(target: "store", "exorcising x_value slot: {id}.");
+        tracing::debug!(target: "store", "exorcising x_value slot: {id}.");
         let result = self.x_value.write().unwrap()[*id].take();
         self.x_value_free_list.lock().unwrap().push(*id);
         result
@@ -6979,11 +6979,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<ValueType>>,
     {
         let _index = if let Some(_index) = self.value_type_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.value_type.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.value_type.write().unwrap().push(None);
             _index
         };
@@ -7004,11 +7004,11 @@ impl ObjectStore {
         };
 
         if let Some(value_type) = found {
-            log::debug!(target: "store", "found duplicate {value_type:?}.");
+            tracing::debug!(target: "store", "found duplicate {value_type:?}.");
             self.value_type_free_list.lock().unwrap().push(_index);
             value_type.clone()
         } else {
-            log::debug!(target: "store", "interring {value_type:?}.");
+            tracing::debug!(target: "store", "interring {value_type:?}.");
             self.value_type.write().unwrap()[_index] = Some(value_type.clone());
             value_type
         }
@@ -7028,7 +7028,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_value_type(&mut self, id: &usize) -> Option<Arc<RwLock<ValueType>>> {
-        log::debug!(target: "store", "exorcising value_type slot: {id}.");
+        tracing::debug!(target: "store", "exorcising value_type slot: {id}.");
         let result = self.value_type.write().unwrap()[*id].take();
         self.value_type_free_list.lock().unwrap().push(*id);
         result
@@ -7057,11 +7057,11 @@ impl ObjectStore {
         F: Fn(usize) -> Arc<RwLock<Variable>>,
     {
         let _index = if let Some(_index) = self.variable_free_list.lock().unwrap().pop() {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.variable.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.variable.write().unwrap().push(None);
             _index
         };
@@ -7081,11 +7081,11 @@ impl ObjectStore {
         };
 
         if let Some(variable) = found {
-            log::debug!(target: "store", "found duplicate {variable:?}.");
+            tracing::debug!(target: "store", "found duplicate {variable:?}.");
             self.variable_free_list.lock().unwrap().push(_index);
             variable.clone()
         } else {
-            log::debug!(target: "store", "interring {variable:?}.");
+            tracing::debug!(target: "store", "interring {variable:?}.");
             self.variable.write().unwrap()[_index] = Some(variable.clone());
             variable
         }
@@ -7105,7 +7105,7 @@ impl ObjectStore {
     ///
     #[inline]
     pub fn exorcise_variable(&mut self, id: &usize) -> Option<Arc<RwLock<Variable>>> {
-        log::debug!(target: "store", "exorcising variable slot: {id}.");
+        tracing::debug!(target: "store", "exorcising variable slot: {id}.");
         let result = self.variable.write().unwrap()[*id].take();
         self.variable_free_list.lock().unwrap().push(*id);
         result
@@ -7138,11 +7138,11 @@ impl ObjectStore {
     {
         let _index = if let Some(_index) = self.variable_expression_free_list.lock().unwrap().pop()
         {
-            log::trace!(target: "store", "recycling block {_index}.");
+            tracing::trace!(target: "store", "recycling block {_index}.");
             _index
         } else {
             let _index = self.variable_expression.read().unwrap().len();
-            log::trace!(target: "store", "allocating block {_index}.");
+            tracing::trace!(target: "store", "allocating block {_index}.");
             self.variable_expression.write().unwrap().push(None);
             _index
         };
@@ -7167,14 +7167,14 @@ impl ObjectStore {
         };
 
         if let Some(variable_expression) = found {
-            log::debug!(target: "store", "found duplicate {variable_expression:?}.");
+            tracing::debug!(target: "store", "found duplicate {variable_expression:?}.");
             self.variable_expression_free_list
                 .lock()
                 .unwrap()
                 .push(_index);
             variable_expression.clone()
         } else {
-            log::debug!(target: "store", "interring {variable_expression:?}.");
+            tracing::debug!(target: "store", "interring {variable_expression:?}.");
             self.variable_expression.write().unwrap()[_index] = Some(variable_expression.clone());
             variable_expression
         }
@@ -7200,7 +7200,7 @@ impl ObjectStore {
         &mut self,
         id: &usize,
     ) -> Option<Arc<RwLock<VariableExpression>>> {
-        log::debug!(target: "store", "exorcising variable_expression slot: {id}.");
+        tracing::debug!(target: "store", "exorcising variable_expression slot: {id}.");
         let result = self.variable_expression.write().unwrap()[*id].take();
         self.variable_expression_free_list.lock().unwrap().push(*id);
         result
