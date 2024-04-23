@@ -15,7 +15,7 @@ use crate::v2::lu_dog::types::field_access::FieldAccess;
 use crate::v2::lu_dog::types::field_expression::FieldExpression;
 use crate::v2::lu_dog::types::for_loop::ForLoop;
 use crate::v2::lu_dog::types::grouped::Grouped;
-use crate::v2::lu_dog::types::halt_and_catch_fire::HALT_AND_CATCH_FIRE;
+use crate::v2::lu_dog::types::halt_and_catch_fire::HaltAndCatchFire;
 use crate::v2::lu_dog::types::index::Index;
 use crate::v2::lu_dog::types::lambda::Lambda;
 use crate::v2::lu_dog::types::let_statement::LetStatement;
@@ -239,11 +239,15 @@ impl Expression {
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-new_halt_and_catch_fire"}}}
     /// Inter a new Expression in the store, and return it's `id`.
-    pub fn new_halt_and_catch_fire(bogus: bool, store: &mut LuDogStore) -> Rc<RefCell<Expression>> {
+    pub fn new_halt_and_catch_fire(
+        bogus: bool,
+        subtype: &Rc<RefCell<HaltAndCatchFire>>,
+        store: &mut LuDogStore,
+    ) -> Rc<RefCell<Expression>> {
         let id = Uuid::new_v4();
         let new = Rc::new(RefCell::new(Expression {
             bogus: bogus,
-            subtype: ExpressionEnum::HaltAndCatchFire(HALT_AND_CATCH_FIRE),
+            subtype: ExpressionEnum::HaltAndCatchFire(subtype.borrow().id), // b
             id,
         }));
         store.inter_expression(new.clone());
@@ -606,6 +610,18 @@ impl Expression {
         store
             .iter_grouped()
             .filter(|grouped| grouped.borrow().expression == self.id)
+            .collect()
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-nav-backward-1_M-to-halt_and_catch_fire"}}}
+    /// Navigate to [`HaltAndCatchFire`] across R114(1-M)
+    pub fn r114_halt_and_catch_fire<'a>(
+        &'a self,
+        store: &'a LuDogStore,
+    ) -> Vec<Rc<RefCell<HaltAndCatchFire>>> {
+        store
+            .iter_halt_and_catch_fire()
+            .filter(|halt_and_catch_fire| halt_and_catch_fire.borrow().expression == self.id)
             .collect()
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}

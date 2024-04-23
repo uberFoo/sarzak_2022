@@ -15,7 +15,7 @@ use crate::v2::lu_dog_rwlock::types::field_access::FieldAccess;
 use crate::v2::lu_dog_rwlock::types::field_expression::FieldExpression;
 use crate::v2::lu_dog_rwlock::types::for_loop::ForLoop;
 use crate::v2::lu_dog_rwlock::types::grouped::Grouped;
-use crate::v2::lu_dog_rwlock::types::halt_and_catch_fire::HALT_AND_CATCH_FIRE;
+use crate::v2::lu_dog_rwlock::types::halt_and_catch_fire::HaltAndCatchFire;
 use crate::v2::lu_dog_rwlock::types::index::Index;
 use crate::v2::lu_dog_rwlock::types::lambda::Lambda;
 use crate::v2::lu_dog_rwlock::types::let_statement::LetStatement;
@@ -243,12 +243,13 @@ impl Expression {
     /// Inter a new Expression in the store, and return it's `id`.
     pub fn new_halt_and_catch_fire(
         bogus: bool,
+        subtype: &Arc<RwLock<HaltAndCatchFire>>,
         store: &mut LuDogRwlockStore,
     ) -> Arc<RwLock<Expression>> {
         let id = Uuid::new_v4();
         let new = Arc::new(RwLock::new(Expression {
             bogus: bogus,
-            subtype: ExpressionEnum::HaltAndCatchFire(HALT_AND_CATCH_FIRE),
+            subtype: ExpressionEnum::HaltAndCatchFire(subtype.read().unwrap().id), // b
             id,
         }));
         store.inter_expression(new.clone());
@@ -616,6 +617,18 @@ impl Expression {
         store
             .iter_grouped()
             .filter(|grouped| grouped.read().unwrap().expression == self.id)
+            .collect()
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-nav-backward-1_M-to-halt_and_catch_fire"}}}
+    /// Navigate to [`HaltAndCatchFire`] across R114(1-M)
+    pub fn r114_halt_and_catch_fire<'a>(
+        &'a self,
+        store: &'a LuDogRwlockStore,
+    ) -> Vec<Arc<RwLock<HaltAndCatchFire>>> {
+        store
+            .iter_halt_and_catch_fire()
+            .filter(|halt_and_catch_fire| halt_and_catch_fire.read().unwrap().expression == self.id)
             .collect()
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}

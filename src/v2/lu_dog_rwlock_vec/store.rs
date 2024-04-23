@@ -39,6 +39,7 @@
 //! * [`FunctionCall`]
 //! * [`XFuture`]
 //! * [`Grouped`]
+//! * [`HaltAndCatchFire`]
 //! * [`XIf`]
 //! * [`ImplementationBlock`]
 //! * [`Import`]
@@ -107,17 +108,18 @@ use crate::v2::lu_dog_rwlock_vec::types::{
     Comparison, DataStructure, DwarfSourceFile, EnumField, EnumGeneric, Enumeration, Expression,
     ExpressionBit, ExpressionStatement, ExternalImplementation, Field, FieldAccess,
     FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit, FormatString,
-    FuncGeneric, Function, FunctionCall, Grouped, ImplementationBlock, Import, Index,
-    IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement, ListExpression,
-    Literal, LocalVariable, MethodCall, NamedFieldExpression, ObjectWrapper, Operator, Parameter,
-    PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement, StaticMethodCall,
-    StringBit, StringLiteral, StructExpression, StructField, StructGeneric, TupleField, TypeCast,
-    Unary, Unit, UnnamedFieldExpression, ValueType, Variable, VariableExpression, WoogStruct,
-    XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn, XValue, ZObjectStore, ADDITION,
-    AND, ANY_LIST, ASSIGNMENT, CHAR, DIVISION, EMPTY, EMPTY_EXPRESSION, EQUAL, FALSE_LITERAL, FROM,
-    FULL, GREATER_THAN, GREATER_THAN_OR_EQUAL, HALT_AND_CATCH_FIRE, INCLUSIVE, ITEM_STATEMENT,
-    LESS_THAN, LESS_THAN_OR_EQUAL, MACRO_CALL, MULTIPLICATION, NEGATION, NOT, NOT_EQUAL, OR, RANGE,
-    SUBTRACTION, TASK, TO, TO_INCLUSIVE, TRUE_LITERAL, UNKNOWN, X_DEBUGGER,
+    FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire, ImplementationBlock, Import,
+    Index, IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement,
+    ListExpression, Literal, LocalVariable, MethodCall, NamedFieldExpression, ObjectWrapper,
+    Operator, Parameter, PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement,
+    StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField, StructGeneric,
+    TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
+    VariableExpression, WoogStruct, XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn,
+    XValue, ZObjectStore, ADDITION, AND, ANY_LIST, ASSIGNMENT, CHAR, DIVISION, EMPTY,
+    EMPTY_EXPRESSION, EQUAL, FALSE_LITERAL, FROM, FULL, GREATER_THAN, GREATER_THAN_OR_EQUAL,
+    INCLUSIVE, ITEM_STATEMENT, LESS_THAN, LESS_THAN_OR_EQUAL, MACRO_CALL, MULTIPLICATION, NEGATION,
+    NOT, NOT_EQUAL, OR, RANGE, SUBTRACTION, TASK, TO, TO_INCLUSIVE, TRUE_LITERAL, UNKNOWN,
+    X_DEBUGGER,
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -189,6 +191,8 @@ pub struct ObjectStore {
     x_future: Arc<RwLock<Vec<Option<Arc<RwLock<XFuture>>>>>>,
     grouped_free_list: std::sync::Mutex<Vec<usize>>,
     grouped: Arc<RwLock<Vec<Option<Arc<RwLock<Grouped>>>>>>,
+    halt_and_catch_fire_free_list: std::sync::Mutex<Vec<usize>>,
+    halt_and_catch_fire: Arc<RwLock<Vec<Option<Arc<RwLock<HaltAndCatchFire>>>>>>,
     x_if_free_list: std::sync::Mutex<Vec<usize>>,
     x_if: Arc<RwLock<Vec<Option<Arc<RwLock<XIf>>>>>>,
     implementation_block_free_list: std::sync::Mutex<Vec<usize>>,
@@ -387,6 +391,10 @@ impl Clone for ObjectStore {
             x_future: self.x_future.clone(),
             grouped_free_list: Mutex::new(self.grouped_free_list.lock().unwrap().clone()),
             grouped: self.grouped.clone(),
+            halt_and_catch_fire_free_list: Mutex::new(
+                self.halt_and_catch_fire_free_list.lock().unwrap().clone(),
+            ),
+            halt_and_catch_fire: self.halt_and_catch_fire.clone(),
             x_if_free_list: Mutex::new(self.x_if_free_list.lock().unwrap().clone()),
             x_if: self.x_if.clone(),
             implementation_block_free_list: Mutex::new(
@@ -599,6 +607,8 @@ impl ObjectStore {
             x_future: Arc::new(RwLock::new(Vec::new())),
             grouped_free_list: std::sync::Mutex::new(Vec::new()),
             grouped: Arc::new(RwLock::new(Vec::new())),
+            halt_and_catch_fire_free_list: std::sync::Mutex::new(Vec::new()),
+            halt_and_catch_fire: Arc::new(RwLock::new(Vec::new())),
             x_if_free_list: std::sync::Mutex::new(Vec::new()),
             x_if: Arc::new(RwLock::new(Vec::new())),
             implementation_block_free_list: std::sync::Mutex::new(Vec::new()),
@@ -3320,6 +3330,100 @@ impl ObjectStore {
                 self.grouped.read().unwrap()[i]
                     .as_ref()
                     .map(|grouped| grouped.clone())
+                    .unwrap()
+            })
+    }
+
+    /// Inter (insert) [`HaltAndCatchFire`] into the store.
+    ///
+    #[inline]
+    pub fn inter_halt_and_catch_fire<F>(
+        &mut self,
+        halt_and_catch_fire: F,
+    ) -> Arc<RwLock<HaltAndCatchFire>>
+    where
+        F: Fn(usize) -> Arc<RwLock<HaltAndCatchFire>>,
+    {
+        let _index = if let Some(_index) = self.halt_and_catch_fire_free_list.lock().unwrap().pop()
+        {
+            tracing::trace!(target: "store", "recycling block {_index}.");
+            _index
+        } else {
+            let _index = self.halt_and_catch_fire.read().unwrap().len();
+            tracing::trace!(target: "store", "allocating block {_index}.");
+            self.halt_and_catch_fire.write().unwrap().push(None);
+            _index
+        };
+
+        let halt_and_catch_fire = halt_and_catch_fire(_index);
+
+        let found = if let Some(halt_and_catch_fire) = self
+            .halt_and_catch_fire
+            .read()
+            .unwrap()
+            .iter()
+            .find(|stored| {
+                if let Some(stored) = stored {
+                    *stored.read().unwrap() == *halt_and_catch_fire.read().unwrap()
+                } else {
+                    false
+                }
+            }) {
+            halt_and_catch_fire.clone()
+        } else {
+            None
+        };
+
+        if let Some(halt_and_catch_fire) = found {
+            tracing::debug!(target: "store", "found duplicate {halt_and_catch_fire:?}.");
+            self.halt_and_catch_fire_free_list
+                .lock()
+                .unwrap()
+                .push(_index);
+            halt_and_catch_fire.clone()
+        } else {
+            tracing::debug!(target: "store", "interring {halt_and_catch_fire:?}.");
+            self.halt_and_catch_fire.write().unwrap()[_index] = Some(halt_and_catch_fire.clone());
+            halt_and_catch_fire
+        }
+    }
+
+    /// Exhume (get) [`HaltAndCatchFire`] from the store.
+    ///
+    #[inline]
+    pub fn exhume_halt_and_catch_fire(&self, id: &usize) -> Option<Arc<RwLock<HaltAndCatchFire>>> {
+        match self.halt_and_catch_fire.read().unwrap().get(*id) {
+            Some(halt_and_catch_fire) => halt_and_catch_fire.clone(),
+            None => None,
+        }
+    }
+
+    /// Exorcise (remove) [`HaltAndCatchFire`] from the store.
+    ///
+    #[inline]
+    pub fn exorcise_halt_and_catch_fire(
+        &mut self,
+        id: &usize,
+    ) -> Option<Arc<RwLock<HaltAndCatchFire>>> {
+        tracing::debug!(target: "store", "exorcising halt_and_catch_fire slot: {id}.");
+        let result = self.halt_and_catch_fire.write().unwrap()[*id].take();
+        self.halt_and_catch_fire_free_list.lock().unwrap().push(*id);
+        result
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, HaltAndCatchFire>`.
+    ///
+    #[inline]
+    pub fn iter_halt_and_catch_fire(
+        &self,
+    ) -> impl Iterator<Item = Arc<RwLock<HaltAndCatchFire>>> + '_ {
+        let len = self.halt_and_catch_fire.read().unwrap().len();
+        (0..len)
+            .filter(|i| self.halt_and_catch_fire.read().unwrap()[*i].is_some())
+            .map(move |i| {
+                self.halt_and_catch_fire.read().unwrap()[i]
+                    .as_ref()
+                    .map(|halt_and_catch_fire| halt_and_catch_fire.clone())
                     .unwrap()
             })
     }
@@ -7702,6 +7806,21 @@ impl ObjectStore {
             }
         }
 
+        // Persist Halt and Catch Fire.
+        {
+            let path = path.join("halt_and_catch_fire");
+            fs::create_dir_all(&path)?;
+            for halt_and_catch_fire in &*self.halt_and_catch_fire.read().unwrap() {
+                if let Some(halt_and_catch_fire) = halt_and_catch_fire {
+                    let path =
+                        path.join(format!("{}.json", halt_and_catch_fire.read().unwrap().id));
+                    let file = fs::File::create(path)?;
+                    let mut writer = io::BufWriter::new(file);
+                    serde_json::to_writer_pretty(&mut writer, &halt_and_catch_fire)?;
+                }
+            }
+        }
+
         // Persist If.
         {
             let path = path.join("x_if");
@@ -8988,6 +9107,24 @@ impl ObjectStore {
                     .write()
                     .unwrap()
                     .insert(grouped.read().unwrap().id, Some(grouped.clone()));
+            }
+        }
+
+        // Load Halt and Catch Fire.
+        {
+            let path = path.join("halt_and_catch_fire");
+            let entries = fs::read_dir(path)?;
+            for entry in entries {
+                let entry = entry?;
+                let path = entry.path();
+                let file = fs::File::open(path)?;
+                let reader = io::BufReader::new(file);
+                let halt_and_catch_fire: Arc<RwLock<HaltAndCatchFire>> =
+                    serde_json::from_reader(reader)?;
+                store.halt_and_catch_fire.write().unwrap().insert(
+                    halt_and_catch_fire.read().unwrap().id,
+                    Some(halt_and_catch_fire.clone()),
+                );
             }
         }
 

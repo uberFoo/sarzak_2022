@@ -39,6 +39,7 @@
 //! * [`FunctionCall`]
 //! * [`XFuture`]
 //! * [`Grouped`]
+//! * [`HaltAndCatchFire`]
 //! * [`XIf`]
 //! * [`ImplementationBlock`]
 //! * [`Import`]
@@ -106,17 +107,18 @@ use crate::v2::lu_dog_vec_tracy::types::{
     Comparison, DataStructure, DwarfSourceFile, EnumField, EnumGeneric, Enumeration, Expression,
     ExpressionBit, ExpressionStatement, ExternalImplementation, Field, FieldAccess,
     FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit, FormatString,
-    FuncGeneric, Function, FunctionCall, Grouped, ImplementationBlock, Import, Index,
-    IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement, ListExpression,
-    Literal, LocalVariable, MethodCall, NamedFieldExpression, ObjectWrapper, Operator, Parameter,
-    PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement, StaticMethodCall,
-    StringBit, StringLiteral, StructExpression, StructField, StructGeneric, TupleField, TypeCast,
-    Unary, Unit, UnnamedFieldExpression, ValueType, Variable, VariableExpression, WoogStruct,
-    XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn, XValue, ZObjectStore, ADDITION,
-    AND, ANY_LIST, ASSIGNMENT, CHAR, DIVISION, EMPTY, EMPTY_EXPRESSION, EQUAL, FALSE_LITERAL, FROM,
-    FULL, GREATER_THAN, GREATER_THAN_OR_EQUAL, HALT_AND_CATCH_FIRE, INCLUSIVE, ITEM_STATEMENT,
-    LESS_THAN, LESS_THAN_OR_EQUAL, MACRO_CALL, MULTIPLICATION, NEGATION, NOT, NOT_EQUAL, OR, RANGE,
-    SUBTRACTION, TASK, TO, TO_INCLUSIVE, TRUE_LITERAL, UNKNOWN, X_DEBUGGER,
+    FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire, ImplementationBlock, Import,
+    Index, IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement,
+    ListExpression, Literal, LocalVariable, MethodCall, NamedFieldExpression, ObjectWrapper,
+    Operator, Parameter, PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement,
+    StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField, StructGeneric,
+    TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
+    VariableExpression, WoogStruct, XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn,
+    XValue, ZObjectStore, ADDITION, AND, ANY_LIST, ASSIGNMENT, CHAR, DIVISION, EMPTY,
+    EMPTY_EXPRESSION, EQUAL, FALSE_LITERAL, FROM, FULL, GREATER_THAN, GREATER_THAN_OR_EQUAL,
+    INCLUSIVE, ITEM_STATEMENT, LESS_THAN, LESS_THAN_OR_EQUAL, MACRO_CALL, MULTIPLICATION, NEGATION,
+    NOT, NOT_EQUAL, OR, RANGE, SUBTRACTION, TASK, TO, TO_INCLUSIVE, TRUE_LITERAL, UNKNOWN,
+    X_DEBUGGER,
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -188,6 +190,8 @@ pub struct ObjectStore {
     x_future: Vec<Option<Rc<RefCell<XFuture>>>>,
     grouped_free_list: Vec<usize>,
     grouped: Vec<Option<Rc<RefCell<Grouped>>>>,
+    halt_and_catch_fire_free_list: Vec<usize>,
+    halt_and_catch_fire: Vec<Option<Rc<RefCell<HaltAndCatchFire>>>>,
     x_if_free_list: Vec<usize>,
     x_if: Vec<Option<Rc<RefCell<XIf>>>>,
     implementation_block_free_list: Vec<usize>,
@@ -386,6 +390,10 @@ impl Clone for ObjectStore {
             x_future: self.x_future.clone(),
             grouped_free_list: Mutex::new(self.grouped_free_list.lock().unwrap().clone()),
             grouped: self.grouped.clone(),
+            halt_and_catch_fire_free_list: Mutex::new(
+                self.halt_and_catch_fire_free_list.lock().unwrap().clone(),
+            ),
+            halt_and_catch_fire: self.halt_and_catch_fire.clone(),
             x_if_free_list: Mutex::new(self.x_if_free_list.lock().unwrap().clone()),
             x_if: self.x_if.clone(),
             implementation_block_free_list: Mutex::new(
@@ -598,6 +606,8 @@ impl ObjectStore {
             x_future: Vec::new(),
             grouped_free_list: Vec::new(),
             grouped: Vec::new(),
+            halt_and_catch_fire_free_list: Vec::new(),
+            halt_and_catch_fire: Vec::new(),
             x_if_free_list: Vec::new(),
             x_if: Vec::new(),
             implementation_block_free_list: Vec::new(),
@@ -3036,6 +3046,85 @@ impl ObjectStore {
                 self.grouped[i]
                     .as_ref()
                     .map(|grouped| grouped.clone())
+                    .unwrap()
+            })
+    }
+
+    /// Inter (insert) [`HaltAndCatchFire`] into the store.
+    ///
+    #[inline]
+    pub fn inter_halt_and_catch_fire<F>(
+        &mut self,
+        halt_and_catch_fire: F,
+    ) -> Rc<RefCell<HaltAndCatchFire>>
+    where
+        F: Fn(usize) -> Rc<RefCell<HaltAndCatchFire>>,
+    {
+        let _index = if let Some(_index) = self.halt_and_catch_fire_free_list.pop() {
+            tracing::trace!(target: "store", "recycling block {_index}.");
+            _index
+        } else {
+            let _index = self.halt_and_catch_fire.len();
+            tracing::trace!(target: "store", "allocating block {_index}.");
+            self.halt_and_catch_fire.push(None);
+            _index
+        };
+
+        let halt_and_catch_fire = halt_and_catch_fire(_index);
+
+        if let Some(Some(halt_and_catch_fire)) = self.halt_and_catch_fire.iter().find(|stored| {
+            if let Some(stored) = stored {
+                *stored.borrow() == *halt_and_catch_fire.borrow()
+            } else {
+                false
+            }
+        }) {
+            tracing::debug!(target: "store", "found duplicate {halt_and_catch_fire:?}.");
+            self.halt_and_catch_fire_free_list.push(_index);
+            halt_and_catch_fire.clone()
+        } else {
+            tracing::debug!(target: "store", "interring {halt_and_catch_fire:?}.");
+            self.halt_and_catch_fire[_index] = Some(halt_and_catch_fire.clone());
+            halt_and_catch_fire
+        }
+    }
+
+    /// Exhume (get) [`HaltAndCatchFire`] from the store.
+    ///
+    #[inline]
+    pub fn exhume_halt_and_catch_fire(&self, id: &usize) -> Option<Rc<RefCell<HaltAndCatchFire>>> {
+        match self.halt_and_catch_fire.get(*id) {
+            Some(halt_and_catch_fire) => halt_and_catch_fire.clone(),
+            None => None,
+        }
+    }
+
+    /// Exorcise (remove) [`HaltAndCatchFire`] from the store.
+    ///
+    #[inline]
+    pub fn exorcise_halt_and_catch_fire(
+        &mut self,
+        id: &usize,
+    ) -> Option<Rc<RefCell<HaltAndCatchFire>>> {
+        tracing::debug!(target: "store", "exorcising halt_and_catch_fire slot: {id}.");
+        let result = self.halt_and_catch_fire[*id].take();
+        self.halt_and_catch_fire_free_list.push(*id);
+        result
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, HaltAndCatchFire>`.
+    ///
+    #[inline]
+    pub fn iter_halt_and_catch_fire(
+        &self,
+    ) -> impl Iterator<Item = Rc<RefCell<HaltAndCatchFire>>> + '_ {
+        let len = self.halt_and_catch_fire.len();
+        (0..len)
+            .filter(|i| self.halt_and_catch_fire[*i].is_some())
+            .map(move |i| {
+                self.halt_and_catch_fire[i]
+                    .as_ref()
+                    .map(|halt_and_catch_fire| halt_and_catch_fire.clone())
                     .unwrap()
             })
     }
@@ -6999,6 +7088,20 @@ impl ObjectStore {
             }
         }
 
+        // Persist Halt and Catch Fire.
+        {
+            let path = path.join("halt_and_catch_fire");
+            fs::create_dir_all(&path)?;
+            for halt_and_catch_fire in &self.halt_and_catch_fire {
+                if let Some(halt_and_catch_fire) = halt_and_catch_fire {
+                    let path = path.join(format!("{}.json", halt_and_catch_fire.borrow().id));
+                    let file = fs::File::create(path)?;
+                    let mut writer = io::BufWriter::new(file);
+                    serde_json::to_writer_pretty(&mut writer, &halt_and_catch_fire)?;
+                }
+            }
+        }
+
         // Persist If.
         {
             let path = path.join("x_if");
@@ -8219,6 +8322,24 @@ impl ObjectStore {
                 store
                     .grouped
                     .insert(grouped.borrow().id, Some(grouped.clone()));
+            }
+        }
+
+        // Load Halt and Catch Fire.
+        {
+            let path = path.join("halt_and_catch_fire");
+            let entries = fs::read_dir(path)?;
+            for entry in entries {
+                let entry = entry?;
+                let path = entry.path();
+                let file = fs::File::open(path)?;
+                let reader = io::BufReader::new(file);
+                let halt_and_catch_fire: Rc<RefCell<HaltAndCatchFire>> =
+                    serde_json::from_reader(reader)?;
+                store.halt_and_catch_fire.insert(
+                    halt_and_catch_fire.borrow().id,
+                    Some(halt_and_catch_fire.clone()),
+                );
             }
         }
 
