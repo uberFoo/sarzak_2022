@@ -186,7 +186,6 @@ pub use crate::v2::lu_dog_pl_vec::greater_than_or_equal::GreaterThanOrEqual;
 pub use crate::v2::lu_dog_pl_vec::greater_than_or_equal::GREATER_THAN_OR_EQUAL;
 pub use crate::v2::lu_dog_pl_vec::grouped::Grouped;
 pub use crate::v2::lu_dog_pl_vec::halt_and_catch_fire::HaltAndCatchFire;
-pub use crate::v2::lu_dog_pl_vec::halt_and_catch_fire::HALT_AND_CATCH_FIRE;
 pub use crate::v2::lu_dog_pl_vec::implementation_block::ImplementationBlock;
 pub use crate::v2::lu_dog_pl_vec::import::Import;
 pub use crate::v2::lu_dog_pl_vec::inclusive::Inclusive;
