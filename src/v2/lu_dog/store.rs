@@ -39,6 +39,7 @@
 //! * [`FunctionCall`]
 //! * [`XFuture`]
 //! * [`Grouped`]
+//! * [`HaltAndCatchFire`]
 //! * [`XIf`]
 //! * [`ImplementationBlock`]
 //! * [`Import`]
@@ -106,13 +107,14 @@ use crate::v2::lu_dog::types::{
     Comparison, DataStructure, DwarfSourceFile, EnumField, EnumGeneric, Enumeration, Expression,
     ExpressionBit, ExpressionStatement, ExternalImplementation, Field, FieldAccess,
     FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit, FormatString,
-    FuncGeneric, Function, FunctionCall, Grouped, ImplementationBlock, Import, Index,
-    IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement, ListExpression,
-    Literal, LocalVariable, MethodCall, NamedFieldExpression, ObjectWrapper, Operator, Parameter,
-    PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement, StaticMethodCall,
-    StringBit, StringLiteral, StructExpression, StructField, StructGeneric, TupleField, TypeCast,
-    Unary, Unit, UnnamedFieldExpression, ValueType, Variable, VariableExpression, WoogStruct,
-    XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn, XValue, ZObjectStore,
+    FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire, ImplementationBlock, Import,
+    Index, IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement,
+    ListExpression, Literal, LocalVariable, MethodCall, NamedFieldExpression, ObjectWrapper,
+    Operator, Parameter, PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement,
+    StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField, StructGeneric,
+    TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
+    VariableExpression, WoogStruct, XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn,
+    XValue, ZObjectStore,
 };
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -152,6 +154,7 @@ pub struct ObjectStore {
     function_call: Rc<RefCell<HashMap<Uuid, Rc<RefCell<FunctionCall>>>>>,
     x_future: Rc<RefCell<HashMap<Uuid, Rc<RefCell<XFuture>>>>>,
     grouped: Rc<RefCell<HashMap<Uuid, Rc<RefCell<Grouped>>>>>,
+    halt_and_catch_fire: Rc<RefCell<HashMap<Uuid, Rc<RefCell<HaltAndCatchFire>>>>>,
     x_if: Rc<RefCell<HashMap<Uuid, Rc<RefCell<XIf>>>>>,
     implementation_block: Rc<RefCell<HashMap<Uuid, Rc<RefCell<ImplementationBlock>>>>>,
     import: Rc<RefCell<HashMap<Uuid, Rc<RefCell<Import>>>>>,
@@ -243,6 +246,7 @@ impl ObjectStore {
             function_call: Rc::new(RefCell::new(HashMap::default())),
             x_future: Rc::new(RefCell::new(HashMap::default())),
             grouped: Rc::new(RefCell::new(HashMap::default())),
+            halt_and_catch_fire: Rc::new(RefCell::new(HashMap::default())),
             x_if: Rc::new(RefCell::new(HashMap::default())),
             implementation_block: Rc::new(RefCell::new(HashMap::default())),
             import: Rc::new(RefCell::new(HashMap::default())),
@@ -1599,6 +1603,54 @@ impl ObjectStore {
             .borrow()
             .values()
             .map(|grouped| grouped.clone())
+            .collect();
+        let len = values.len();
+        (0..len).map(move |i| values[i].clone())
+    }
+
+    /// Inter (insert) [`HaltAndCatchFire`] into the store.
+    ///
+    pub fn inter_halt_and_catch_fire(
+        &mut self,
+        halt_and_catch_fire: Rc<RefCell<HaltAndCatchFire>>,
+    ) {
+        let read = halt_and_catch_fire.borrow();
+        self.halt_and_catch_fire
+            .borrow_mut()
+            .insert(read.id, halt_and_catch_fire.clone());
+    }
+
+    /// Exhume (get) [`HaltAndCatchFire`] from the store.
+    ///
+    pub fn exhume_halt_and_catch_fire(&self, id: &Uuid) -> Option<Rc<RefCell<HaltAndCatchFire>>> {
+        self.halt_and_catch_fire
+            .borrow()
+            .get(id)
+            .map(|halt_and_catch_fire| halt_and_catch_fire.clone())
+    }
+
+    /// Exorcise (remove) [`HaltAndCatchFire`] from the store.
+    ///
+    pub fn exorcise_halt_and_catch_fire(
+        &mut self,
+        id: &Uuid,
+    ) -> Option<Rc<RefCell<HaltAndCatchFire>>> {
+        self.halt_and_catch_fire
+            .borrow_mut()
+            .remove(id)
+            .map(|halt_and_catch_fire| halt_and_catch_fire.clone())
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, HaltAndCatchFire>`.
+    ///
+    pub fn iter_halt_and_catch_fire(
+        &self,
+    ) -> impl Iterator<Item = Rc<RefCell<HaltAndCatchFire>>> + '_ {
+        let values: Vec<Rc<RefCell<HaltAndCatchFire>>> = self
+            .halt_and_catch_fire
+            .borrow()
+            .values()
+            .map(|halt_and_catch_fire| halt_and_catch_fire.clone())
             .collect();
         let len = values.len();
         (0..len).map(move |i| values[i].clone())
@@ -3918,6 +3970,18 @@ impl ObjectStore {
             }
         }
 
+        // Persist Halt and Catch Fire.
+        {
+            let path = path.join("halt_and_catch_fire");
+            fs::create_dir_all(&path)?;
+            for halt_and_catch_fire in self.halt_and_catch_fire.borrow().values() {
+                let path = path.join(format!("{}.json", halt_and_catch_fire.borrow().id));
+                let file = fs::File::create(path)?;
+                let mut writer = io::BufWriter::new(file);
+                serde_json::to_writer_pretty(&mut writer, &halt_and_catch_fire)?;
+            }
+        }
+
         // Persist If.
         {
             let path = path.join("x_if");
@@ -5080,6 +5144,24 @@ impl ObjectStore {
                     .grouped
                     .borrow_mut()
                     .insert(grouped.borrow().id, grouped.clone());
+            }
+        }
+
+        // Load Halt and Catch Fire.
+        {
+            let path = path.join("halt_and_catch_fire");
+            let entries = fs::read_dir(path)?;
+            for entry in entries {
+                let entry = entry?;
+                let path = entry.path();
+                let file = fs::File::open(path)?;
+                let reader = io::BufReader::new(file);
+                let halt_and_catch_fire: Rc<RefCell<HaltAndCatchFire>> =
+                    serde_json::from_reader(reader)?;
+                store
+                    .halt_and_catch_fire
+                    .borrow_mut()
+                    .insert(halt_and_catch_fire.borrow().id, halt_and_catch_fire.clone());
             }
         }
 

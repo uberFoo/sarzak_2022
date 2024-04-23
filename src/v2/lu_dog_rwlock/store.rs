@@ -39,6 +39,7 @@
 //! * [`FunctionCall`]
 //! * [`XFuture`]
 //! * [`Grouped`]
+//! * [`HaltAndCatchFire`]
 //! * [`XIf`]
 //! * [`ImplementationBlock`]
 //! * [`Import`]
@@ -106,13 +107,14 @@ use crate::v2::lu_dog_rwlock::types::{
     Comparison, DataStructure, DwarfSourceFile, EnumField, EnumGeneric, Enumeration, Expression,
     ExpressionBit, ExpressionStatement, ExternalImplementation, Field, FieldAccess,
     FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit, FormatString,
-    FuncGeneric, Function, FunctionCall, Grouped, ImplementationBlock, Import, Index,
-    IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement, ListExpression,
-    Literal, LocalVariable, MethodCall, NamedFieldExpression, ObjectWrapper, Operator, Parameter,
-    PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement, StaticMethodCall,
-    StringBit, StringLiteral, StructExpression, StructField, StructGeneric, TupleField, TypeCast,
-    Unary, Unit, UnnamedFieldExpression, ValueType, Variable, VariableExpression, WoogStruct,
-    XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn, XValue, ZObjectStore,
+    FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire, ImplementationBlock, Import,
+    Index, IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement,
+    ListExpression, Literal, LocalVariable, MethodCall, NamedFieldExpression, ObjectWrapper,
+    Operator, Parameter, PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement,
+    StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField, StructGeneric,
+    TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
+    VariableExpression, WoogStruct, XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn,
+    XValue, ZObjectStore,
 };
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -152,6 +154,7 @@ pub struct ObjectStore {
     function_call: Arc<RwLock<HashMap<Uuid, Arc<RwLock<FunctionCall>>>>>,
     x_future: Arc<RwLock<HashMap<Uuid, Arc<RwLock<XFuture>>>>>,
     grouped: Arc<RwLock<HashMap<Uuid, Arc<RwLock<Grouped>>>>>,
+    halt_and_catch_fire: Arc<RwLock<HashMap<Uuid, Arc<RwLock<HaltAndCatchFire>>>>>,
     x_if: Arc<RwLock<HashMap<Uuid, Arc<RwLock<XIf>>>>>,
     implementation_block: Arc<RwLock<HashMap<Uuid, Arc<RwLock<ImplementationBlock>>>>>,
     import: Arc<RwLock<HashMap<Uuid, Arc<RwLock<Import>>>>>,
@@ -243,6 +246,7 @@ impl ObjectStore {
             function_call: Arc::new(RwLock::new(HashMap::default())),
             x_future: Arc::new(RwLock::new(HashMap::default())),
             grouped: Arc::new(RwLock::new(HashMap::default())),
+            halt_and_catch_fire: Arc::new(RwLock::new(HashMap::default())),
             x_if: Arc::new(RwLock::new(HashMap::default())),
             implementation_block: Arc::new(RwLock::new(HashMap::default())),
             import: Arc::new(RwLock::new(HashMap::default())),
@@ -1759,6 +1763,58 @@ impl ObjectStore {
             .unwrap()
             .values()
             .map(|grouped| grouped.clone())
+            .collect();
+        let len = values.len();
+        (0..len).map(move |i| values[i].clone())
+    }
+
+    /// Inter (insert) [`HaltAndCatchFire`] into the store.
+    ///
+    pub fn inter_halt_and_catch_fire(
+        &mut self,
+        halt_and_catch_fire: Arc<RwLock<HaltAndCatchFire>>,
+    ) {
+        let read = halt_and_catch_fire.read().unwrap();
+        self.halt_and_catch_fire
+            .write()
+            .unwrap()
+            .insert(read.id, halt_and_catch_fire.clone());
+    }
+
+    /// Exhume (get) [`HaltAndCatchFire`] from the store.
+    ///
+    pub fn exhume_halt_and_catch_fire(&self, id: &Uuid) -> Option<Arc<RwLock<HaltAndCatchFire>>> {
+        self.halt_and_catch_fire
+            .read()
+            .unwrap()
+            .get(id)
+            .map(|halt_and_catch_fire| halt_and_catch_fire.clone())
+    }
+
+    /// Exorcise (remove) [`HaltAndCatchFire`] from the store.
+    ///
+    pub fn exorcise_halt_and_catch_fire(
+        &mut self,
+        id: &Uuid,
+    ) -> Option<Arc<RwLock<HaltAndCatchFire>>> {
+        self.halt_and_catch_fire
+            .write()
+            .unwrap()
+            .remove(id)
+            .map(|halt_and_catch_fire| halt_and_catch_fire.clone())
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, HaltAndCatchFire>`.
+    ///
+    pub fn iter_halt_and_catch_fire(
+        &self,
+    ) -> impl Iterator<Item = Arc<RwLock<HaltAndCatchFire>>> + '_ {
+        let values: Vec<Arc<RwLock<HaltAndCatchFire>>> = self
+            .halt_and_catch_fire
+            .read()
+            .unwrap()
+            .values()
+            .map(|halt_and_catch_fire| halt_and_catch_fire.clone())
             .collect();
         let len = values.len();
         (0..len).map(move |i| values[i].clone())
@@ -4332,6 +4388,18 @@ impl ObjectStore {
             }
         }
 
+        // Persist Halt and Catch Fire.
+        {
+            let path = path.join("halt_and_catch_fire");
+            fs::create_dir_all(&path)?;
+            for halt_and_catch_fire in self.halt_and_catch_fire.read().unwrap().values() {
+                let path = path.join(format!("{}.json", halt_and_catch_fire.read().unwrap().id));
+                let file = fs::File::create(path)?;
+                let mut writer = io::BufWriter::new(file);
+                serde_json::to_writer_pretty(&mut writer, &halt_and_catch_fire)?;
+            }
+        }
+
         // Persist If.
         {
             let path = path.join("x_if");
@@ -5526,6 +5594,24 @@ impl ObjectStore {
                     .write()
                     .unwrap()
                     .insert(grouped.read().unwrap().id, grouped.clone());
+            }
+        }
+
+        // Load Halt and Catch Fire.
+        {
+            let path = path.join("halt_and_catch_fire");
+            let entries = fs::read_dir(path)?;
+            for entry in entries {
+                let entry = entry?;
+                let path = entry.path();
+                let file = fs::File::open(path)?;
+                let reader = io::BufReader::new(file);
+                let halt_and_catch_fire: Arc<RwLock<HaltAndCatchFire>> =
+                    serde_json::from_reader(reader)?;
+                store.halt_and_catch_fire.write().unwrap().insert(
+                    halt_and_catch_fire.read().unwrap().id,
+                    halt_and_catch_fire.clone(),
+                );
             }
         }
 
