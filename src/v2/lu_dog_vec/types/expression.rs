@@ -15,6 +15,7 @@ use crate::v2::lu_dog_vec::types::field_access::FieldAccess;
 use crate::v2::lu_dog_vec::types::field_expression::FieldExpression;
 use crate::v2::lu_dog_vec::types::for_loop::ForLoop;
 use crate::v2::lu_dog_vec::types::grouped::Grouped;
+use crate::v2::lu_dog_vec::types::halt_and_catch_fire::HALT_AND_CATCH_FIRE;
 use crate::v2::lu_dog_vec::types::index::Index;
 use crate::v2::lu_dog_vec::types::lambda::Lambda;
 use crate::v2::lu_dog_vec::types::let_statement::LetStatement;
@@ -67,6 +68,7 @@ pub enum ExpressionEnum {
     FieldExpression(usize),
     ForLoop(usize),
     Grouped(usize),
+    HaltAndCatchFire(Uuid),
     XIf(usize),
     Index(usize),
     Lambda(usize),
@@ -221,6 +223,21 @@ impl Expression {
             Rc::new(RefCell::new(Expression {
                 bogus: bogus,
                 subtype: ExpressionEnum::Grouped(subtype.borrow().id), // b
+                id,
+            }))
+        })
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-new_halt_and_catch_fire"}}}
+    /// Inter a new Expression in the store, and return it's `id`.
+    pub fn new_halt_and_catch_fire(
+        bogus: bool,
+        store: &mut LuDogVecStore,
+    ) -> Rc<RefCell<Expression>> {
+        store.inter_expression(|id| {
+            Rc::new(RefCell::new(Expression {
+                bogus: bogus,
+                subtype: ExpressionEnum::HaltAndCatchFire(HALT_AND_CATCH_FIRE),
                 id,
             }))
         })
@@ -651,21 +668,21 @@ impl Expression {
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-nav-backward-1_Mc-to-operator"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-nav-backward-1_M-to-operator"}}}
-    /// Navigate to [`Operator`] across R50(1-M)
-    pub fn r50_operator<'a>(&'a self, store: &'a LuDogVecStore) -> Vec<Rc<RefCell<Operator>>> {
-        store
-            .iter_operator()
-            .filter(|operator| operator.borrow().lhs == self.id)
-            .collect()
-    }
-    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
-    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-nav-backward-1_M-to-operator"}}}
-    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-nav-backward-1_Mc-to-operator"}}}
     /// Navigate to [`Operator`] across R51(1-Mc)
     pub fn r51_operator<'a>(&'a self, store: &'a LuDogVecStore) -> Vec<Rc<RefCell<Operator>>> {
         store
             .iter_operator()
             .filter(|operator| operator.borrow().rhs == Some(self.id))
+            .collect()
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-nav-backward-1_M-to-operator"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-nav-backward-1_Mc-to-operator"}}}
+    /// Navigate to [`Operator`] across R50(1-M)
+    pub fn r50_operator<'a>(&'a self, store: &'a LuDogVecStore) -> Vec<Rc<RefCell<Operator>>> {
+        store
+            .iter_operator()
+            .filter(|operator| operator.borrow().lhs == self.id)
             .collect()
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}

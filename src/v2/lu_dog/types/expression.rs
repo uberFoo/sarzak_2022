@@ -15,6 +15,7 @@ use crate::v2::lu_dog::types::field_access::FieldAccess;
 use crate::v2::lu_dog::types::field_expression::FieldExpression;
 use crate::v2::lu_dog::types::for_loop::ForLoop;
 use crate::v2::lu_dog::types::grouped::Grouped;
+use crate::v2::lu_dog::types::halt_and_catch_fire::HALT_AND_CATCH_FIRE;
 use crate::v2::lu_dog::types::index::Index;
 use crate::v2::lu_dog::types::lambda::Lambda;
 use crate::v2::lu_dog::types::let_statement::LetStatement;
@@ -69,6 +70,7 @@ pub enum ExpressionEnum {
     FieldExpression(Uuid),
     ForLoop(Uuid),
     Grouped(Uuid),
+    HaltAndCatchFire(Uuid),
     XIf(Uuid),
     Index(Uuid),
     Lambda(Uuid),
@@ -229,6 +231,19 @@ impl Expression {
         let new = Rc::new(RefCell::new(Expression {
             bogus: bogus,
             subtype: ExpressionEnum::Grouped(subtype.borrow().id), // b
+            id,
+        }));
+        store.inter_expression(new.clone());
+        new
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-new_halt_and_catch_fire"}}}
+    /// Inter a new Expression in the store, and return it's `id`.
+    pub fn new_halt_and_catch_fire(bogus: bool, store: &mut LuDogStore) -> Rc<RefCell<Expression>> {
+        let id = Uuid::new_v4();
+        let new = Rc::new(RefCell::new(Expression {
+            bogus: bogus,
+            subtype: ExpressionEnum::HaltAndCatchFire(HALT_AND_CATCH_FIRE),
             id,
         }));
         store.inter_expression(new.clone());

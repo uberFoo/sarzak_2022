@@ -15,6 +15,7 @@ use crate::v2::lu_dog_rwlock::types::field_access::FieldAccess;
 use crate::v2::lu_dog_rwlock::types::field_expression::FieldExpression;
 use crate::v2::lu_dog_rwlock::types::for_loop::ForLoop;
 use crate::v2::lu_dog_rwlock::types::grouped::Grouped;
+use crate::v2::lu_dog_rwlock::types::halt_and_catch_fire::HALT_AND_CATCH_FIRE;
 use crate::v2::lu_dog_rwlock::types::index::Index;
 use crate::v2::lu_dog_rwlock::types::lambda::Lambda;
 use crate::v2::lu_dog_rwlock::types::let_statement::LetStatement;
@@ -69,6 +70,7 @@ pub enum ExpressionEnum {
     FieldExpression(Uuid),
     ForLoop(Uuid),
     Grouped(Uuid),
+    HaltAndCatchFire(Uuid),
     XIf(Uuid),
     Index(Uuid),
     Lambda(Uuid),
@@ -231,6 +233,22 @@ impl Expression {
         let new = Arc::new(RwLock::new(Expression {
             bogus: bogus,
             subtype: ExpressionEnum::Grouped(subtype.read().unwrap().id), // b
+            id,
+        }));
+        store.inter_expression(new.clone());
+        new
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-new_halt_and_catch_fire"}}}
+    /// Inter a new Expression in the store, and return it's `id`.
+    pub fn new_halt_and_catch_fire(
+        bogus: bool,
+        store: &mut LuDogRwlockStore,
+    ) -> Arc<RwLock<Expression>> {
+        let id = Uuid::new_v4();
+        let new = Arc::new(RwLock::new(Expression {
+            bogus: bogus,
+            subtype: ExpressionEnum::HaltAndCatchFire(HALT_AND_CATCH_FIRE),
             id,
         }));
         store.inter_expression(new.clone());
