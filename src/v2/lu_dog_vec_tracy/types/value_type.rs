@@ -17,6 +17,7 @@ use crate::v2::lu_dog_vec_tracy::types::import::Import;
 use crate::v2::lu_dog_vec_tracy::types::lambda::Lambda;
 use crate::v2::lu_dog_vec_tracy::types::lambda_parameter::LambdaParameter;
 use crate::v2::lu_dog_vec_tracy::types::list::List;
+use crate::v2::lu_dog_vec_tracy::types::map::Map;
 use crate::v2::lu_dog_vec_tracy::types::parameter::Parameter;
 use crate::v2::lu_dog_vec_tracy::types::range::RANGE;
 use crate::v2::lu_dog_vec_tracy::types::span::Span;
@@ -78,6 +79,7 @@ pub enum ValueTypeEnum {
     Import(usize),
     Lambda(usize),
     List(usize),
+    Map(usize),
     ZObjectStore(usize),
     XPlugin(usize),
     Range(Uuid),
@@ -251,6 +253,22 @@ impl ValueType {
             Rc::new(RefCell::new(ValueType {
                 bogus: bogus,
                 subtype: ValueTypeEnum::List(subtype.borrow().id), // b
+                id,
+            }))
+        })
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"value_type-struct-impl-new_map"}}}
+    /// Inter a new ValueType in the store, and return it's `id`.
+    pub fn new_map(
+        bogus: bool,
+        subtype: &Rc<RefCell<Map>>,
+        store: &mut LuDogVecTracyStore,
+    ) -> Rc<RefCell<ValueType>> {
+        store.inter_value_type(|id| {
+            Rc::new(RefCell::new(ValueType {
+                bogus: bogus,
+                subtype: ValueTypeEnum::Map(subtype.borrow().id), // b
                 id,
             }))
         })
@@ -435,6 +453,26 @@ impl ValueType {
         store
             .iter_list()
             .filter(|list| list.borrow().ty == self.id)
+            .collect()
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"value_type-struct-impl-nav-backward-1_M-to-map"}}}
+    /// Navigate to [`Map`] across R115(1-M)
+    pub fn r115_map<'a>(&'a self, store: &'a LuDogVecTracyStore) -> Vec<Rc<RefCell<Map>>> {
+        span!("r115_map");
+        store
+            .iter_map()
+            .filter(|map| map.borrow().key_type == self.id)
+            .collect()
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"value_type-struct-impl-nav-backward-1_M-to-map"}}}
+    /// Navigate to [`Map`] across R116(1-M)
+    pub fn r116_map<'a>(&'a self, store: &'a LuDogVecTracyStore) -> Vec<Rc<RefCell<Map>>> {
+        span!("r116_map");
+        store
+            .iter_map()
+            .filter(|map| map.borrow().value_type == self.id)
             .collect()
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}

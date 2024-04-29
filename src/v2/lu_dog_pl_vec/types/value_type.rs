@@ -16,6 +16,7 @@ use crate::v2::lu_dog_pl_vec::types::import::Import;
 use crate::v2::lu_dog_pl_vec::types::lambda::Lambda;
 use crate::v2::lu_dog_pl_vec::types::lambda_parameter::LambdaParameter;
 use crate::v2::lu_dog_pl_vec::types::list::List;
+use crate::v2::lu_dog_pl_vec::types::map::Map;
 use crate::v2::lu_dog_pl_vec::types::parameter::Parameter;
 use crate::v2::lu_dog_pl_vec::types::range::RANGE;
 use crate::v2::lu_dog_pl_vec::types::span::Span;
@@ -77,6 +78,7 @@ pub enum ValueTypeEnum {
     Import(usize),
     Lambda(usize),
     List(usize),
+    Map(usize),
     ZObjectStore(usize),
     XPlugin(usize),
     Range(Uuid),
@@ -253,6 +255,22 @@ impl ValueType {
         })
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"value_type-struct-impl-new_map"}}}
+    /// Inter a new ValueType in the store, and return it's `id`.
+    pub fn new_map(
+        bogus: bool,
+        subtype: &Arc<RwLock<Map>>,
+        store: &mut LuDogPlVecStore,
+    ) -> Arc<RwLock<ValueType>> {
+        store.inter_value_type(|id| {
+            Arc::new(RwLock::new(ValueType {
+                bogus: bogus,
+                subtype: ValueTypeEnum::Map(subtype.read().id), // b
+                id,
+            }))
+        })
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"value_type-struct-impl-new_z_object_store"}}}
     /// Inter a new ValueType in the store, and return it's `id`.
     pub fn new_z_object_store(
@@ -423,6 +441,24 @@ impl ValueType {
         store
             .iter_list()
             .filter(|list| list.read().ty == self.id)
+            .collect()
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"value_type-struct-impl-nav-backward-1_M-to-map"}}}
+    /// Navigate to [`Map`] across R115(1-M)
+    pub fn r115_map<'a>(&'a self, store: &'a LuDogPlVecStore) -> Vec<Arc<RwLock<Map>>> {
+        store
+            .iter_map()
+            .filter(|map| map.read().key_type == self.id)
+            .collect()
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"value_type-struct-impl-nav-backward-1_M-to-map"}}}
+    /// Navigate to [`Map`] across R116(1-M)
+    pub fn r116_map<'a>(&'a self, store: &'a LuDogPlVecStore) -> Vec<Arc<RwLock<Map>>> {
+        store
+            .iter_map()
+            .filter(|map| map.read().value_type == self.id)
             .collect()
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}

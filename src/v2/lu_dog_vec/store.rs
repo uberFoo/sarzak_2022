@@ -55,6 +55,7 @@
 //! * [`Literal`]
 //! * [`LocalVariable`]
 //! * [`XMacro`]
+//! * [`Map`]
 //! * [`XMatch`]
 //! * [`MethodCall`]
 //! * [`NamedFieldExpression`]
@@ -109,7 +110,7 @@ use crate::v2::lu_dog_vec::types::{
     FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit, FormatString,
     FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire, ImplementationBlock, Import,
     Index, IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement,
-    ListExpression, Literal, LocalVariable, MethodCall, NamedFieldExpression, ObjectWrapper,
+    ListExpression, Literal, LocalVariable, Map, MethodCall, NamedFieldExpression, ObjectWrapper,
     Operator, Parameter, PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement,
     StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField, StructGeneric,
     TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
@@ -222,6 +223,8 @@ pub struct ObjectStore {
     local_variable: Vec<Option<Rc<RefCell<LocalVariable>>>>,
     x_macro_free_list: Vec<usize>,
     x_macro: Vec<Option<Rc<RefCell<XMacro>>>>,
+    map_free_list: Vec<usize>,
+    map: Vec<Option<Rc<RefCell<Map>>>>,
     x_match_free_list: Vec<usize>,
     x_match: Vec<Option<Rc<RefCell<XMatch>>>>,
     method_call_free_list: Vec<usize>,
@@ -436,6 +439,8 @@ impl Clone for ObjectStore {
             local_variable: self.local_variable.clone(),
             x_macro_free_list: Mutex::new(self.x_macro_free_list.lock().unwrap().clone()),
             x_macro: self.x_macro.clone(),
+            map_free_list: Mutex::new(self.map_free_list.lock().unwrap().clone()),
+            map: self.map.clone(),
             x_match_free_list: Mutex::new(self.x_match_free_list.lock().unwrap().clone()),
             x_match: self.x_match.clone(),
             method_call_free_list: Mutex::new(self.method_call_free_list.lock().unwrap().clone()),
@@ -638,6 +643,8 @@ impl ObjectStore {
             local_variable: Vec::new(),
             x_macro_free_list: Vec::new(),
             x_macro: Vec::new(),
+            map_free_list: Vec::new(),
+            map: Vec::new(),
             x_match_free_list: Vec::new(),
             x_match: Vec::new(),
             method_call_free_list: Vec::new(),
@@ -4188,6 +4195,72 @@ impl ObjectStore {
             })
     }
 
+    /// Inter (insert) [`Map`] into the store.
+    ///
+    #[inline]
+    pub fn inter_map<F>(&mut self, map: F) -> Rc<RefCell<Map>>
+    where
+        F: Fn(usize) -> Rc<RefCell<Map>>,
+    {
+        let _index = if let Some(_index) = self.map_free_list.pop() {
+            tracing::trace!(target: "store", "recycling block {_index}.");
+            _index
+        } else {
+            let _index = self.map.len();
+            tracing::trace!(target: "store", "allocating block {_index}.");
+            self.map.push(None);
+            _index
+        };
+
+        let map = map(_index);
+
+        if let Some(Some(map)) = self.map.iter().find(|stored| {
+            if let Some(stored) = stored {
+                *stored.borrow() == *map.borrow()
+            } else {
+                false
+            }
+        }) {
+            tracing::debug!(target: "store", "found duplicate {map:?}.");
+            self.map_free_list.push(_index);
+            map.clone()
+        } else {
+            tracing::debug!(target: "store", "interring {map:?}.");
+            self.map[_index] = Some(map.clone());
+            map
+        }
+    }
+
+    /// Exhume (get) [`Map`] from the store.
+    ///
+    #[inline]
+    pub fn exhume_map(&self, id: &usize) -> Option<Rc<RefCell<Map>>> {
+        match self.map.get(*id) {
+            Some(map) => map.clone(),
+            None => None,
+        }
+    }
+
+    /// Exorcise (remove) [`Map`] from the store.
+    ///
+    #[inline]
+    pub fn exorcise_map(&mut self, id: &usize) -> Option<Rc<RefCell<Map>>> {
+        tracing::debug!(target: "store", "exorcising map slot: {id}.");
+        let result = self.map[*id].take();
+        self.map_free_list.push(*id);
+        result
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, Map>`.
+    ///
+    #[inline]
+    pub fn iter_map(&self) -> impl Iterator<Item = Rc<RefCell<Map>>> + '_ {
+        let len = self.map.len();
+        (0..len)
+            .filter(|i| self.map[*i].is_some())
+            .map(move |i| self.map[i].as_ref().map(|map| map.clone()).unwrap())
+    }
+
     /// Inter (insert) [`XMatch`] into the store.
     ///
     #[inline]
@@ -7312,6 +7385,20 @@ impl ObjectStore {
             }
         }
 
+        // Persist Map.
+        {
+            let path = path.join("map");
+            fs::create_dir_all(&path)?;
+            for map in &self.map {
+                if let Some(map) = map {
+                    let path = path.join(format!("{}.json", map.borrow().id));
+                    let file = fs::File::create(path)?;
+                    let mut writer = io::BufWriter::new(file);
+                    serde_json::to_writer_pretty(&mut writer, &map)?;
+                }
+            }
+        }
+
         // Persist Match.
         {
             let path = path.join("x_match");
@@ -8575,6 +8662,20 @@ impl ObjectStore {
                 store
                     .x_macro
                     .insert(x_macro.borrow().id, Some(x_macro.clone()));
+            }
+        }
+
+        // Load Map.
+        {
+            let path = path.join("map");
+            let entries = fs::read_dir(path)?;
+            for entry in entries {
+                let entry = entry?;
+                let path = entry.path();
+                let file = fs::File::open(path)?;
+                let reader = io::BufReader::new(file);
+                let map: Rc<RefCell<Map>> = serde_json::from_reader(reader)?;
+                store.map.insert(map.borrow().id, Some(map.clone()));
             }
         }
 

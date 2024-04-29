@@ -55,6 +55,7 @@
 //! * [`Literal`]
 //! * [`LocalVariable`]
 //! * [`XMacro`]
+//! * [`Map`]
 //! * [`XMatch`]
 //! * [`MethodCall`]
 //! * [`NamedFieldExpression`]
@@ -105,7 +106,7 @@ use crate::v2::lu_dog_ndrwlock_vec::types::{
     FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit, FormatString,
     FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire, ImplementationBlock, Import,
     Index, IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement,
-    ListExpression, Literal, LocalVariable, MethodCall, NamedFieldExpression, ObjectWrapper,
+    ListExpression, Literal, LocalVariable, Map, MethodCall, NamedFieldExpression, ObjectWrapper,
     Operator, Parameter, PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement,
     StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField, StructGeneric,
     TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
@@ -218,6 +219,8 @@ pub struct ObjectStore {
     local_variable: Arc<RwLock<Vec<Option<Arc<RwLock<LocalVariable>>>>>>,
     x_macro_free_list: std::sync::Mutex<Vec<usize>>,
     x_macro: Arc<RwLock<Vec<Option<Arc<RwLock<XMacro>>>>>>,
+    map_free_list: std::sync::Mutex<Vec<usize>>,
+    map: Arc<RwLock<Vec<Option<Arc<RwLock<Map>>>>>>,
     x_match_free_list: std::sync::Mutex<Vec<usize>>,
     x_match: Arc<RwLock<Vec<Option<Arc<RwLock<XMatch>>>>>>,
     method_call_free_list: std::sync::Mutex<Vec<usize>>,
@@ -432,6 +435,8 @@ impl Clone for ObjectStore {
             local_variable: self.local_variable.clone(),
             x_macro_free_list: Mutex::new(self.x_macro_free_list.lock().unwrap().clone()),
             x_macro: self.x_macro.clone(),
+            map_free_list: Mutex::new(self.map_free_list.lock().unwrap().clone()),
+            map: self.map.clone(),
             x_match_free_list: Mutex::new(self.x_match_free_list.lock().unwrap().clone()),
             x_match: self.x_match.clone(),
             method_call_free_list: Mutex::new(self.method_call_free_list.lock().unwrap().clone()),
@@ -634,6 +639,8 @@ impl ObjectStore {
             local_variable: Arc::new(RwLock::new(Vec::new())),
             x_macro_free_list: std::sync::Mutex::new(Vec::new()),
             x_macro: Arc::new(RwLock::new(Vec::new())),
+            map_free_list: std::sync::Mutex::new(Vec::new()),
+            map: Arc::new(RwLock::new(Vec::new())),
             x_match_free_list: std::sync::Mutex::new(Vec::new()),
             x_match: Arc::new(RwLock::new(Vec::new())),
             method_call_free_list: std::sync::Mutex::new(Vec::new()),
@@ -4606,6 +4613,83 @@ impl ObjectStore {
                 self.x_macro.read().unwrap()[i]
                     .as_ref()
                     .map(|x_macro| x_macro.clone())
+                    .unwrap()
+            })
+    }
+
+    /// Inter (insert) [`Map`] into the store.
+    ///
+    #[inline]
+    pub fn inter_map<F>(&mut self, map: F) -> Arc<RwLock<Map>>
+    where
+        F: Fn(usize) -> Arc<RwLock<Map>>,
+    {
+        let _index = if let Some(_index) = self.map_free_list.lock().unwrap().pop() {
+            tracing::trace!(target: "store", "recycling block {_index}.");
+            _index
+        } else {
+            let _index = self.map.read().unwrap().len();
+            tracing::trace!(target: "store", "allocating block {_index}.");
+            self.map.write().unwrap().push(None);
+            _index
+        };
+
+        let map = map(_index);
+
+        let found = if let Some(map) = self.map.read().unwrap().iter().find(|stored| {
+            if let Some(stored) = stored {
+                *stored.read().unwrap() == *map.read().unwrap()
+            } else {
+                false
+            }
+        }) {
+            map.clone()
+        } else {
+            None
+        };
+
+        if let Some(map) = found {
+            tracing::debug!(target: "store", "found duplicate {map:?}.");
+            self.map_free_list.lock().unwrap().push(_index);
+            map.clone()
+        } else {
+            tracing::debug!(target: "store", "interring {map:?}.");
+            self.map.write().unwrap()[_index] = Some(map.clone());
+            map
+        }
+    }
+
+    /// Exhume (get) [`Map`] from the store.
+    ///
+    #[inline]
+    pub fn exhume_map(&self, id: &usize) -> Option<Arc<RwLock<Map>>> {
+        match self.map.read().unwrap().get(*id) {
+            Some(map) => map.clone(),
+            None => None,
+        }
+    }
+
+    /// Exorcise (remove) [`Map`] from the store.
+    ///
+    #[inline]
+    pub fn exorcise_map(&mut self, id: &usize) -> Option<Arc<RwLock<Map>>> {
+        tracing::debug!(target: "store", "exorcising map slot: {id}.");
+        let result = self.map.write().unwrap()[*id].take();
+        self.map_free_list.lock().unwrap().push(*id);
+        result
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, Map>`.
+    ///
+    #[inline]
+    pub fn iter_map(&self) -> impl Iterator<Item = Arc<RwLock<Map>>> + '_ {
+        let len = self.map.read().unwrap().len();
+        (0..len)
+            .filter(|i| self.map.read().unwrap()[*i].is_some())
+            .map(move |i| {
+                self.map.read().unwrap()[i]
+                    .as_ref()
+                    .map(|map| map.clone())
                     .unwrap()
             })
     }

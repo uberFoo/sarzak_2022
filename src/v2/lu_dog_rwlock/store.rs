@@ -55,6 +55,7 @@
 //! * [`Literal`]
 //! * [`LocalVariable`]
 //! * [`XMacro`]
+//! * [`Map`]
 //! * [`XMatch`]
 //! * [`MethodCall`]
 //! * [`NamedFieldExpression`]
@@ -109,7 +110,7 @@ use crate::v2::lu_dog_rwlock::types::{
     FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit, FormatString,
     FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire, ImplementationBlock, Import,
     Index, IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement,
-    ListExpression, Literal, LocalVariable, MethodCall, NamedFieldExpression, ObjectWrapper,
+    ListExpression, Literal, LocalVariable, Map, MethodCall, NamedFieldExpression, ObjectWrapper,
     Operator, Parameter, PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement,
     StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField, StructGeneric,
     TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
@@ -170,6 +171,7 @@ pub struct ObjectStore {
     literal: Arc<RwLock<HashMap<Uuid, Arc<RwLock<Literal>>>>>,
     local_variable: Arc<RwLock<HashMap<Uuid, Arc<RwLock<LocalVariable>>>>>,
     x_macro: Arc<RwLock<HashMap<Uuid, Arc<RwLock<XMacro>>>>>,
+    map: Arc<RwLock<HashMap<Uuid, Arc<RwLock<Map>>>>>,
     x_match: Arc<RwLock<HashMap<Uuid, Arc<RwLock<XMatch>>>>>,
     method_call: Arc<RwLock<HashMap<Uuid, Arc<RwLock<MethodCall>>>>>,
     named_field_expression: Arc<RwLock<HashMap<Uuid, Arc<RwLock<NamedFieldExpression>>>>>,
@@ -262,6 +264,7 @@ impl ObjectStore {
             literal: Arc::new(RwLock::new(HashMap::default())),
             local_variable: Arc::new(RwLock::new(HashMap::default())),
             x_macro: Arc::new(RwLock::new(HashMap::default())),
+            map: Arc::new(RwLock::new(HashMap::default())),
             x_match: Arc::new(RwLock::new(HashMap::default())),
             method_call: Arc::new(RwLock::new(HashMap::default())),
             named_field_expression: Arc::new(RwLock::new(HashMap::default())),
@@ -2461,6 +2464,39 @@ impl ObjectStore {
         (0..len).map(move |i| values[i].clone())
     }
 
+    /// Inter (insert) [`Map`] into the store.
+    ///
+    pub fn inter_map(&mut self, map: Arc<RwLock<Map>>) {
+        let read = map.read().unwrap();
+        self.map.write().unwrap().insert(read.id, map.clone());
+    }
+
+    /// Exhume (get) [`Map`] from the store.
+    ///
+    pub fn exhume_map(&self, id: &Uuid) -> Option<Arc<RwLock<Map>>> {
+        self.map.read().unwrap().get(id).map(|map| map.clone())
+    }
+
+    /// Exorcise (remove) [`Map`] from the store.
+    ///
+    pub fn exorcise_map(&mut self, id: &Uuid) -> Option<Arc<RwLock<Map>>> {
+        self.map.write().unwrap().remove(id).map(|map| map.clone())
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, Map>`.
+    ///
+    pub fn iter_map(&self) -> impl Iterator<Item = Arc<RwLock<Map>>> + '_ {
+        let values: Vec<Arc<RwLock<Map>>> = self
+            .map
+            .read()
+            .unwrap()
+            .values()
+            .map(|map| map.clone())
+            .collect();
+        let len = values.len();
+        (0..len).map(move |i| values[i].clone())
+    }
+
     /// Inter (insert) [`XMatch`] into the store.
     ///
     pub fn inter_x_match(&mut self, x_match: Arc<RwLock<XMatch>>) {
@@ -4580,6 +4616,18 @@ impl ObjectStore {
             }
         }
 
+        // Persist Map.
+        {
+            let path = path.join("map");
+            fs::create_dir_all(&path)?;
+            for map in self.map.read().unwrap().values() {
+                let path = path.join(format!("{}.json", map.read().unwrap().id));
+                let file = fs::File::create(path)?;
+                let mut writer = io::BufWriter::new(file);
+                serde_json::to_writer_pretty(&mut writer, &map)?;
+            }
+        }
+
         // Persist Match.
         {
             let path = path.join("x_match");
@@ -5882,6 +5930,24 @@ impl ObjectStore {
                     .write()
                     .unwrap()
                     .insert(x_macro.read().unwrap().id, x_macro.clone());
+            }
+        }
+
+        // Load Map.
+        {
+            let path = path.join("map");
+            let entries = fs::read_dir(path)?;
+            for entry in entries {
+                let entry = entry?;
+                let path = entry.path();
+                let file = fs::File::open(path)?;
+                let reader = io::BufReader::new(file);
+                let map: Arc<RwLock<Map>> = serde_json::from_reader(reader)?;
+                store
+                    .map
+                    .write()
+                    .unwrap()
+                    .insert(map.read().unwrap().id, map.clone());
             }
         }
 

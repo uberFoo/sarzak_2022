@@ -55,6 +55,7 @@
 //! * [`Literal`]
 //! * [`LocalVariable`]
 //! * [`XMacro`]
+//! * [`Map`]
 //! * [`XMatch`]
 //! * [`MethodCall`]
 //! * [`NamedFieldExpression`]
@@ -109,7 +110,7 @@ use crate::v2::lu_dog::types::{
     FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit, FormatString,
     FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire, ImplementationBlock, Import,
     Index, IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement,
-    ListExpression, Literal, LocalVariable, MethodCall, NamedFieldExpression, ObjectWrapper,
+    ListExpression, Literal, LocalVariable, Map, MethodCall, NamedFieldExpression, ObjectWrapper,
     Operator, Parameter, PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement,
     StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField, StructGeneric,
     TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
@@ -170,6 +171,7 @@ pub struct ObjectStore {
     literal: Rc<RefCell<HashMap<Uuid, Rc<RefCell<Literal>>>>>,
     local_variable: Rc<RefCell<HashMap<Uuid, Rc<RefCell<LocalVariable>>>>>,
     x_macro: Rc<RefCell<HashMap<Uuid, Rc<RefCell<XMacro>>>>>,
+    map: Rc<RefCell<HashMap<Uuid, Rc<RefCell<Map>>>>>,
     x_match: Rc<RefCell<HashMap<Uuid, Rc<RefCell<XMatch>>>>>,
     method_call: Rc<RefCell<HashMap<Uuid, Rc<RefCell<MethodCall>>>>>,
     named_field_expression: Rc<RefCell<HashMap<Uuid, Rc<RefCell<NamedFieldExpression>>>>>,
@@ -262,6 +264,7 @@ impl ObjectStore {
             literal: Rc::new(RefCell::new(HashMap::default())),
             local_variable: Rc::new(RefCell::new(HashMap::default())),
             x_macro: Rc::new(RefCell::new(HashMap::default())),
+            map: Rc::new(RefCell::new(HashMap::default())),
             x_match: Rc::new(RefCell::new(HashMap::default())),
             method_call: Rc::new(RefCell::new(HashMap::default())),
             named_field_expression: Rc::new(RefCell::new(HashMap::default())),
@@ -2218,6 +2221,34 @@ impl ObjectStore {
         (0..len).map(move |i| values[i].clone())
     }
 
+    /// Inter (insert) [`Map`] into the store.
+    ///
+    pub fn inter_map(&mut self, map: Rc<RefCell<Map>>) {
+        let read = map.borrow();
+        self.map.borrow_mut().insert(read.id, map.clone());
+    }
+
+    /// Exhume (get) [`Map`] from the store.
+    ///
+    pub fn exhume_map(&self, id: &Uuid) -> Option<Rc<RefCell<Map>>> {
+        self.map.borrow().get(id).map(|map| map.clone())
+    }
+
+    /// Exorcise (remove) [`Map`] from the store.
+    ///
+    pub fn exorcise_map(&mut self, id: &Uuid) -> Option<Rc<RefCell<Map>>> {
+        self.map.borrow_mut().remove(id).map(|map| map.clone())
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, Map>`.
+    ///
+    pub fn iter_map(&self) -> impl Iterator<Item = Rc<RefCell<Map>>> + '_ {
+        let values: Vec<Rc<RefCell<Map>>> =
+            self.map.borrow().values().map(|map| map.clone()).collect();
+        let len = values.len();
+        (0..len).map(move |i| values[i].clone())
+    }
+
     /// Inter (insert) [`XMatch`] into the store.
     ///
     pub fn inter_x_match(&mut self, x_match: Rc<RefCell<XMatch>>) {
@@ -4162,6 +4193,18 @@ impl ObjectStore {
             }
         }
 
+        // Persist Map.
+        {
+            let path = path.join("map");
+            fs::create_dir_all(&path)?;
+            for map in self.map.borrow().values() {
+                let path = path.join(format!("{}.json", map.borrow().id));
+                let file = fs::File::create(path)?;
+                let mut writer = io::BufWriter::new(file);
+                serde_json::to_writer_pretty(&mut writer, &map)?;
+            }
+        }
+
         // Persist Match.
         {
             let path = path.join("x_match");
@@ -5419,6 +5462,20 @@ impl ObjectStore {
                     .x_macro
                     .borrow_mut()
                     .insert(x_macro.borrow().id, x_macro.clone());
+            }
+        }
+
+        // Load Map.
+        {
+            let path = path.join("map");
+            let entries = fs::read_dir(path)?;
+            for entry in entries {
+                let entry = entry?;
+                let path = entry.path();
+                let file = fs::File::open(path)?;
+                let reader = io::BufReader::new(file);
+                let map: Rc<RefCell<Map>> = serde_json::from_reader(reader)?;
+                store.map.borrow_mut().insert(map.borrow().id, map.clone());
             }
         }
 
