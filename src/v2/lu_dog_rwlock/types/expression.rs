@@ -22,6 +22,7 @@ use crate::v2::lu_dog_rwlock::types::let_statement::LetStatement;
 use crate::v2::lu_dog_rwlock::types::list_element::ListElement;
 use crate::v2::lu_dog_rwlock::types::list_expression::ListExpression;
 use crate::v2::lu_dog_rwlock::types::literal::Literal;
+use crate::v2::lu_dog_rwlock::types::map_element::MapElement;
 use crate::v2::lu_dog_rwlock::types::operator::Operator;
 use crate::v2::lu_dog_rwlock::types::pattern::Pattern;
 use crate::v2::lu_dog_rwlock::types::range_expression::RangeExpression;
@@ -696,6 +697,30 @@ impl Expression {
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-nav-backward-1_M-to-operator"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-nav-backward-1_M-to-map_element"}}}
+    /// Navigate to [`MapElement`] across R118(1-M)
+    pub fn r118_map_element<'a>(
+        &'a self,
+        store: &'a LuDogRwlockStore,
+    ) -> Vec<Arc<RwLock<MapElement>>> {
+        store
+            .iter_map_element()
+            .filter(|map_element| map_element.read().unwrap().x_value == self.id)
+            .collect()
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-nav-backward-1_M-to-map_element"}}}
+    /// Navigate to [`MapElement`] across R116(1-M)
+    pub fn r116_map_element<'a>(
+        &'a self,
+        store: &'a LuDogRwlockStore,
+    ) -> Vec<Arc<RwLock<MapElement>>> {
+        store
+            .iter_map_element()
+            .filter(|map_element| map_element.read().unwrap().key == self.id)
+            .collect()
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-nav-backward-1_M-to-x_match"}}}
     /// Navigate to [`XMatch`] across R91(1-M)
     pub fn r91_x_match<'a>(&'a self, store: &'a LuDogRwlockStore) -> Vec<Arc<RwLock<XMatch>>> {

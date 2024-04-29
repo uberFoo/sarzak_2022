@@ -56,6 +56,7 @@
 //! * [`LocalVariable`]
 //! * [`XMacro`]
 //! * [`Map`]
+//! * [`MapElement`]
 //! * [`XMatch`]
 //! * [`MethodCall`]
 //! * [`NamedFieldExpression`]
@@ -110,10 +111,10 @@ use crate::v2::lu_dog::types::{
     FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit, FormatString,
     FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire, ImplementationBlock, Import,
     Index, IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement,
-    ListExpression, Literal, LocalVariable, Map, MethodCall, NamedFieldExpression, ObjectWrapper,
-    Operator, Parameter, PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement,
-    StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField, StructGeneric,
-    TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
+    ListExpression, Literal, LocalVariable, Map, MapElement, MethodCall, NamedFieldExpression,
+    ObjectWrapper, Operator, Parameter, PathElement, Pattern, RangeExpression, ResultStatement,
+    Span, Statement, StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField,
+    StructGeneric, TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
     VariableExpression, WoogStruct, XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn,
     XValue, ZObjectStore,
 };
@@ -172,6 +173,7 @@ pub struct ObjectStore {
     local_variable: Rc<RefCell<HashMap<Uuid, Rc<RefCell<LocalVariable>>>>>,
     x_macro: Rc<RefCell<HashMap<Uuid, Rc<RefCell<XMacro>>>>>,
     map: Rc<RefCell<HashMap<Uuid, Rc<RefCell<Map>>>>>,
+    map_element: Rc<RefCell<HashMap<Uuid, Rc<RefCell<MapElement>>>>>,
     x_match: Rc<RefCell<HashMap<Uuid, Rc<RefCell<XMatch>>>>>,
     method_call: Rc<RefCell<HashMap<Uuid, Rc<RefCell<MethodCall>>>>>,
     named_field_expression: Rc<RefCell<HashMap<Uuid, Rc<RefCell<NamedFieldExpression>>>>>,
@@ -265,6 +267,7 @@ impl ObjectStore {
             local_variable: Rc::new(RefCell::new(HashMap::default())),
             x_macro: Rc::new(RefCell::new(HashMap::default())),
             map: Rc::new(RefCell::new(HashMap::default())),
+            map_element: Rc::new(RefCell::new(HashMap::default())),
             x_match: Rc::new(RefCell::new(HashMap::default())),
             method_call: Rc::new(RefCell::new(HashMap::default())),
             named_field_expression: Rc::new(RefCell::new(HashMap::default())),
@@ -2249,6 +2252,46 @@ impl ObjectStore {
         (0..len).map(move |i| values[i].clone())
     }
 
+    /// Inter (insert) [`MapElement`] into the store.
+    ///
+    pub fn inter_map_element(&mut self, map_element: Rc<RefCell<MapElement>>) {
+        let read = map_element.borrow();
+        self.map_element
+            .borrow_mut()
+            .insert(read.id, map_element.clone());
+    }
+
+    /// Exhume (get) [`MapElement`] from the store.
+    ///
+    pub fn exhume_map_element(&self, id: &Uuid) -> Option<Rc<RefCell<MapElement>>> {
+        self.map_element
+            .borrow()
+            .get(id)
+            .map(|map_element| map_element.clone())
+    }
+
+    /// Exorcise (remove) [`MapElement`] from the store.
+    ///
+    pub fn exorcise_map_element(&mut self, id: &Uuid) -> Option<Rc<RefCell<MapElement>>> {
+        self.map_element
+            .borrow_mut()
+            .remove(id)
+            .map(|map_element| map_element.clone())
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, MapElement>`.
+    ///
+    pub fn iter_map_element(&self) -> impl Iterator<Item = Rc<RefCell<MapElement>>> + '_ {
+        let values: Vec<Rc<RefCell<MapElement>>> = self
+            .map_element
+            .borrow()
+            .values()
+            .map(|map_element| map_element.clone())
+            .collect();
+        let len = values.len();
+        (0..len).map(move |i| values[i].clone())
+    }
+
     /// Inter (insert) [`XMatch`] into the store.
     ///
     pub fn inter_x_match(&mut self, x_match: Rc<RefCell<XMatch>>) {
@@ -4205,6 +4248,18 @@ impl ObjectStore {
             }
         }
 
+        // Persist Map Element.
+        {
+            let path = path.join("map_element");
+            fs::create_dir_all(&path)?;
+            for map_element in self.map_element.borrow().values() {
+                let path = path.join(format!("{}.json", map_element.borrow().id));
+                let file = fs::File::create(path)?;
+                let mut writer = io::BufWriter::new(file);
+                serde_json::to_writer_pretty(&mut writer, &map_element)?;
+            }
+        }
+
         // Persist Match.
         {
             let path = path.join("x_match");
@@ -5476,6 +5531,23 @@ impl ObjectStore {
                 let reader = io::BufReader::new(file);
                 let map: Rc<RefCell<Map>> = serde_json::from_reader(reader)?;
                 store.map.borrow_mut().insert(map.borrow().id, map.clone());
+            }
+        }
+
+        // Load Map Element.
+        {
+            let path = path.join("map_element");
+            let entries = fs::read_dir(path)?;
+            for entry in entries {
+                let entry = entry?;
+                let path = entry.path();
+                let file = fs::File::open(path)?;
+                let reader = io::BufReader::new(file);
+                let map_element: Rc<RefCell<MapElement>> = serde_json::from_reader(reader)?;
+                store
+                    .map_element
+                    .borrow_mut()
+                    .insert(map_element.borrow().id, map_element.clone());
             }
         }
 

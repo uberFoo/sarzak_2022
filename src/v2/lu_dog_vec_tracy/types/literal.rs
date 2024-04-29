@@ -12,6 +12,7 @@ use crate::v2::lu_dog_vec_tracy::types::expression::ExpressionEnum;
 use crate::v2::lu_dog_vec_tracy::types::float_literal::FloatLiteral;
 use crate::v2::lu_dog_vec_tracy::types::format_string::FormatString;
 use crate::v2::lu_dog_vec_tracy::types::integer_literal::IntegerLiteral;
+use crate::v2::lu_dog_vec_tracy::types::map_expression::MAP_EXPRESSION;
 use crate::v2::lu_dog_vec_tracy::types::string_literal::StringLiteral;
 use serde::{Deserialize, Serialize};
 
@@ -40,6 +41,7 @@ pub enum LiteralEnum {
     FloatLiteral(usize),
     FormatString(usize),
     IntegerLiteral(usize),
+    MapExpression(Uuid),
     StringLiteral(usize),
 }
 // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
@@ -120,6 +122,18 @@ impl Literal {
             Rc::new(RefCell::new(Literal {
                 bogus: bogus,
                 subtype: LiteralEnum::IntegerLiteral(subtype.borrow().id), // b
+                id,
+            }))
+        })
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"literal-struct-impl-new_map_expression"}}}
+    /// Inter a new Literal in the store, and return it's `id`.
+    pub fn new_map_expression(bogus: bool, store: &mut LuDogVecTracyStore) -> Rc<RefCell<Literal>> {
+        store.inter_literal(|id| {
+            Rc::new(RefCell::new(Literal {
+                bogus: bogus,
+                subtype: LiteralEnum::MapExpression(MAP_EXPRESSION),
                 id,
             }))
         })

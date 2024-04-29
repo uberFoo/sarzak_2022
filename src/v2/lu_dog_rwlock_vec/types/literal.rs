@@ -11,6 +11,7 @@ use crate::v2::lu_dog_rwlock_vec::types::expression::ExpressionEnum;
 use crate::v2::lu_dog_rwlock_vec::types::float_literal::FloatLiteral;
 use crate::v2::lu_dog_rwlock_vec::types::format_string::FormatString;
 use crate::v2::lu_dog_rwlock_vec::types::integer_literal::IntegerLiteral;
+use crate::v2::lu_dog_rwlock_vec::types::map_expression::MAP_EXPRESSION;
 use crate::v2::lu_dog_rwlock_vec::types::string_literal::StringLiteral;
 use serde::{Deserialize, Serialize};
 
@@ -39,6 +40,7 @@ pub enum LiteralEnum {
     FloatLiteral(usize),
     FormatString(usize),
     IntegerLiteral(usize),
+    MapExpression(Uuid),
     StringLiteral(usize),
 }
 // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
@@ -119,6 +121,21 @@ impl Literal {
             Arc::new(RwLock::new(Literal {
                 bogus: bogus,
                 subtype: LiteralEnum::IntegerLiteral(subtype.read().unwrap().id), // b
+                id,
+            }))
+        })
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"literal-struct-impl-new_map_expression"}}}
+    /// Inter a new Literal in the store, and return it's `id`.
+    pub fn new_map_expression(
+        bogus: bool,
+        store: &mut LuDogRwlockVecStore,
+    ) -> Arc<RwLock<Literal>> {
+        store.inter_literal(|id| {
+            Arc::new(RwLock::new(Literal {
+                bogus: bogus,
+                subtype: LiteralEnum::MapExpression(MAP_EXPRESSION),
                 id,
             }))
         })

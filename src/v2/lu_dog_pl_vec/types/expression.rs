@@ -22,6 +22,7 @@ use crate::v2::lu_dog_pl_vec::types::let_statement::LetStatement;
 use crate::v2::lu_dog_pl_vec::types::list_element::ListElement;
 use crate::v2::lu_dog_pl_vec::types::list_expression::ListExpression;
 use crate::v2::lu_dog_pl_vec::types::literal::Literal;
+use crate::v2::lu_dog_pl_vec::types::map_element::MapElement;
 use crate::v2::lu_dog_pl_vec::types::operator::Operator;
 use crate::v2::lu_dog_pl_vec::types::pattern::Pattern;
 use crate::v2::lu_dog_pl_vec::types::range_expression::RangeExpression;
@@ -660,6 +661,30 @@ impl Expression {
         store
             .iter_list_element()
             .filter(|list_element| list_element.read().expression == self.id)
+            .collect()
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-nav-backward-1_M-to-map_element"}}}
+    /// Navigate to [`MapElement`] across R118(1-M)
+    pub fn r118_map_element<'a>(
+        &'a self,
+        store: &'a LuDogPlVecStore,
+    ) -> Vec<Arc<RwLock<MapElement>>> {
+        store
+            .iter_map_element()
+            .filter(|map_element| map_element.read().x_value == self.id)
+            .collect()
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-nav-backward-1_M-to-map_element"}}}
+    /// Navigate to [`MapElement`] across R116(1-M)
+    pub fn r116_map_element<'a>(
+        &'a self,
+        store: &'a LuDogPlVecStore,
+    ) -> Vec<Arc<RwLock<MapElement>>> {
+        store
+            .iter_map_element()
+            .filter(|map_element| map_element.read().key == self.id)
             .collect()
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}

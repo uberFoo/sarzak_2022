@@ -56,6 +56,7 @@
 //! * [`LocalVariable`]
 //! * [`XMacro`]
 //! * [`Map`]
+//! * [`MapElement`]
 //! * [`XMatch`]
 //! * [`MethodCall`]
 //! * [`NamedFieldExpression`]
@@ -111,16 +112,16 @@ use crate::v2::lu_dog_pl_vec::types::{
     FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit, FormatString,
     FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire, ImplementationBlock, Import,
     Index, IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement,
-    ListExpression, Literal, LocalVariable, Map, MethodCall, NamedFieldExpression, ObjectWrapper,
-    Operator, Parameter, PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement,
-    StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField, StructGeneric,
-    TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
+    ListExpression, Literal, LocalVariable, Map, MapElement, MethodCall, NamedFieldExpression,
+    ObjectWrapper, Operator, Parameter, PathElement, Pattern, RangeExpression, ResultStatement,
+    Span, Statement, StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField,
+    StructGeneric, TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
     VariableExpression, WoogStruct, XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn,
     XValue, ZObjectStore, ADDITION, AND, ANY_LIST, ASSIGNMENT, CHAR, DIVISION, EMPTY,
     EMPTY_EXPRESSION, EQUAL, FALSE_LITERAL, FROM, FULL, GREATER_THAN, GREATER_THAN_OR_EQUAL,
-    INCLUSIVE, ITEM_STATEMENT, LESS_THAN, LESS_THAN_OR_EQUAL, MACRO_CALL, MULTIPLICATION, NEGATION,
-    NOT, NOT_EQUAL, OR, RANGE, SUBTRACTION, TASK, TO, TO_INCLUSIVE, TRUE_LITERAL, UNKNOWN,
-    X_DEBUGGER,
+    INCLUSIVE, ITEM_STATEMENT, LESS_THAN, LESS_THAN_OR_EQUAL, MACRO_CALL, MAP_EXPRESSION,
+    MULTIPLICATION, NEGATION, NOT, NOT_EQUAL, OR, RANGE, SUBTRACTION, TASK, TO, TO_INCLUSIVE,
+    TRUE_LITERAL, UNKNOWN, X_DEBUGGER,
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -226,6 +227,8 @@ pub struct ObjectStore {
     x_macro: Arc<RwLock<Vec<Option<Arc<RwLock<XMacro>>>>>>,
     map_free_list: std::sync::Mutex<Vec<usize>>,
     map: Arc<RwLock<Vec<Option<Arc<RwLock<Map>>>>>>,
+    map_element_free_list: std::sync::Mutex<Vec<usize>>,
+    map_element: Arc<RwLock<Vec<Option<Arc<RwLock<MapElement>>>>>>,
     x_match_free_list: std::sync::Mutex<Vec<usize>>,
     x_match: Arc<RwLock<Vec<Option<Arc<RwLock<XMatch>>>>>>,
     method_call_free_list: std::sync::Mutex<Vec<usize>>,
@@ -442,6 +445,8 @@ impl Clone for ObjectStore {
             x_macro: self.x_macro.clone(),
             map_free_list: Mutex::new(self.map_free_list.lock().unwrap().clone()),
             map: self.map.clone(),
+            map_element_free_list: Mutex::new(self.map_element_free_list.lock().unwrap().clone()),
+            map_element: self.map_element.clone(),
             x_match_free_list: Mutex::new(self.x_match_free_list.lock().unwrap().clone()),
             x_match: self.x_match.clone(),
             method_call_free_list: Mutex::new(self.method_call_free_list.lock().unwrap().clone()),
@@ -646,6 +651,8 @@ impl ObjectStore {
             x_macro: Arc::new(RwLock::new(Vec::new())),
             map_free_list: std::sync::Mutex::new(Vec::new()),
             map: Arc::new(RwLock::new(Vec::new())),
+            map_element_free_list: std::sync::Mutex::new(Vec::new()),
+            map_element: Arc::new(RwLock::new(Vec::new())),
             x_match_free_list: std::sync::Mutex::new(Vec::new()),
             x_match: Arc::new(RwLock::new(Vec::new())),
             method_call_free_list: std::sync::Mutex::new(Vec::new()),
@@ -4643,6 +4650,83 @@ impl ObjectStore {
             .map(move |i| self.map.read()[i].as_ref().map(|map| map.clone()).unwrap())
     }
 
+    /// Inter (insert) [`MapElement`] into the store.
+    ///
+    #[inline]
+    pub fn inter_map_element<F>(&mut self, map_element: F) -> Arc<RwLock<MapElement>>
+    where
+        F: Fn(usize) -> Arc<RwLock<MapElement>>,
+    {
+        let _index = if let Some(_index) = self.map_element_free_list.lock().unwrap().pop() {
+            tracing::trace!(target: "store", "recycling block {_index}.");
+            _index
+        } else {
+            let _index = self.map_element.read().len();
+            tracing::trace!(target: "store", "allocating block {_index}.");
+            self.map_element.write().push(None);
+            _index
+        };
+
+        let map_element = map_element(_index);
+
+        let found = if let Some(map_element) = self.map_element.read().iter().find(|stored| {
+            if let Some(stored) = stored {
+                *stored.read() == *map_element.read()
+            } else {
+                false
+            }
+        }) {
+            map_element.clone()
+        } else {
+            None
+        };
+
+        if let Some(map_element) = found {
+            tracing::debug!(target: "store", "found duplicate {map_element:?}.");
+            self.map_element_free_list.lock().unwrap().push(_index);
+            map_element.clone()
+        } else {
+            tracing::debug!(target: "store", "interring {map_element:?}.");
+            self.map_element.write()[_index] = Some(map_element.clone());
+            map_element
+        }
+    }
+
+    /// Exhume (get) [`MapElement`] from the store.
+    ///
+    #[inline]
+    pub fn exhume_map_element(&self, id: &usize) -> Option<Arc<RwLock<MapElement>>> {
+        match self.map_element.read().get(*id) {
+            Some(map_element) => map_element.clone(),
+            None => None,
+        }
+    }
+
+    /// Exorcise (remove) [`MapElement`] from the store.
+    ///
+    #[inline]
+    pub fn exorcise_map_element(&mut self, id: &usize) -> Option<Arc<RwLock<MapElement>>> {
+        tracing::debug!(target: "store", "exorcising map_element slot: {id}.");
+        let result = self.map_element.write()[*id].take();
+        self.map_element_free_list.lock().unwrap().push(*id);
+        result
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, MapElement>`.
+    ///
+    #[inline]
+    pub fn iter_map_element(&self) -> impl Iterator<Item = Arc<RwLock<MapElement>>> + '_ {
+        let len = self.map_element.read().len();
+        (0..len)
+            .filter(|i| self.map_element.read()[*i].is_some())
+            .map(move |i| {
+                self.map_element.read()[i]
+                    .as_ref()
+                    .map(|map_element| map_element.clone())
+                    .unwrap()
+            })
+    }
+
     /// Inter (insert) [`XMatch`] into the store.
     ///
     #[inline]
@@ -8029,6 +8113,20 @@ impl ObjectStore {
             }
         }
 
+        // Persist Map Element.
+        {
+            let path = path.join("map_element");
+            fs::create_dir_all(&path)?;
+            for map_element in &*self.map_element.read() {
+                if let Some(map_element) = map_element {
+                    let path = path.join(format!("{}.json", map_element.read().id));
+                    let file = fs::File::create(path)?;
+                    let mut writer = io::BufWriter::new(file);
+                    serde_json::to_writer_pretty(&mut writer, &map_element)?;
+                }
+            }
+        }
+
         // Persist Match.
         {
             let path = path.join("x_match");
@@ -9366,6 +9464,23 @@ impl ObjectStore {
                 let reader = io::BufReader::new(file);
                 let map: Arc<RwLock<Map>> = serde_json::from_reader(reader)?;
                 store.map.write().insert(map.read().id, Some(map.clone()));
+            }
+        }
+
+        // Load Map Element.
+        {
+            let path = path.join("map_element");
+            let entries = fs::read_dir(path)?;
+            for entry in entries {
+                let entry = entry?;
+                let path = entry.path();
+                let file = fs::File::open(path)?;
+                let reader = io::BufReader::new(file);
+                let map_element: Arc<RwLock<MapElement>> = serde_json::from_reader(reader)?;
+                store
+                    .map_element
+                    .write()
+                    .insert(map_element.read().id, Some(map_element.clone()));
             }
         }
 

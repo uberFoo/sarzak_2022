@@ -11,6 +11,7 @@ use crate::v2::lu_dog_rwlock::types::expression::ExpressionEnum;
 use crate::v2::lu_dog_rwlock::types::float_literal::FloatLiteral;
 use crate::v2::lu_dog_rwlock::types::format_string::FormatString;
 use crate::v2::lu_dog_rwlock::types::integer_literal::IntegerLiteral;
+use crate::v2::lu_dog_rwlock::types::map_expression::MAP_EXPRESSION;
 use crate::v2::lu_dog_rwlock::types::string_literal::StringLiteral;
 use serde::{Deserialize, Serialize};
 
@@ -41,6 +42,7 @@ pub enum LiteralEnum {
     FloatLiteral(Uuid),
     FormatString(Uuid),
     IntegerLiteral(Uuid),
+    MapExpression(Uuid),
     StringLiteral(Uuid),
 }
 // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
@@ -126,6 +128,19 @@ impl Literal {
         let new = Arc::new(RwLock::new(Literal {
             bogus: bogus,
             subtype: LiteralEnum::IntegerLiteral(subtype.read().unwrap().id), // b
+            id,
+        }));
+        store.inter_literal(new.clone());
+        new
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"literal-struct-impl-new_map_expression"}}}
+    /// Inter a new Literal in the store, and return it's `id`.
+    pub fn new_map_expression(bogus: bool, store: &mut LuDogRwlockStore) -> Arc<RwLock<Literal>> {
+        let id = Uuid::new_v4();
+        let new = Arc::new(RwLock::new(Literal {
+            bogus: bogus,
+            subtype: LiteralEnum::MapExpression(MAP_EXPRESSION),
             id,
         }));
         store.inter_literal(new.clone());
