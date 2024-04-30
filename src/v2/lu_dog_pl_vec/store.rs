@@ -57,6 +57,7 @@
 //! * [`XMacro`]
 //! * [`Map`]
 //! * [`MapElement`]
+//! * [`MapExpression`]
 //! * [`XMatch`]
 //! * [`MethodCall`]
 //! * [`NamedFieldExpression`]
@@ -112,16 +113,16 @@ use crate::v2::lu_dog_pl_vec::types::{
     FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit, FormatString,
     FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire, ImplementationBlock, Import,
     Index, IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement,
-    ListExpression, Literal, LocalVariable, Map, MapElement, MethodCall, NamedFieldExpression,
-    ObjectWrapper, Operator, Parameter, PathElement, Pattern, RangeExpression, ResultStatement,
-    Span, Statement, StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField,
-    StructGeneric, TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
-    VariableExpression, WoogStruct, XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn,
-    XValue, ZObjectStore, ADDITION, AND, ANY_LIST, ASSIGNMENT, CHAR, DIVISION, EMPTY,
-    EMPTY_EXPRESSION, EQUAL, FALSE_LITERAL, FROM, FULL, GREATER_THAN, GREATER_THAN_OR_EQUAL,
-    INCLUSIVE, ITEM_STATEMENT, LESS_THAN, LESS_THAN_OR_EQUAL, MACRO_CALL, MAP_EXPRESSION,
-    MULTIPLICATION, NEGATION, NOT, NOT_EQUAL, OR, RANGE, SUBTRACTION, TASK, TO, TO_INCLUSIVE,
-    TRUE_LITERAL, UNKNOWN, X_DEBUGGER,
+    ListExpression, Literal, LocalVariable, Map, MapElement, MapExpression, MethodCall,
+    NamedFieldExpression, ObjectWrapper, Operator, Parameter, PathElement, Pattern,
+    RangeExpression, ResultStatement, Span, Statement, StaticMethodCall, StringBit, StringLiteral,
+    StructExpression, StructField, StructGeneric, TupleField, TypeCast, Unary, Unit,
+    UnnamedFieldExpression, ValueType, Variable, VariableExpression, WoogStruct, XFuture, XIf,
+    XMacro, XMatch, XPath, XPlugin, XPrint, XReturn, XValue, ZObjectStore, ADDITION, AND, ANY_LIST,
+    ASSIGNMENT, CHAR, DIVISION, EMPTY, EMPTY_EXPRESSION, EQUAL, FALSE_LITERAL, FROM, FULL,
+    GREATER_THAN, GREATER_THAN_OR_EQUAL, INCLUSIVE, ITEM_STATEMENT, LESS_THAN, LESS_THAN_OR_EQUAL,
+    MACRO_CALL, MULTIPLICATION, NEGATION, NOT, NOT_EQUAL, OR, RANGE, SUBTRACTION, TASK, TO,
+    TO_INCLUSIVE, TRUE_LITERAL, UNKNOWN, X_DEBUGGER,
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -229,6 +230,8 @@ pub struct ObjectStore {
     map: Arc<RwLock<Vec<Option<Arc<RwLock<Map>>>>>>,
     map_element_free_list: std::sync::Mutex<Vec<usize>>,
     map_element: Arc<RwLock<Vec<Option<Arc<RwLock<MapElement>>>>>>,
+    map_expression_free_list: std::sync::Mutex<Vec<usize>>,
+    map_expression: Arc<RwLock<Vec<Option<Arc<RwLock<MapExpression>>>>>>,
     x_match_free_list: std::sync::Mutex<Vec<usize>>,
     x_match: Arc<RwLock<Vec<Option<Arc<RwLock<XMatch>>>>>>,
     method_call_free_list: std::sync::Mutex<Vec<usize>>,
@@ -447,6 +450,10 @@ impl Clone for ObjectStore {
             map: self.map.clone(),
             map_element_free_list: Mutex::new(self.map_element_free_list.lock().unwrap().clone()),
             map_element: self.map_element.clone(),
+            map_expression_free_list: Mutex::new(
+                self.map_expression_free_list.lock().unwrap().clone(),
+            ),
+            map_expression: self.map_expression.clone(),
             x_match_free_list: Mutex::new(self.x_match_free_list.lock().unwrap().clone()),
             x_match: self.x_match.clone(),
             method_call_free_list: Mutex::new(self.method_call_free_list.lock().unwrap().clone()),
@@ -653,6 +660,8 @@ impl ObjectStore {
             map: Arc::new(RwLock::new(Vec::new())),
             map_element_free_list: std::sync::Mutex::new(Vec::new()),
             map_element: Arc::new(RwLock::new(Vec::new())),
+            map_expression_free_list: std::sync::Mutex::new(Vec::new()),
+            map_expression: Arc::new(RwLock::new(Vec::new())),
             x_match_free_list: std::sync::Mutex::new(Vec::new()),
             x_match: Arc::new(RwLock::new(Vec::new())),
             method_call_free_list: std::sync::Mutex::new(Vec::new()),
@@ -4727,6 +4736,83 @@ impl ObjectStore {
             })
     }
 
+    /// Inter (insert) [`MapExpression`] into the store.
+    ///
+    #[inline]
+    pub fn inter_map_expression<F>(&mut self, map_expression: F) -> Arc<RwLock<MapExpression>>
+    where
+        F: Fn(usize) -> Arc<RwLock<MapExpression>>,
+    {
+        let _index = if let Some(_index) = self.map_expression_free_list.lock().unwrap().pop() {
+            tracing::trace!(target: "store", "recycling block {_index}.");
+            _index
+        } else {
+            let _index = self.map_expression.read().len();
+            tracing::trace!(target: "store", "allocating block {_index}.");
+            self.map_expression.write().push(None);
+            _index
+        };
+
+        let map_expression = map_expression(_index);
+
+        let found = if let Some(map_expression) = self.map_expression.read().iter().find(|stored| {
+            if let Some(stored) = stored {
+                *stored.read() == *map_expression.read()
+            } else {
+                false
+            }
+        }) {
+            map_expression.clone()
+        } else {
+            None
+        };
+
+        if let Some(map_expression) = found {
+            tracing::debug!(target: "store", "found duplicate {map_expression:?}.");
+            self.map_expression_free_list.lock().unwrap().push(_index);
+            map_expression.clone()
+        } else {
+            tracing::debug!(target: "store", "interring {map_expression:?}.");
+            self.map_expression.write()[_index] = Some(map_expression.clone());
+            map_expression
+        }
+    }
+
+    /// Exhume (get) [`MapExpression`] from the store.
+    ///
+    #[inline]
+    pub fn exhume_map_expression(&self, id: &usize) -> Option<Arc<RwLock<MapExpression>>> {
+        match self.map_expression.read().get(*id) {
+            Some(map_expression) => map_expression.clone(),
+            None => None,
+        }
+    }
+
+    /// Exorcise (remove) [`MapExpression`] from the store.
+    ///
+    #[inline]
+    pub fn exorcise_map_expression(&mut self, id: &usize) -> Option<Arc<RwLock<MapExpression>>> {
+        tracing::debug!(target: "store", "exorcising map_expression slot: {id}.");
+        let result = self.map_expression.write()[*id].take();
+        self.map_expression_free_list.lock().unwrap().push(*id);
+        result
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, MapExpression>`.
+    ///
+    #[inline]
+    pub fn iter_map_expression(&self) -> impl Iterator<Item = Arc<RwLock<MapExpression>>> + '_ {
+        let len = self.map_expression.read().len();
+        (0..len)
+            .filter(|i| self.map_expression.read()[*i].is_some())
+            .map(move |i| {
+                self.map_expression.read()[i]
+                    .as_ref()
+                    .map(|map_expression| map_expression.clone())
+                    .unwrap()
+            })
+    }
+
     /// Inter (insert) [`XMatch`] into the store.
     ///
     #[inline]
@@ -8127,6 +8213,20 @@ impl ObjectStore {
             }
         }
 
+        // Persist Map Expression.
+        {
+            let path = path.join("map_expression");
+            fs::create_dir_all(&path)?;
+            for map_expression in &*self.map_expression.read() {
+                if let Some(map_expression) = map_expression {
+                    let path = path.join(format!("{}.json", map_expression.read().id));
+                    let file = fs::File::create(path)?;
+                    let mut writer = io::BufWriter::new(file);
+                    serde_json::to_writer_pretty(&mut writer, &map_expression)?;
+                }
+            }
+        }
+
         // Persist Match.
         {
             let path = path.join("x_match");
@@ -9481,6 +9581,23 @@ impl ObjectStore {
                     .map_element
                     .write()
                     .insert(map_element.read().id, Some(map_element.clone()));
+            }
+        }
+
+        // Load Map Expression.
+        {
+            let path = path.join("map_expression");
+            let entries = fs::read_dir(path)?;
+            for entry in entries {
+                let entry = entry?;
+                let path = entry.path();
+                let file = fs::File::open(path)?;
+                let reader = io::BufReader::new(file);
+                let map_expression: Arc<RwLock<MapExpression>> = serde_json::from_reader(reader)?;
+                store
+                    .map_expression
+                    .write()
+                    .insert(map_expression.read().id, Some(map_expression.clone()));
             }
         }
 

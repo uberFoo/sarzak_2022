@@ -57,6 +57,7 @@
 //! * [`XMacro`]
 //! * [`Map`]
 //! * [`MapElement`]
+//! * [`MapExpression`]
 //! * [`XMatch`]
 //! * [`MethodCall`]
 //! * [`NamedFieldExpression`]
@@ -111,16 +112,16 @@ use crate::v2::lu_dog_vec::types::{
     FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit, FormatString,
     FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire, ImplementationBlock, Import,
     Index, IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement,
-    ListExpression, Literal, LocalVariable, Map, MapElement, MethodCall, NamedFieldExpression,
-    ObjectWrapper, Operator, Parameter, PathElement, Pattern, RangeExpression, ResultStatement,
-    Span, Statement, StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField,
-    StructGeneric, TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
-    VariableExpression, WoogStruct, XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn,
-    XValue, ZObjectStore, ADDITION, AND, ANY_LIST, ASSIGNMENT, CHAR, DIVISION, EMPTY,
-    EMPTY_EXPRESSION, EQUAL, FALSE_LITERAL, FROM, FULL, GREATER_THAN, GREATER_THAN_OR_EQUAL,
-    INCLUSIVE, ITEM_STATEMENT, LESS_THAN, LESS_THAN_OR_EQUAL, MACRO_CALL, MAP_EXPRESSION,
-    MULTIPLICATION, NEGATION, NOT, NOT_EQUAL, OR, RANGE, SUBTRACTION, TASK, TO, TO_INCLUSIVE,
-    TRUE_LITERAL, UNKNOWN, X_DEBUGGER,
+    ListExpression, Literal, LocalVariable, Map, MapElement, MapExpression, MethodCall,
+    NamedFieldExpression, ObjectWrapper, Operator, Parameter, PathElement, Pattern,
+    RangeExpression, ResultStatement, Span, Statement, StaticMethodCall, StringBit, StringLiteral,
+    StructExpression, StructField, StructGeneric, TupleField, TypeCast, Unary, Unit,
+    UnnamedFieldExpression, ValueType, Variable, VariableExpression, WoogStruct, XFuture, XIf,
+    XMacro, XMatch, XPath, XPlugin, XPrint, XReturn, XValue, ZObjectStore, ADDITION, AND, ANY_LIST,
+    ASSIGNMENT, CHAR, DIVISION, EMPTY, EMPTY_EXPRESSION, EQUAL, FALSE_LITERAL, FROM, FULL,
+    GREATER_THAN, GREATER_THAN_OR_EQUAL, INCLUSIVE, ITEM_STATEMENT, LESS_THAN, LESS_THAN_OR_EQUAL,
+    MACRO_CALL, MULTIPLICATION, NEGATION, NOT, NOT_EQUAL, OR, RANGE, SUBTRACTION, TASK, TO,
+    TO_INCLUSIVE, TRUE_LITERAL, UNKNOWN, X_DEBUGGER,
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -228,6 +229,8 @@ pub struct ObjectStore {
     map: Vec<Option<Rc<RefCell<Map>>>>,
     map_element_free_list: Vec<usize>,
     map_element: Vec<Option<Rc<RefCell<MapElement>>>>,
+    map_expression_free_list: Vec<usize>,
+    map_expression: Vec<Option<Rc<RefCell<MapExpression>>>>,
     x_match_free_list: Vec<usize>,
     x_match: Vec<Option<Rc<RefCell<XMatch>>>>,
     method_call_free_list: Vec<usize>,
@@ -446,6 +449,10 @@ impl Clone for ObjectStore {
             map: self.map.clone(),
             map_element_free_list: Mutex::new(self.map_element_free_list.lock().unwrap().clone()),
             map_element: self.map_element.clone(),
+            map_expression_free_list: Mutex::new(
+                self.map_expression_free_list.lock().unwrap().clone(),
+            ),
+            map_expression: self.map_expression.clone(),
             x_match_free_list: Mutex::new(self.x_match_free_list.lock().unwrap().clone()),
             x_match: self.x_match.clone(),
             method_call_free_list: Mutex::new(self.method_call_free_list.lock().unwrap().clone()),
@@ -652,6 +659,8 @@ impl ObjectStore {
             map: Vec::new(),
             map_element_free_list: Vec::new(),
             map_element: Vec::new(),
+            map_expression_free_list: Vec::new(),
+            map_expression: Vec::new(),
             x_match_free_list: Vec::new(),
             x_match: Vec::new(),
             method_call_free_list: Vec::new(),
@@ -4339,6 +4348,77 @@ impl ObjectStore {
             })
     }
 
+    /// Inter (insert) [`MapExpression`] into the store.
+    ///
+    #[inline]
+    pub fn inter_map_expression<F>(&mut self, map_expression: F) -> Rc<RefCell<MapExpression>>
+    where
+        F: Fn(usize) -> Rc<RefCell<MapExpression>>,
+    {
+        let _index = if let Some(_index) = self.map_expression_free_list.pop() {
+            tracing::trace!(target: "store", "recycling block {_index}.");
+            _index
+        } else {
+            let _index = self.map_expression.len();
+            tracing::trace!(target: "store", "allocating block {_index}.");
+            self.map_expression.push(None);
+            _index
+        };
+
+        let map_expression = map_expression(_index);
+
+        if let Some(Some(map_expression)) = self.map_expression.iter().find(|stored| {
+            if let Some(stored) = stored {
+                *stored.borrow() == *map_expression.borrow()
+            } else {
+                false
+            }
+        }) {
+            tracing::debug!(target: "store", "found duplicate {map_expression:?}.");
+            self.map_expression_free_list.push(_index);
+            map_expression.clone()
+        } else {
+            tracing::debug!(target: "store", "interring {map_expression:?}.");
+            self.map_expression[_index] = Some(map_expression.clone());
+            map_expression
+        }
+    }
+
+    /// Exhume (get) [`MapExpression`] from the store.
+    ///
+    #[inline]
+    pub fn exhume_map_expression(&self, id: &usize) -> Option<Rc<RefCell<MapExpression>>> {
+        match self.map_expression.get(*id) {
+            Some(map_expression) => map_expression.clone(),
+            None => None,
+        }
+    }
+
+    /// Exorcise (remove) [`MapExpression`] from the store.
+    ///
+    #[inline]
+    pub fn exorcise_map_expression(&mut self, id: &usize) -> Option<Rc<RefCell<MapExpression>>> {
+        tracing::debug!(target: "store", "exorcising map_expression slot: {id}.");
+        let result = self.map_expression[*id].take();
+        self.map_expression_free_list.push(*id);
+        result
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, MapExpression>`.
+    ///
+    #[inline]
+    pub fn iter_map_expression(&self) -> impl Iterator<Item = Rc<RefCell<MapExpression>>> + '_ {
+        let len = self.map_expression.len();
+        (0..len)
+            .filter(|i| self.map_expression[*i].is_some())
+            .map(move |i| {
+                self.map_expression[i]
+                    .as_ref()
+                    .map(|map_expression| map_expression.clone())
+                    .unwrap()
+            })
+    }
+
     /// Inter (insert) [`XMatch`] into the store.
     ///
     #[inline]
@@ -7491,6 +7571,20 @@ impl ObjectStore {
             }
         }
 
+        // Persist Map Expression.
+        {
+            let path = path.join("map_expression");
+            fs::create_dir_all(&path)?;
+            for map_expression in &self.map_expression {
+                if let Some(map_expression) = map_expression {
+                    let path = path.join(format!("{}.json", map_expression.borrow().id));
+                    let file = fs::File::create(path)?;
+                    let mut writer = io::BufWriter::new(file);
+                    serde_json::to_writer_pretty(&mut writer, &map_expression)?;
+                }
+            }
+        }
+
         // Persist Match.
         {
             let path = path.join("x_match");
@@ -8784,6 +8878,22 @@ impl ObjectStore {
                 store
                     .map_element
                     .insert(map_element.borrow().id, Some(map_element.clone()));
+            }
+        }
+
+        // Load Map Expression.
+        {
+            let path = path.join("map_expression");
+            let entries = fs::read_dir(path)?;
+            for entry in entries {
+                let entry = entry?;
+                let path = entry.path();
+                let file = fs::File::open(path)?;
+                let reader = io::BufReader::new(file);
+                let map_expression: Rc<RefCell<MapExpression>> = serde_json::from_reader(reader)?;
+                store
+                    .map_expression
+                    .insert(map_expression.borrow().id, Some(map_expression.clone()));
             }
         }
 

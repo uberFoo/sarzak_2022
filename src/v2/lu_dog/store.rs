@@ -57,6 +57,7 @@
 //! * [`XMacro`]
 //! * [`Map`]
 //! * [`MapElement`]
+//! * [`MapExpression`]
 //! * [`XMatch`]
 //! * [`MethodCall`]
 //! * [`NamedFieldExpression`]
@@ -111,12 +112,12 @@ use crate::v2::lu_dog::types::{
     FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit, FormatString,
     FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire, ImplementationBlock, Import,
     Index, IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement,
-    ListExpression, Literal, LocalVariable, Map, MapElement, MethodCall, NamedFieldExpression,
-    ObjectWrapper, Operator, Parameter, PathElement, Pattern, RangeExpression, ResultStatement,
-    Span, Statement, StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField,
-    StructGeneric, TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
-    VariableExpression, WoogStruct, XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn,
-    XValue, ZObjectStore,
+    ListExpression, Literal, LocalVariable, Map, MapElement, MapExpression, MethodCall,
+    NamedFieldExpression, ObjectWrapper, Operator, Parameter, PathElement, Pattern,
+    RangeExpression, ResultStatement, Span, Statement, StaticMethodCall, StringBit, StringLiteral,
+    StructExpression, StructField, StructGeneric, TupleField, TypeCast, Unary, Unit,
+    UnnamedFieldExpression, ValueType, Variable, VariableExpression, WoogStruct, XFuture, XIf,
+    XMacro, XMatch, XPath, XPlugin, XPrint, XReturn, XValue, ZObjectStore,
 };
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -174,6 +175,7 @@ pub struct ObjectStore {
     x_macro: Rc<RefCell<HashMap<Uuid, Rc<RefCell<XMacro>>>>>,
     map: Rc<RefCell<HashMap<Uuid, Rc<RefCell<Map>>>>>,
     map_element: Rc<RefCell<HashMap<Uuid, Rc<RefCell<MapElement>>>>>,
+    map_expression: Rc<RefCell<HashMap<Uuid, Rc<RefCell<MapExpression>>>>>,
     x_match: Rc<RefCell<HashMap<Uuid, Rc<RefCell<XMatch>>>>>,
     method_call: Rc<RefCell<HashMap<Uuid, Rc<RefCell<MethodCall>>>>>,
     named_field_expression: Rc<RefCell<HashMap<Uuid, Rc<RefCell<NamedFieldExpression>>>>>,
@@ -268,6 +270,7 @@ impl ObjectStore {
             x_macro: Rc::new(RefCell::new(HashMap::default())),
             map: Rc::new(RefCell::new(HashMap::default())),
             map_element: Rc::new(RefCell::new(HashMap::default())),
+            map_expression: Rc::new(RefCell::new(HashMap::default())),
             x_match: Rc::new(RefCell::new(HashMap::default())),
             method_call: Rc::new(RefCell::new(HashMap::default())),
             named_field_expression: Rc::new(RefCell::new(HashMap::default())),
@@ -2292,6 +2295,46 @@ impl ObjectStore {
         (0..len).map(move |i| values[i].clone())
     }
 
+    /// Inter (insert) [`MapExpression`] into the store.
+    ///
+    pub fn inter_map_expression(&mut self, map_expression: Rc<RefCell<MapExpression>>) {
+        let read = map_expression.borrow();
+        self.map_expression
+            .borrow_mut()
+            .insert(read.id, map_expression.clone());
+    }
+
+    /// Exhume (get) [`MapExpression`] from the store.
+    ///
+    pub fn exhume_map_expression(&self, id: &Uuid) -> Option<Rc<RefCell<MapExpression>>> {
+        self.map_expression
+            .borrow()
+            .get(id)
+            .map(|map_expression| map_expression.clone())
+    }
+
+    /// Exorcise (remove) [`MapExpression`] from the store.
+    ///
+    pub fn exorcise_map_expression(&mut self, id: &Uuid) -> Option<Rc<RefCell<MapExpression>>> {
+        self.map_expression
+            .borrow_mut()
+            .remove(id)
+            .map(|map_expression| map_expression.clone())
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, MapExpression>`.
+    ///
+    pub fn iter_map_expression(&self) -> impl Iterator<Item = Rc<RefCell<MapExpression>>> + '_ {
+        let values: Vec<Rc<RefCell<MapExpression>>> = self
+            .map_expression
+            .borrow()
+            .values()
+            .map(|map_expression| map_expression.clone())
+            .collect();
+        let len = values.len();
+        (0..len).map(move |i| values[i].clone())
+    }
+
     /// Inter (insert) [`XMatch`] into the store.
     ///
     pub fn inter_x_match(&mut self, x_match: Rc<RefCell<XMatch>>) {
@@ -4260,6 +4303,18 @@ impl ObjectStore {
             }
         }
 
+        // Persist Map Expression.
+        {
+            let path = path.join("map_expression");
+            fs::create_dir_all(&path)?;
+            for map_expression in self.map_expression.borrow().values() {
+                let path = path.join(format!("{}.json", map_expression.borrow().id));
+                let file = fs::File::create(path)?;
+                let mut writer = io::BufWriter::new(file);
+                serde_json::to_writer_pretty(&mut writer, &map_expression)?;
+            }
+        }
+
         // Persist Match.
         {
             let path = path.join("x_match");
@@ -5548,6 +5603,23 @@ impl ObjectStore {
                     .map_element
                     .borrow_mut()
                     .insert(map_element.borrow().id, map_element.clone());
+            }
+        }
+
+        // Load Map Expression.
+        {
+            let path = path.join("map_expression");
+            let entries = fs::read_dir(path)?;
+            for entry in entries {
+                let entry = entry?;
+                let path = entry.path();
+                let file = fs::File::open(path)?;
+                let reader = io::BufReader::new(file);
+                let map_expression: Rc<RefCell<MapExpression>> = serde_json::from_reader(reader)?;
+                store
+                    .map_expression
+                    .borrow_mut()
+                    .insert(map_expression.borrow().id, map_expression.clone());
             }
         }
 

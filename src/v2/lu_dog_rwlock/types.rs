@@ -217,7 +217,6 @@ pub use crate::v2::lu_dog_rwlock::macro_call::MACRO_CALL;
 pub use crate::v2::lu_dog_rwlock::map::Map;
 pub use crate::v2::lu_dog_rwlock::map_element::MapElement;
 pub use crate::v2::lu_dog_rwlock::map_expression::MapExpression;
-pub use crate::v2::lu_dog_rwlock::map_expression::MAP_EXPRESSION;
 pub use crate::v2::lu_dog_rwlock::method_call::MethodCall;
 pub use crate::v2::lu_dog_rwlock::multiplication::Multiplication;
 pub use crate::v2::lu_dog_rwlock::multiplication::MULTIPLICATION;
