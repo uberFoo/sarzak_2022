@@ -7,7 +7,6 @@
 //!
 //! # Contents:
 //!
-//! * [`AnyList`]
 //! * [`Argument`]
 //! * [`AWait`]
 //! * [`Binary`]
@@ -109,28 +108,26 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::v2::lu_dog_pl_vec::types::{
-    AWait, AnyList, Argument, Binary, Block, Body, BooleanLiteral, BooleanOperator, Call,
-    CharLiteral, Comparison, DataStructure, DwarfSourceFile, EnumField, EnumGeneric,
-    EnumGenericType, Enumeration, Expression, ExpressionBit, ExpressionStatement,
-    ExternalImplementation, Field, FieldAccess, FieldAccessTarget, FieldExpression, FloatLiteral,
-    ForLoop, FormatBit, FormatString, FuncGeneric, Function, FunctionCall, Grouped,
-    HaltAndCatchFire, ImplementationBlock, Import, Index, IntegerLiteral, Item, Lambda,
-    LambdaParameter, LetStatement, List, ListElement, ListExpression, Literal, LocalVariable, Map,
-    MapElement, MapExpression, MethodCall, NamedFieldExpression, ObjectWrapper, Operator,
-    Parameter, PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement,
-    StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField, StructGeneric,
-    TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
-    VariableExpression, WoogStruct, XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn,
-    XValue, ZObjectStore, ADDITION, AND, ASSIGNMENT, CHAR, DIVISION, EMPTY, EMPTY_EXPRESSION,
-    EQUAL, FALSE_LITERAL, FROM, FULL, GREATER_THAN, GREATER_THAN_OR_EQUAL, INCLUSIVE,
-    ITEM_STATEMENT, LESS_THAN, LESS_THAN_OR_EQUAL, MACRO_CALL, MULTIPLICATION, NEGATION, NOT,
-    NOT_EQUAL, OR, RANGE, SUBTRACTION, TASK, TO, TO_INCLUSIVE, TRUE_LITERAL, UNKNOWN, X_DEBUGGER,
+    AWait, Argument, Binary, Block, Body, BooleanLiteral, BooleanOperator, Call, CharLiteral,
+    Comparison, DataStructure, DwarfSourceFile, EnumField, EnumGeneric, EnumGenericType,
+    Enumeration, Expression, ExpressionBit, ExpressionStatement, ExternalImplementation, Field,
+    FieldAccess, FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit,
+    FormatString, FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire,
+    ImplementationBlock, Import, Index, IntegerLiteral, Item, Lambda, LambdaParameter,
+    LetStatement, List, ListElement, ListExpression, Literal, LocalVariable, Map, MapElement,
+    MapExpression, MethodCall, NamedFieldExpression, ObjectWrapper, Operator, Parameter,
+    PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement, StaticMethodCall,
+    StringBit, StringLiteral, StructExpression, StructField, StructGeneric, TupleField, TypeCast,
+    Unary, Unit, UnnamedFieldExpression, ValueType, Variable, VariableExpression, WoogStruct,
+    XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn, XValue, ZObjectStore, ADDITION,
+    AND, ANY_LIST, ASSIGNMENT, CHAR, DIVISION, EMPTY, EMPTY_EXPRESSION, EQUAL, FALSE_LITERAL, FROM,
+    FULL, GREATER_THAN, GREATER_THAN_OR_EQUAL, INCLUSIVE, ITEM_STATEMENT, LESS_THAN,
+    LESS_THAN_OR_EQUAL, MACRO_CALL, MULTIPLICATION, NEGATION, NOT, NOT_EQUAL, OR, RANGE,
+    SUBTRACTION, TASK, TO, TO_INCLUSIVE, TRUE_LITERAL, UNKNOWN, X_DEBUGGER,
 };
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct ObjectStore {
-    any_list_free_list: std::sync::Mutex<Vec<usize>>,
-    any_list: Arc<RwLock<Vec<Option<Arc<RwLock<AnyList>>>>>>,
     argument_free_list: std::sync::Mutex<Vec<usize>>,
     argument: Arc<RwLock<Vec<Option<Arc<RwLock<Argument>>>>>>,
     a_wait_free_list: std::sync::Mutex<Vec<usize>>,
@@ -312,8 +309,6 @@ pub struct ObjectStore {
 impl Clone for ObjectStore {
     fn clone(&self) -> Self {
         ObjectStore {
-            any_list_free_list: Mutex::new(self.any_list_free_list.lock().unwrap().clone()),
-            any_list: Arc::new(RwLock::new(self.any_list.read().unwrap().clone())),
             argument_free_list: Mutex::new(self.argument_free_list.lock().unwrap().clone()),
             argument: Arc::new(RwLock::new(self.argument.read().unwrap().clone())),
             a_wait_free_list: Mutex::new(self.a_wait_free_list.lock().unwrap().clone()),
@@ -592,30 +587,6 @@ impl Clone for ObjectStore {
 }
 impl ObjectStore {
     pub fn merge(&mut self, other: &ObjectStore) {
-        let mut any_list = self.any_list.write().unwrap();
-        other.any_list.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in any_list, if it's not there add it to any_list.
-                if any_list
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = any_list.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    any_list.push(Some(x.clone()));
-                }
-            }
-        });
-
         let mut argument = self.argument.write().unwrap();
         other.argument.read().unwrap().iter().for_each(|x| {
             if let Some(x) = x {
@@ -2718,8 +2689,6 @@ impl ObjectStore {
     }
     pub fn new() -> Self {
         let mut store = Self {
-            any_list_free_list: std::sync::Mutex::new(Vec::new()),
-            any_list: Arc::new(RwLock::new(Vec::new())),
             argument_free_list: std::sync::Mutex::new(Vec::new()),
             argument: Arc::new(RwLock::new(Vec::new())),
             a_wait_free_list: std::sync::Mutex::new(Vec::new()),
@@ -2907,83 +2876,6 @@ impl ObjectStore {
     }
 
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"v2::lu_dog_pl_vec-object-store-methods"}}}
-    /// Inter (insert) [`AnyList`] into the store.
-    ///
-    #[inline]
-    pub fn inter_any_list<F>(&mut self, any_list: F) -> Arc<RwLock<AnyList>>
-    where
-        F: Fn(usize) -> Arc<RwLock<AnyList>>,
-    {
-        let _index = if let Some(_index) = self.any_list_free_list.lock().unwrap().pop() {
-            tracing::trace!(target: "store", "recycling block {_index}.");
-            _index
-        } else {
-            let _index = self.any_list.read().len();
-            tracing::trace!(target: "store", "allocating block {_index}.");
-            self.any_list.write().push(None);
-            _index
-        };
-
-        let any_list = any_list(_index);
-
-        let found = if let Some(any_list) = self.any_list.read().iter().find(|stored| {
-            if let Some(stored) = stored {
-                *stored.read() == *any_list.read()
-            } else {
-                false
-            }
-        }) {
-            any_list.clone()
-        } else {
-            None
-        };
-
-        if let Some(any_list) = found {
-            tracing::debug!(target: "store", "found duplicate {any_list:?}.");
-            self.any_list_free_list.lock().unwrap().push(_index);
-            any_list.clone()
-        } else {
-            tracing::debug!(target: "store", "interring {any_list:?}.");
-            self.any_list.write()[_index] = Some(any_list.clone());
-            any_list
-        }
-    }
-
-    /// Exhume (get) [`AnyList`] from the store.
-    ///
-    #[inline]
-    pub fn exhume_any_list(&self, id: &usize) -> Option<Arc<RwLock<AnyList>>> {
-        match self.any_list.read().get(*id) {
-            Some(any_list) => any_list.clone(),
-            None => None,
-        }
-    }
-
-    /// Exorcise (remove) [`AnyList`] from the store.
-    ///
-    #[inline]
-    pub fn exorcise_any_list(&mut self, id: &usize) -> Option<Arc<RwLock<AnyList>>> {
-        tracing::debug!(target: "store", "exorcising any_list slot: {id}.");
-        let result = self.any_list.write()[*id].take();
-        self.any_list_free_list.lock().unwrap().push(*id);
-        result
-    }
-
-    /// Get an iterator over the internal `HashMap<&Uuid, AnyList>`.
-    ///
-    #[inline]
-    pub fn iter_any_list(&self) -> impl Iterator<Item = Arc<RwLock<AnyList>>> + '_ {
-        let len = self.any_list.read().len();
-        (0..len)
-            .filter(|i| self.any_list.read()[*i].is_some())
-            .map(move |i| {
-                self.any_list.read()[i]
-                    .as_ref()
-                    .map(|any_list| any_list.clone())
-                    .unwrap()
-            })
-    }
-
     /// Inter (insert) [`Argument`] into the store.
     ///
     #[inline]
@@ -9844,20 +9736,6 @@ impl ObjectStore {
         let path = path.join("lu_dog.json");
         fs::create_dir_all(&path)?;
 
-        // Persist Any List.
-        {
-            let path = path.join("any_list");
-            fs::create_dir_all(&path)?;
-            for any_list in &*self.any_list.read() {
-                if let Some(any_list) = any_list {
-                    let path = path.join(format!("{}.json", any_list.read().id));
-                    let file = fs::File::create(path)?;
-                    let mut writer = io::BufWriter::new(file);
-                    serde_json::to_writer_pretty(&mut writer, &any_list)?;
-                }
-            }
-        }
-
         // Persist Argument.
         {
             let path = path.join("argument");
@@ -11074,23 +10952,6 @@ impl ObjectStore {
         let path = path.join("lu_dog.json");
 
         let mut store = Self::new();
-
-        // Load Any List.
-        {
-            let path = path.join("any_list");
-            let entries = fs::read_dir(path)?;
-            for entry in entries {
-                let entry = entry?;
-                let path = entry.path();
-                let file = fs::File::open(path)?;
-                let reader = io::BufReader::new(file);
-                let any_list: Arc<RwLock<AnyList>> = serde_json::from_reader(reader)?;
-                store
-                    .any_list
-                    .write()
-                    .insert(any_list.read().id, Some(any_list.clone()));
-            }
-        }
 
         // Load Argument.
         {

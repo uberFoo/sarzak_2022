@@ -7,7 +7,6 @@
 //!
 //! # Contents:
 //!
-//! * [`AnyList`]
 //! * [`Argument`]
 //! * [`AWait`]
 //! * [`Binary`]
@@ -108,24 +107,22 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::v2::lu_dog::types::{
-    AWait, AnyList, Argument, Binary, Block, Body, BooleanLiteral, BooleanOperator, Call,
-    CharLiteral, Comparison, DataStructure, DwarfSourceFile, EnumField, EnumGeneric,
-    EnumGenericType, Enumeration, Expression, ExpressionBit, ExpressionStatement,
-    ExternalImplementation, Field, FieldAccess, FieldAccessTarget, FieldExpression, FloatLiteral,
-    ForLoop, FormatBit, FormatString, FuncGeneric, Function, FunctionCall, Grouped,
-    HaltAndCatchFire, ImplementationBlock, Import, Index, IntegerLiteral, Item, Lambda,
-    LambdaParameter, LetStatement, List, ListElement, ListExpression, Literal, LocalVariable, Map,
-    MapElement, MapExpression, MethodCall, NamedFieldExpression, ObjectWrapper, Operator,
-    Parameter, PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement,
-    StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField, StructGeneric,
-    TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
-    VariableExpression, WoogStruct, XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn,
-    XValue, ZObjectStore,
+    AWait, Argument, Binary, Block, Body, BooleanLiteral, BooleanOperator, Call, CharLiteral,
+    Comparison, DataStructure, DwarfSourceFile, EnumField, EnumGeneric, EnumGenericType,
+    Enumeration, Expression, ExpressionBit, ExpressionStatement, ExternalImplementation, Field,
+    FieldAccess, FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit,
+    FormatString, FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire,
+    ImplementationBlock, Import, Index, IntegerLiteral, Item, Lambda, LambdaParameter,
+    LetStatement, List, ListElement, ListExpression, Literal, LocalVariable, Map, MapElement,
+    MapExpression, MethodCall, NamedFieldExpression, ObjectWrapper, Operator, Parameter,
+    PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement, StaticMethodCall,
+    StringBit, StringLiteral, StructExpression, StructField, StructGeneric, TupleField, TypeCast,
+    Unary, Unit, UnnamedFieldExpression, ValueType, Variable, VariableExpression, WoogStruct,
+    XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn, XValue, ZObjectStore,
 };
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct ObjectStore {
-    any_list: Rc<RefCell<HashMap<Uuid, Rc<RefCell<AnyList>>>>>,
     argument: Rc<RefCell<HashMap<Uuid, Rc<RefCell<Argument>>>>>,
     a_wait: Rc<RefCell<HashMap<Uuid, Rc<RefCell<AWait>>>>>,
     binary: Rc<RefCell<HashMap<Uuid, Rc<RefCell<Binary>>>>>,
@@ -222,7 +219,6 @@ pub struct ObjectStore {
 impl ObjectStore {
     pub fn new() -> Self {
         let store = Self {
-            any_list: Rc::new(RefCell::new(HashMap::default())),
             argument: Rc::new(RefCell::new(HashMap::default())),
             a_wait: Rc::new(RefCell::new(HashMap::default())),
             binary: Rc::new(RefCell::new(HashMap::default())),
@@ -325,44 +321,6 @@ impl ObjectStore {
     }
 
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"v2::lu_dog-object-store-methods"}}}
-    /// Inter (insert) [`AnyList`] into the store.
-    ///
-    pub fn inter_any_list(&mut self, any_list: Rc<RefCell<AnyList>>) {
-        let read = any_list.borrow();
-        self.any_list.borrow_mut().insert(read.id, any_list.clone());
-    }
-
-    /// Exhume (get) [`AnyList`] from the store.
-    ///
-    pub fn exhume_any_list(&self, id: &Uuid) -> Option<Rc<RefCell<AnyList>>> {
-        self.any_list
-            .borrow()
-            .get(id)
-            .map(|any_list| any_list.clone())
-    }
-
-    /// Exorcise (remove) [`AnyList`] from the store.
-    ///
-    pub fn exorcise_any_list(&mut self, id: &Uuid) -> Option<Rc<RefCell<AnyList>>> {
-        self.any_list
-            .borrow_mut()
-            .remove(id)
-            .map(|any_list| any_list.clone())
-    }
-
-    /// Get an iterator over the internal `HashMap<&Uuid, AnyList>`.
-    ///
-    pub fn iter_any_list(&self) -> impl Iterator<Item = Rc<RefCell<AnyList>>> + '_ {
-        let values: Vec<Rc<RefCell<AnyList>>> = self
-            .any_list
-            .borrow()
-            .values()
-            .map(|any_list| any_list.clone())
-            .collect();
-        let len = values.len();
-        (0..len).map(move |i| values[i].clone())
-    }
-
     /// Inter (insert) [`Argument`] into the store.
     ///
     pub fn inter_argument(&mut self, argument: Rc<RefCell<Argument>>) {
@@ -3793,18 +3751,6 @@ impl ObjectStore {
         let path = path.join("lu_dog.json");
         fs::create_dir_all(&path)?;
 
-        // Persist Any List.
-        {
-            let path = path.join("any_list");
-            fs::create_dir_all(&path)?;
-            for any_list in self.any_list.borrow().values() {
-                let path = path.join(format!("{}.json", any_list.borrow().id));
-                let file = fs::File::create(path)?;
-                let mut writer = io::BufWriter::new(file);
-                serde_json::to_writer_pretty(&mut writer, &any_list)?;
-            }
-        }
-
         // Persist Argument.
         {
             let path = path.join("argument");
@@ -4851,23 +4797,6 @@ impl ObjectStore {
         let path = path.join("lu_dog.json");
 
         let store = Self::new();
-
-        // Load Any List.
-        {
-            let path = path.join("any_list");
-            let entries = fs::read_dir(path)?;
-            for entry in entries {
-                let entry = entry?;
-                let path = entry.path();
-                let file = fs::File::open(path)?;
-                let reader = io::BufReader::new(file);
-                let any_list: Rc<RefCell<AnyList>> = serde_json::from_reader(reader)?;
-                store
-                    .any_list
-                    .borrow_mut()
-                    .insert(any_list.borrow().id, any_list.clone());
-            }
-        }
 
         // Load Argument.
         {
