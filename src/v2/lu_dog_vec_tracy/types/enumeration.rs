@@ -9,6 +9,7 @@ use crate::v2::lu_dog_vec_tracy::types::data_structure::DataStructure;
 use crate::v2::lu_dog_vec_tracy::types::data_structure::DataStructureEnum;
 use crate::v2::lu_dog_vec_tracy::types::enum_field::EnumField;
 use crate::v2::lu_dog_vec_tracy::types::enum_generic::EnumGeneric;
+use crate::v2::lu_dog_vec_tracy::types::enum_generic_type::EnumGenericType;
 use crate::v2::lu_dog_vec_tracy::types::implementation_block::ImplementationBlock;
 use crate::v2::lu_dog_vec_tracy::types::item::Item;
 use crate::v2::lu_dog_vec_tracy::types::item::ItemEnum;
@@ -113,6 +114,19 @@ impl Enumeration {
             Some(ref implementation_block) => vec![implementation_block.clone()],
             None => Vec::new(),
         }
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"enumeration-struct-impl-nav-backward-assoc-one-to-enum_generic_type"}}}
+    /// Navigate to [`EnumGenericType`] across R120(1-1)
+    pub fn r120_enum_generic_type<'a>(
+        &'a self,
+        store: &'a LuDogVecTracyStore,
+    ) -> Vec<Rc<RefCell<EnumGenericType>>> {
+        span!("r120_enum_generic_type");
+        vec![store
+            .iter_enum_generic_type()
+            .find(|enum_generic_type| enum_generic_type.borrow().enumeration == self.id)
+            .unwrap()]
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"enumeration-impl-nav-subtype-to-supertype-data_structure"}}}

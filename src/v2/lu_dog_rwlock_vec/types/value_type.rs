@@ -4,10 +4,11 @@ use std::sync::Arc;
 use std::sync::RwLock;
 use uuid::Uuid;
 
-use crate::v2::lu_dog_rwlock_vec::types::any_list::ANY_LIST;
+use crate::v2::lu_dog_rwlock_vec::types::any_list::AnyList;
 use crate::v2::lu_dog_rwlock_vec::types::char::CHAR;
 use crate::v2::lu_dog_rwlock_vec::types::empty::EMPTY;
 use crate::v2::lu_dog_rwlock_vec::types::enum_generic::EnumGeneric;
+use crate::v2::lu_dog_rwlock_vec::types::enum_generic_type::EnumGenericType;
 use crate::v2::lu_dog_rwlock_vec::types::enumeration::Enumeration;
 use crate::v2::lu_dog_rwlock_vec::types::field::Field;
 use crate::v2::lu_dog_rwlock_vec::types::func_generic::FuncGeneric;
@@ -67,7 +68,7 @@ pub struct ValueType {
 // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"value_type-hybrid-enum-definition"}}}
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub enum ValueTypeEnum {
-    AnyList(Uuid),
+    AnyList(usize),
     Char(Uuid),
     Empty(Uuid),
     EnumGeneric(usize),
@@ -93,11 +94,15 @@ pub enum ValueTypeEnum {
 impl ValueType {
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"value_type-struct-impl-new_any_list"}}}
     /// Inter a new ValueType in the store, and return it's `id`.
-    pub fn new_any_list(bogus: bool, store: &mut LuDogRwlockVecStore) -> Arc<RwLock<ValueType>> {
+    pub fn new_any_list(
+        bogus: bool,
+        subtype: &Arc<RwLock<AnyList>>,
+        store: &mut LuDogRwlockVecStore,
+    ) -> Arc<RwLock<ValueType>> {
         store.inter_value_type(|id| {
             Arc::new(RwLock::new(ValueType {
                 bogus: bogus,
-                subtype: ValueTypeEnum::AnyList(ANY_LIST),
+                subtype: ValueTypeEnum::AnyList(subtype.read().unwrap().id), // b
                 id,
             }))
         })
@@ -394,6 +399,18 @@ impl ValueType {
                 id,
             }))
         })
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"value_type-struct-impl-nav-backward-1_M-to-enum_generic_type"}}}
+    /// Navigate to [`EnumGenericType`] across R119(1-M)
+    pub fn r119_enum_generic_type<'a>(
+        &'a self,
+        store: &'a LuDogRwlockVecStore,
+    ) -> Vec<Arc<RwLock<EnumGenericType>>> {
+        store
+            .iter_enum_generic_type()
+            .filter(|enum_generic_type| enum_generic_type.read().unwrap().ty == self.id)
+            .collect()
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"value_type-struct-impl-nav-backward-1_M-to-field"}}}

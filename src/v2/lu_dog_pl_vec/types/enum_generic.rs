@@ -4,6 +4,7 @@ use parking_lot::RwLock;
 use std::sync::Arc;
 use uuid::Uuid;
 
+use crate::v2::lu_dog_pl_vec::types::enum_generic_type::EnumGenericType;
 use crate::v2::lu_dog_pl_vec::types::enumeration::Enumeration;
 use crate::v2::lu_dog_pl_vec::types::value_type::ValueType;
 use crate::v2::lu_dog_pl_vec::types::value_type::ValueTypeEnum;
@@ -92,6 +93,18 @@ impl EnumGeneric {
             .iter_enumeration()
             .find(|enumeration| enumeration.read().first_generic == Some(self.id))
             .unwrap()]
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"enum_generic-struct-impl-nav-backward-assoc-many-to-enum_generic_type"}}}
+    /// Navigate to [`EnumGenericType`] across R120(1-M)
+    pub fn r120_enum_generic_type<'a>(
+        &'a self,
+        store: &'a LuDogPlVecStore,
+    ) -> Vec<Arc<RwLock<EnumGenericType>>> {
+        store
+            .iter_enum_generic_type()
+            .filter(|enum_generic_type| enum_generic_type.read().generic == self.id)
+            .collect()
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"enum_generic-impl-nav-subtype-to-supertype-value_type"}}}

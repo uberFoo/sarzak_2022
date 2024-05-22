@@ -7,6 +7,7 @@
 //!
 //! # Contents:
 //!
+//! * [`AnyList`]
 //! * [`Argument`]
 //! * [`AWait`]
 //! * [`Binary`]
@@ -21,6 +22,7 @@
 //! * [`DwarfSourceFile`]
 //! * [`EnumField`]
 //! * [`EnumGeneric`]
+//! * [`EnumGenericType`]
 //! * [`Enumeration`]
 //! * [`Expression`]
 //! * [`ExpressionBit`]
@@ -106,22 +108,24 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::v2::lu_dog_rwlock::types::{
-    AWait, Argument, Binary, Block, Body, BooleanLiteral, BooleanOperator, Call, CharLiteral,
-    Comparison, DataStructure, DwarfSourceFile, EnumField, EnumGeneric, Enumeration, Expression,
-    ExpressionBit, ExpressionStatement, ExternalImplementation, Field, FieldAccess,
-    FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit, FormatString,
-    FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire, ImplementationBlock, Import,
-    Index, IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement,
-    ListExpression, Literal, LocalVariable, Map, MapElement, MapExpression, MethodCall,
-    NamedFieldExpression, ObjectWrapper, Operator, Parameter, PathElement, Pattern,
-    RangeExpression, ResultStatement, Span, Statement, StaticMethodCall, StringBit, StringLiteral,
-    StructExpression, StructField, StructGeneric, TupleField, TypeCast, Unary, Unit,
-    UnnamedFieldExpression, ValueType, Variable, VariableExpression, WoogStruct, XFuture, XIf,
-    XMacro, XMatch, XPath, XPlugin, XPrint, XReturn, XValue, ZObjectStore,
+    AWait, AnyList, Argument, Binary, Block, Body, BooleanLiteral, BooleanOperator, Call,
+    CharLiteral, Comparison, DataStructure, DwarfSourceFile, EnumField, EnumGeneric,
+    EnumGenericType, Enumeration, Expression, ExpressionBit, ExpressionStatement,
+    ExternalImplementation, Field, FieldAccess, FieldAccessTarget, FieldExpression, FloatLiteral,
+    ForLoop, FormatBit, FormatString, FuncGeneric, Function, FunctionCall, Grouped,
+    HaltAndCatchFire, ImplementationBlock, Import, Index, IntegerLiteral, Item, Lambda,
+    LambdaParameter, LetStatement, List, ListElement, ListExpression, Literal, LocalVariable, Map,
+    MapElement, MapExpression, MethodCall, NamedFieldExpression, ObjectWrapper, Operator,
+    Parameter, PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement,
+    StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField, StructGeneric,
+    TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
+    VariableExpression, WoogStruct, XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn,
+    XValue, ZObjectStore,
 };
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct ObjectStore {
+    any_list: Arc<RwLock<HashMap<Uuid, Arc<RwLock<AnyList>>>>>,
     argument: Arc<RwLock<HashMap<Uuid, Arc<RwLock<Argument>>>>>,
     a_wait: Arc<RwLock<HashMap<Uuid, Arc<RwLock<AWait>>>>>,
     binary: Arc<RwLock<HashMap<Uuid, Arc<RwLock<Binary>>>>>,
@@ -136,6 +140,7 @@ pub struct ObjectStore {
     dwarf_source_file: Arc<RwLock<HashMap<Uuid, Arc<RwLock<DwarfSourceFile>>>>>,
     enum_field: Arc<RwLock<HashMap<Uuid, Arc<RwLock<EnumField>>>>>,
     enum_generic: Arc<RwLock<HashMap<Uuid, Arc<RwLock<EnumGeneric>>>>>,
+    enum_generic_type: Arc<RwLock<HashMap<Uuid, Arc<RwLock<EnumGenericType>>>>>,
     enumeration: Arc<RwLock<HashMap<Uuid, Arc<RwLock<Enumeration>>>>>,
     enumeration_id_by_name: Arc<RwLock<HashMap<String, Uuid>>>,
     expression: Arc<RwLock<HashMap<Uuid, Arc<RwLock<Expression>>>>>,
@@ -217,6 +222,7 @@ pub struct ObjectStore {
 impl ObjectStore {
     pub fn new() -> Self {
         let store = Self {
+            any_list: Arc::new(RwLock::new(HashMap::default())),
             argument: Arc::new(RwLock::new(HashMap::default())),
             a_wait: Arc::new(RwLock::new(HashMap::default())),
             binary: Arc::new(RwLock::new(HashMap::default())),
@@ -231,6 +237,7 @@ impl ObjectStore {
             dwarf_source_file: Arc::new(RwLock::new(HashMap::default())),
             enum_field: Arc::new(RwLock::new(HashMap::default())),
             enum_generic: Arc::new(RwLock::new(HashMap::default())),
+            enum_generic_type: Arc::new(RwLock::new(HashMap::default())),
             enumeration: Arc::new(RwLock::new(HashMap::default())),
             enumeration_id_by_name: Arc::new(RwLock::new(HashMap::default())),
             expression: Arc::new(RwLock::new(HashMap::default())),
@@ -318,6 +325,50 @@ impl ObjectStore {
     }
 
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"v2::lu_dog_rwlock-object-store-methods"}}}
+    /// Inter (insert) [`AnyList`] into the store.
+    ///
+    pub fn inter_any_list(&mut self, any_list: Arc<RwLock<AnyList>>) {
+        let read = any_list.read().unwrap();
+        self.any_list
+            .write()
+            .unwrap()
+            .insert(read.id, any_list.clone());
+    }
+
+    /// Exhume (get) [`AnyList`] from the store.
+    ///
+    pub fn exhume_any_list(&self, id: &Uuid) -> Option<Arc<RwLock<AnyList>>> {
+        self.any_list
+            .read()
+            .unwrap()
+            .get(id)
+            .map(|any_list| any_list.clone())
+    }
+
+    /// Exorcise (remove) [`AnyList`] from the store.
+    ///
+    pub fn exorcise_any_list(&mut self, id: &Uuid) -> Option<Arc<RwLock<AnyList>>> {
+        self.any_list
+            .write()
+            .unwrap()
+            .remove(id)
+            .map(|any_list| any_list.clone())
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, AnyList>`.
+    ///
+    pub fn iter_any_list(&self) -> impl Iterator<Item = Arc<RwLock<AnyList>>> + '_ {
+        let values: Vec<Arc<RwLock<AnyList>>> = self
+            .any_list
+            .read()
+            .unwrap()
+            .values()
+            .map(|any_list| any_list.clone())
+            .collect();
+        let len = values.len();
+        (0..len).map(move |i| values[i].clone())
+    }
+
     /// Inter (insert) [`Argument`] into the store.
     ///
     pub fn inter_argument(&mut self, argument: Arc<RwLock<Argument>>) {
@@ -911,6 +962,55 @@ impl ObjectStore {
             .unwrap()
             .values()
             .map(|enum_generic| enum_generic.clone())
+            .collect();
+        let len = values.len();
+        (0..len).map(move |i| values[i].clone())
+    }
+
+    /// Inter (insert) [`EnumGenericType`] into the store.
+    ///
+    pub fn inter_enum_generic_type(&mut self, enum_generic_type: Arc<RwLock<EnumGenericType>>) {
+        let read = enum_generic_type.read().unwrap();
+        self.enum_generic_type
+            .write()
+            .unwrap()
+            .insert(read.id, enum_generic_type.clone());
+    }
+
+    /// Exhume (get) [`EnumGenericType`] from the store.
+    ///
+    pub fn exhume_enum_generic_type(&self, id: &Uuid) -> Option<Arc<RwLock<EnumGenericType>>> {
+        self.enum_generic_type
+            .read()
+            .unwrap()
+            .get(id)
+            .map(|enum_generic_type| enum_generic_type.clone())
+    }
+
+    /// Exorcise (remove) [`EnumGenericType`] from the store.
+    ///
+    pub fn exorcise_enum_generic_type(
+        &mut self,
+        id: &Uuid,
+    ) -> Option<Arc<RwLock<EnumGenericType>>> {
+        self.enum_generic_type
+            .write()
+            .unwrap()
+            .remove(id)
+            .map(|enum_generic_type| enum_generic_type.clone())
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, EnumGenericType>`.
+    ///
+    pub fn iter_enum_generic_type(
+        &self,
+    ) -> impl Iterator<Item = Arc<RwLock<EnumGenericType>>> + '_ {
+        let values: Vec<Arc<RwLock<EnumGenericType>>> = self
+            .enum_generic_type
+            .read()
+            .unwrap()
+            .values()
+            .map(|enum_generic_type| enum_generic_type.clone())
             .collect();
         let len = values.len();
         (0..len).map(move |i| values[i].clone())
@@ -4131,6 +4231,18 @@ impl ObjectStore {
         let path = path.join("lu_dog.json");
         fs::create_dir_all(&path)?;
 
+        // Persist Any List.
+        {
+            let path = path.join("any_list");
+            fs::create_dir_all(&path)?;
+            for any_list in self.any_list.read().unwrap().values() {
+                let path = path.join(format!("{}.json", any_list.read().unwrap().id));
+                let file = fs::File::create(path)?;
+                let mut writer = io::BufWriter::new(file);
+                serde_json::to_writer_pretty(&mut writer, &any_list)?;
+            }
+        }
+
         // Persist Argument.
         {
             let path = path.join("argument");
@@ -4296,6 +4408,18 @@ impl ObjectStore {
                 let file = fs::File::create(path)?;
                 let mut writer = io::BufWriter::new(file);
                 serde_json::to_writer_pretty(&mut writer, &enum_generic)?;
+            }
+        }
+
+        // Persist Enum Generic Type.
+        {
+            let path = path.join("enum_generic_type");
+            fs::create_dir_all(&path)?;
+            for enum_generic_type in self.enum_generic_type.read().unwrap().values() {
+                let path = path.join(format!("{}.json", enum_generic_type.read().unwrap().id));
+                let file = fs::File::create(path)?;
+                let mut writer = io::BufWriter::new(file);
+                serde_json::to_writer_pretty(&mut writer, &enum_generic_type)?;
             }
         }
 
@@ -5175,6 +5299,24 @@ impl ObjectStore {
 
         let store = Self::new();
 
+        // Load Any List.
+        {
+            let path = path.join("any_list");
+            let entries = fs::read_dir(path)?;
+            for entry in entries {
+                let entry = entry?;
+                let path = entry.path();
+                let file = fs::File::open(path)?;
+                let reader = io::BufReader::new(file);
+                let any_list: Arc<RwLock<AnyList>> = serde_json::from_reader(reader)?;
+                store
+                    .any_list
+                    .write()
+                    .unwrap()
+                    .insert(any_list.read().unwrap().id, any_list.clone());
+            }
+        }
+
         // Load Argument.
         {
             let path = path.join("argument");
@@ -5424,6 +5566,24 @@ impl ObjectStore {
                     .write()
                     .unwrap()
                     .insert(enum_generic.read().unwrap().id, enum_generic.clone());
+            }
+        }
+
+        // Load Enum Generic Type.
+        {
+            let path = path.join("enum_generic_type");
+            let entries = fs::read_dir(path)?;
+            for entry in entries {
+                let entry = entry?;
+                let path = entry.path();
+                let file = fs::File::open(path)?;
+                let reader = io::BufReader::new(file);
+                let enum_generic_type: Arc<RwLock<EnumGenericType>> =
+                    serde_json::from_reader(reader)?;
+                store.enum_generic_type.write().unwrap().insert(
+                    enum_generic_type.read().unwrap().id,
+                    enum_generic_type.clone(),
+                );
             }
         }
 

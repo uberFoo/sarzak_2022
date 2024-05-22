@@ -4,6 +4,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use uuid::Uuid;
 
+use crate::v2::lu_dog::types::enum_generic_type::EnumGenericType;
 use crate::v2::lu_dog::types::enumeration::Enumeration;
 use crate::v2::lu_dog::types::value_type::ValueType;
 use crate::v2::lu_dog::types::value_type::ValueTypeEnum;
@@ -84,6 +85,18 @@ impl EnumGeneric {
             .iter_enumeration()
             .find(|enumeration| enumeration.borrow().first_generic == Some(self.id))
             .unwrap()]
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"enum_generic-struct-impl-nav-backward-assoc-many-to-enum_generic_type"}}}
+    /// Navigate to [`EnumGenericType`] across R120(1-M)
+    pub fn r120_enum_generic_type<'a>(
+        &'a self,
+        store: &'a LuDogStore,
+    ) -> Vec<Rc<RefCell<EnumGenericType>>> {
+        store
+            .iter_enum_generic_type()
+            .filter(|enum_generic_type| enum_generic_type.borrow().generic == self.id)
+            .collect()
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"enum_generic-impl-nav-subtype-to-supertype-value_type"}}}

@@ -7,6 +7,7 @@
 //!
 //! # Contents:
 //!
+//! * [`AnyList`]
 //! * [`Argument`]
 //! * [`AWait`]
 //! * [`Binary`]
@@ -21,6 +22,7 @@
 //! * [`DwarfSourceFile`]
 //! * [`EnumField`]
 //! * [`EnumGeneric`]
+//! * [`EnumGenericType`]
 //! * [`Enumeration`]
 //! * [`Expression`]
 //! * [`ExpressionBit`]
@@ -102,26 +104,28 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::v2::lu_dog_ndrwlock_vec::types::{
-    AWait, Argument, Binary, Block, Body, BooleanLiteral, BooleanOperator, Call, CharLiteral,
-    Comparison, DataStructure, DwarfSourceFile, EnumField, EnumGeneric, Enumeration, Expression,
-    ExpressionBit, ExpressionStatement, ExternalImplementation, Field, FieldAccess,
-    FieldAccessTarget, FieldExpression, FloatLiteral, ForLoop, FormatBit, FormatString,
-    FuncGeneric, Function, FunctionCall, Grouped, HaltAndCatchFire, ImplementationBlock, Import,
-    Index, IntegerLiteral, Item, Lambda, LambdaParameter, LetStatement, List, ListElement,
-    ListExpression, Literal, LocalVariable, Map, MapElement, MapExpression, MethodCall,
-    NamedFieldExpression, ObjectWrapper, Operator, Parameter, PathElement, Pattern,
-    RangeExpression, ResultStatement, Span, Statement, StaticMethodCall, StringBit, StringLiteral,
-    StructExpression, StructField, StructGeneric, TupleField, TypeCast, Unary, Unit,
-    UnnamedFieldExpression, ValueType, Variable, VariableExpression, WoogStruct, XFuture, XIf,
-    XMacro, XMatch, XPath, XPlugin, XPrint, XReturn, XValue, ZObjectStore, ADDITION, AND, ANY_LIST,
-    ASSIGNMENT, CHAR, DIVISION, EMPTY, EMPTY_EXPRESSION, EQUAL, FALSE_LITERAL, FROM, FULL,
-    GREATER_THAN, GREATER_THAN_OR_EQUAL, INCLUSIVE, ITEM_STATEMENT, LESS_THAN, LESS_THAN_OR_EQUAL,
-    MACRO_CALL, MULTIPLICATION, NEGATION, NOT, NOT_EQUAL, OR, RANGE, SUBTRACTION, TASK, TO,
-    TO_INCLUSIVE, TRUE_LITERAL, UNKNOWN, X_DEBUGGER,
+    AWait, AnyList, Argument, Binary, Block, Body, BooleanLiteral, BooleanOperator, Call,
+    CharLiteral, Comparison, DataStructure, DwarfSourceFile, EnumField, EnumGeneric,
+    EnumGenericType, Enumeration, Expression, ExpressionBit, ExpressionStatement,
+    ExternalImplementation, Field, FieldAccess, FieldAccessTarget, FieldExpression, FloatLiteral,
+    ForLoop, FormatBit, FormatString, FuncGeneric, Function, FunctionCall, Grouped,
+    HaltAndCatchFire, ImplementationBlock, Import, Index, IntegerLiteral, Item, Lambda,
+    LambdaParameter, LetStatement, List, ListElement, ListExpression, Literal, LocalVariable, Map,
+    MapElement, MapExpression, MethodCall, NamedFieldExpression, ObjectWrapper, Operator,
+    Parameter, PathElement, Pattern, RangeExpression, ResultStatement, Span, Statement,
+    StaticMethodCall, StringBit, StringLiteral, StructExpression, StructField, StructGeneric,
+    TupleField, TypeCast, Unary, Unit, UnnamedFieldExpression, ValueType, Variable,
+    VariableExpression, WoogStruct, XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn,
+    XValue, ZObjectStore, ADDITION, AND, ASSIGNMENT, CHAR, DIVISION, EMPTY, EMPTY_EXPRESSION,
+    EQUAL, FALSE_LITERAL, FROM, FULL, GREATER_THAN, GREATER_THAN_OR_EQUAL, INCLUSIVE,
+    ITEM_STATEMENT, LESS_THAN, LESS_THAN_OR_EQUAL, MACRO_CALL, MULTIPLICATION, NEGATION, NOT,
+    NOT_EQUAL, OR, RANGE, SUBTRACTION, TASK, TO, TO_INCLUSIVE, TRUE_LITERAL, UNKNOWN, X_DEBUGGER,
 };
 
 #[derive(Debug)]
 pub struct ObjectStore {
+    any_list_free_list: std::sync::Mutex<Vec<usize>>,
+    any_list: Arc<RwLock<Vec<Option<Arc<RwLock<AnyList>>>>>>,
     argument_free_list: std::sync::Mutex<Vec<usize>>,
     argument: Arc<RwLock<Vec<Option<Arc<RwLock<Argument>>>>>>,
     a_wait_free_list: std::sync::Mutex<Vec<usize>>,
@@ -150,6 +154,8 @@ pub struct ObjectStore {
     enum_field: Arc<RwLock<Vec<Option<Arc<RwLock<EnumField>>>>>>,
     enum_generic_free_list: std::sync::Mutex<Vec<usize>>,
     enum_generic: Arc<RwLock<Vec<Option<Arc<RwLock<EnumGeneric>>>>>>,
+    enum_generic_type_free_list: std::sync::Mutex<Vec<usize>>,
+    enum_generic_type: Arc<RwLock<Vec<Option<Arc<RwLock<EnumGenericType>>>>>>,
     enumeration_free_list: std::sync::Mutex<Vec<usize>>,
     enumeration: Arc<RwLock<Vec<Option<Arc<RwLock<Enumeration>>>>>>,
     enumeration_id_by_name: Arc<RwLock<HashMap<String, usize>>>,
@@ -301,6 +307,8 @@ pub struct ObjectStore {
 impl Clone for ObjectStore {
     fn clone(&self) -> Self {
         ObjectStore {
+            any_list_free_list: Mutex::new(self.any_list_free_list.lock().unwrap().clone()),
+            any_list: Arc::new(RwLock::new(self.any_list.read().unwrap().clone())),
             argument_free_list: Mutex::new(self.argument_free_list.lock().unwrap().clone()),
             argument: Arc::new(RwLock::new(self.argument.read().unwrap().clone())),
             a_wait_free_list: Mutex::new(self.a_wait_free_list.lock().unwrap().clone()),
@@ -339,6 +347,12 @@ impl Clone for ObjectStore {
             enum_field: Arc::new(RwLock::new(self.enum_field.read().unwrap().clone())),
             enum_generic_free_list: Mutex::new(self.enum_generic_free_list.lock().unwrap().clone()),
             enum_generic: Arc::new(RwLock::new(self.enum_generic.read().unwrap().clone())),
+            enum_generic_type_free_list: Mutex::new(
+                self.enum_generic_type_free_list.lock().unwrap().clone(),
+            ),
+            enum_generic_type: Arc::new(RwLock::new(
+                self.enum_generic_type.read().unwrap().clone(),
+            )),
             enumeration_free_list: Mutex::new(self.enumeration_free_list.lock().unwrap().clone()),
             enumeration: Arc::new(RwLock::new(self.enumeration.read().unwrap().clone())),
             enumeration_id_by_name: self.enumeration_id_by_name.clone(),
@@ -572,7 +586,31 @@ impl Clone for ObjectStore {
     }
 }
 impl ObjectStore {
-    pub fn merge(&mut self, other: ObjectStore) {
+    pub fn merge(&mut self, other: &ObjectStore) {
+        let mut any_list = self.any_list.write().unwrap();
+        other.any_list.read().unwrap().iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in any_list, if it's not there add it to any_list.
+                if any_list
+                    .iter()
+                    .find(|&y| {
+                        if let Some(y) = y {
+                            *y.read().unwrap() == *x.read().unwrap()
+                        } else {
+                            false
+                        }
+                    })
+                    .is_none()
+                {
+                    let _index_ = any_list.len();
+                    if x.read().unwrap().id != _index_ {
+                        x.write().unwrap().id = _index_;
+                    }
+                    any_list.push(Some(x.clone()));
+                }
+            }
+        });
+
         let mut argument = self.argument.write().unwrap();
         other.argument.read().unwrap().iter().for_each(|x| {
             if let Some(x) = x {
@@ -913,6 +951,35 @@ impl ObjectStore {
                 }
             }
         });
+
+        let mut enum_generic_type = self.enum_generic_type.write().unwrap();
+        other
+            .enum_generic_type
+            .read()
+            .unwrap()
+            .iter()
+            .for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in enum_generic_type, if it's not there add it to enum_generic_type.
+                    if enum_generic_type
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = enum_generic_type.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        enum_generic_type.push(Some(x.clone()));
+                    }
+                }
+            });
 
         let mut enumeration = self.enumeration.write().unwrap();
         other.enumeration.read().unwrap().iter().for_each(|x| {
@@ -2646,6 +2713,8 @@ impl ObjectStore {
     }
     pub fn new() -> Self {
         let mut store = Self {
+            any_list_free_list: std::sync::Mutex::new(Vec::new()),
+            any_list: Arc::new(RwLock::new(Vec::new())),
             argument_free_list: std::sync::Mutex::new(Vec::new()),
             argument: Arc::new(RwLock::new(Vec::new())),
             a_wait_free_list: std::sync::Mutex::new(Vec::new()),
@@ -2674,6 +2743,8 @@ impl ObjectStore {
             enum_field: Arc::new(RwLock::new(Vec::new())),
             enum_generic_free_list: std::sync::Mutex::new(Vec::new()),
             enum_generic: Arc::new(RwLock::new(Vec::new())),
+            enum_generic_type_free_list: std::sync::Mutex::new(Vec::new()),
+            enum_generic_type: Arc::new(RwLock::new(Vec::new())),
             enumeration_free_list: std::sync::Mutex::new(Vec::new()),
             enumeration: Arc::new(RwLock::new(Vec::new())),
             enumeration_id_by_name: Arc::new(RwLock::new(HashMap::default())),
@@ -2831,6 +2902,83 @@ impl ObjectStore {
     }
 
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"v2::lu_dog_ndrwlock_vec-object-store-methods"}}}
+    /// Inter (insert) [`AnyList`] into the store.
+    ///
+    #[inline]
+    pub fn inter_any_list<F>(&mut self, any_list: F) -> Arc<RwLock<AnyList>>
+    where
+        F: Fn(usize) -> Arc<RwLock<AnyList>>,
+    {
+        let _index = if let Some(_index) = self.any_list_free_list.lock().unwrap().pop() {
+            tracing::trace!(target: "store", "recycling block {_index}.");
+            _index
+        } else {
+            let _index = self.any_list.read().unwrap().len();
+            tracing::trace!(target: "store", "allocating block {_index}.");
+            self.any_list.write().unwrap().push(None);
+            _index
+        };
+
+        let any_list = any_list(_index);
+
+        let found = if let Some(any_list) = self.any_list.read().unwrap().iter().find(|stored| {
+            if let Some(stored) = stored {
+                *stored.read().unwrap() == *any_list.read().unwrap()
+            } else {
+                false
+            }
+        }) {
+            any_list.clone()
+        } else {
+            None
+        };
+
+        if let Some(any_list) = found {
+            tracing::debug!(target: "store", "found duplicate {any_list:?}.");
+            self.any_list_free_list.lock().unwrap().push(_index);
+            any_list.clone()
+        } else {
+            tracing::debug!(target: "store", "interring {any_list:?}.");
+            self.any_list.write().unwrap()[_index] = Some(any_list.clone());
+            any_list
+        }
+    }
+
+    /// Exhume (get) [`AnyList`] from the store.
+    ///
+    #[inline]
+    pub fn exhume_any_list(&self, id: &usize) -> Option<Arc<RwLock<AnyList>>> {
+        match self.any_list.read().unwrap().get(*id) {
+            Some(any_list) => any_list.clone(),
+            None => None,
+        }
+    }
+
+    /// Exorcise (remove) [`AnyList`] from the store.
+    ///
+    #[inline]
+    pub fn exorcise_any_list(&mut self, id: &usize) -> Option<Arc<RwLock<AnyList>>> {
+        tracing::debug!(target: "store", "exorcising any_list slot: {id}.");
+        let result = self.any_list.write().unwrap()[*id].take();
+        self.any_list_free_list.lock().unwrap().push(*id);
+        result
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, AnyList>`.
+    ///
+    #[inline]
+    pub fn iter_any_list(&self) -> impl Iterator<Item = Arc<RwLock<AnyList>>> + '_ {
+        let len = self.any_list.read().unwrap().len();
+        (0..len)
+            .filter(|i| self.any_list.read().unwrap()[*i].is_some())
+            .map(move |i| {
+                self.any_list.read().unwrap()[i]
+                    .as_ref()
+                    .map(|any_list| any_list.clone())
+                    .unwrap()
+            })
+    }
+
     /// Inter (insert) [`Argument`] into the store.
     ///
     #[inline]
@@ -3931,6 +4079,99 @@ impl ObjectStore {
                 self.enum_generic.read().unwrap()[i]
                     .as_ref()
                     .map(|enum_generic| enum_generic.clone())
+                    .unwrap()
+            })
+    }
+
+    /// Inter (insert) [`EnumGenericType`] into the store.
+    ///
+    #[inline]
+    pub fn inter_enum_generic_type<F>(
+        &mut self,
+        enum_generic_type: F,
+    ) -> Arc<RwLock<EnumGenericType>>
+    where
+        F: Fn(usize) -> Arc<RwLock<EnumGenericType>>,
+    {
+        let _index = if let Some(_index) = self.enum_generic_type_free_list.lock().unwrap().pop() {
+            tracing::trace!(target: "store", "recycling block {_index}.");
+            _index
+        } else {
+            let _index = self.enum_generic_type.read().unwrap().len();
+            tracing::trace!(target: "store", "allocating block {_index}.");
+            self.enum_generic_type.write().unwrap().push(None);
+            _index
+        };
+
+        let enum_generic_type = enum_generic_type(_index);
+
+        let found = if let Some(enum_generic_type) = self
+            .enum_generic_type
+            .read()
+            .unwrap()
+            .iter()
+            .find(|stored| {
+                if let Some(stored) = stored {
+                    *stored.read().unwrap() == *enum_generic_type.read().unwrap()
+                } else {
+                    false
+                }
+            }) {
+            enum_generic_type.clone()
+        } else {
+            None
+        };
+
+        if let Some(enum_generic_type) = found {
+            tracing::debug!(target: "store", "found duplicate {enum_generic_type:?}.");
+            self.enum_generic_type_free_list
+                .lock()
+                .unwrap()
+                .push(_index);
+            enum_generic_type.clone()
+        } else {
+            tracing::debug!(target: "store", "interring {enum_generic_type:?}.");
+            self.enum_generic_type.write().unwrap()[_index] = Some(enum_generic_type.clone());
+            enum_generic_type
+        }
+    }
+
+    /// Exhume (get) [`EnumGenericType`] from the store.
+    ///
+    #[inline]
+    pub fn exhume_enum_generic_type(&self, id: &usize) -> Option<Arc<RwLock<EnumGenericType>>> {
+        match self.enum_generic_type.read().unwrap().get(*id) {
+            Some(enum_generic_type) => enum_generic_type.clone(),
+            None => None,
+        }
+    }
+
+    /// Exorcise (remove) [`EnumGenericType`] from the store.
+    ///
+    #[inline]
+    pub fn exorcise_enum_generic_type(
+        &mut self,
+        id: &usize,
+    ) -> Option<Arc<RwLock<EnumGenericType>>> {
+        tracing::debug!(target: "store", "exorcising enum_generic_type slot: {id}.");
+        let result = self.enum_generic_type.write().unwrap()[*id].take();
+        self.enum_generic_type_free_list.lock().unwrap().push(*id);
+        result
+    }
+
+    /// Get an iterator over the internal `HashMap<&Uuid, EnumGenericType>`.
+    ///
+    #[inline]
+    pub fn iter_enum_generic_type(
+        &self,
+    ) -> impl Iterator<Item = Arc<RwLock<EnumGenericType>>> + '_ {
+        let len = self.enum_generic_type.read().unwrap().len();
+        (0..len)
+            .filter(|i| self.enum_generic_type.read().unwrap()[*i].is_some())
+            .map(move |i| {
+                self.enum_generic_type.read().unwrap()[i]
+                    .as_ref()
+                    .map(|enum_generic_type| enum_generic_type.clone())
                     .unwrap()
             })
     }
