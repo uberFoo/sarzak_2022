@@ -587,280 +587,12 @@ impl Clone for ObjectStore {
 }
 impl ObjectStore {
     pub fn merge(&mut self, other: &ObjectStore) {
-        let mut argument = self.argument.write().unwrap();
-        other.argument.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in argument, if it's not there add it to argument.
-                if argument
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = argument.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    argument.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut a_wait = self.a_wait.write().unwrap();
-        other.a_wait.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in a_wait, if it's not there add it to a_wait.
-                if a_wait
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = a_wait.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    a_wait.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut binary = self.binary.write().unwrap();
-        other.binary.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in binary, if it's not there add it to binary.
-                if binary
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = binary.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    binary.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut block = self.block.write().unwrap();
-        other.block.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in block, if it's not there add it to block.
-                if block
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = block.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    block.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut body = self.body.write().unwrap();
-        other.body.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in body, if it's not there add it to body.
-                if body
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = body.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    body.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut boolean_literal = self.boolean_literal.write().unwrap();
-        other.boolean_literal.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in boolean_literal, if it's not there add it to boolean_literal.
-                if boolean_literal
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = boolean_literal.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    boolean_literal.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut boolean_operator = self.boolean_operator.write().unwrap();
-        other.boolean_operator.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in boolean_operator, if it's not there add it to boolean_operator.
-                if boolean_operator
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = boolean_operator.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    boolean_operator.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut call = self.call.write().unwrap();
-        other.call.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in call, if it's not there add it to call.
-                if call
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = call.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    call.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut char_literal = self.char_literal.write().unwrap();
-        other.char_literal.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in char_literal, if it's not there add it to char_literal.
-                if char_literal
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = char_literal.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    char_literal.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut comparison = self.comparison.write().unwrap();
-        other.comparison.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in comparison, if it's not there add it to comparison.
-                if comparison
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = comparison.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    comparison.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut data_structure = self.data_structure.write().unwrap();
-        other.data_structure.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in data_structure, if it's not there add it to data_structure.
-                if data_structure
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = data_structure.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    data_structure.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut dwarf_source_file = self.dwarf_source_file.write().unwrap();
-        other
-            .dwarf_source_file
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
+        if self.argument.read().unwrap().len() != other.argument.read().unwrap().len() {
+            let mut argument = self.argument.write().unwrap();
+            other.argument.read().unwrap().iter().for_each(|x| {
                 if let Some(x) = x {
-                    // Look for other in dwarf_source_file, if it's not there add it to dwarf_source_file.
-                    if dwarf_source_file
+                    // Look for other in argument, if it's not there add it to argument.
+                    if argument
                         .iter()
                         .find(|&y| {
                             if let Some(y) = y {
@@ -871,73 +603,22 @@ impl ObjectStore {
                         })
                         .is_none()
                     {
-                        let _index_ = dwarf_source_file.len();
+                        let _index_ = argument.len();
                         if x.read().unwrap().id != _index_ {
                             x.write().unwrap().id = _index_;
                         }
-                        dwarf_source_file.push(Some(x.clone()));
+                        argument.push(Some(x.clone()));
                     }
                 }
             });
+        }
 
-        let mut enum_field = self.enum_field.write().unwrap();
-        other.enum_field.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in enum_field, if it's not there add it to enum_field.
-                if enum_field
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = enum_field.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    enum_field.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut enum_generic = self.enum_generic.write().unwrap();
-        other.enum_generic.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in enum_generic, if it's not there add it to enum_generic.
-                if enum_generic
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = enum_generic.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    enum_generic.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut enum_generic_type = self.enum_generic_type.write().unwrap();
-        other
-            .enum_generic_type
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
+        if self.a_wait.read().unwrap().len() != other.a_wait.read().unwrap().len() {
+            let mut a_wait = self.a_wait.write().unwrap();
+            other.a_wait.read().unwrap().iter().for_each(|x| {
                 if let Some(x) = x {
-                    // Look for other in enum_generic_type, if it's not there add it to enum_generic_type.
-                    if enum_generic_type
+                    // Look for other in a_wait, if it's not there add it to a_wait.
+                    if a_wait
                         .iter()
                         .find(|&y| {
                             if let Some(y) = y {
@@ -948,97 +629,22 @@ impl ObjectStore {
                         })
                         .is_none()
                     {
-                        let _index_ = enum_generic_type.len();
+                        let _index_ = a_wait.len();
                         if x.read().unwrap().id != _index_ {
                             x.write().unwrap().id = _index_;
                         }
-                        enum_generic_type.push(Some(x.clone()));
+                        a_wait.push(Some(x.clone()));
                     }
                 }
             });
+        }
 
-        let mut enumeration = self.enumeration.write().unwrap();
-        other.enumeration.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in enumeration, if it's not there add it to enumeration.
-                if enumeration
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = enumeration.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    enumeration.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut expression = self.expression.write().unwrap();
-        other.expression.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in expression, if it's not there add it to expression.
-                if expression
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = expression.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    expression.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut expression_bit = self.expression_bit.write().unwrap();
-        other.expression_bit.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in expression_bit, if it's not there add it to expression_bit.
-                if expression_bit
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = expression_bit.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    expression_bit.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut expression_statement = self.expression_statement.write().unwrap();
-        other
-            .expression_statement
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
+        if self.binary.read().unwrap().len() != other.binary.read().unwrap().len() {
+            let mut binary = self.binary.write().unwrap();
+            other.binary.read().unwrap().iter().for_each(|x| {
                 if let Some(x) = x {
-                    // Look for other in expression_statement, if it's not there add it to expression_statement.
-                    if expression_statement
+                    // Look for other in binary, if it's not there add it to binary.
+                    if binary
                         .iter()
                         .find(|&y| {
                             if let Some(y) = y {
@@ -1049,25 +655,22 @@ impl ObjectStore {
                         })
                         .is_none()
                     {
-                        let _index_ = expression_statement.len();
+                        let _index_ = binary.len();
                         if x.read().unwrap().id != _index_ {
                             x.write().unwrap().id = _index_;
                         }
-                        expression_statement.push(Some(x.clone()));
+                        binary.push(Some(x.clone()));
                     }
                 }
             });
+        }
 
-        let mut external_implementation = self.external_implementation.write().unwrap();
-        other
-            .external_implementation
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
+        if self.block.read().unwrap().len() != other.block.read().unwrap().len() {
+            let mut block = self.block.write().unwrap();
+            other.block.read().unwrap().iter().for_each(|x| {
                 if let Some(x) = x {
-                    // Look for other in external_implementation, if it's not there add it to external_implementation.
-                    if external_implementation
+                    // Look for other in block, if it's not there add it to block.
+                    if block
                         .iter()
                         .find(|&y| {
                             if let Some(y) = y {
@@ -1078,73 +681,22 @@ impl ObjectStore {
                         })
                         .is_none()
                     {
-                        let _index_ = external_implementation.len();
+                        let _index_ = block.len();
                         if x.read().unwrap().id != _index_ {
                             x.write().unwrap().id = _index_;
                         }
-                        external_implementation.push(Some(x.clone()));
+                        block.push(Some(x.clone()));
                     }
                 }
             });
+        }
 
-        let mut field = self.field.write().unwrap();
-        other.field.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in field, if it's not there add it to field.
-                if field
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = field.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    field.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut field_access = self.field_access.write().unwrap();
-        other.field_access.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in field_access, if it's not there add it to field_access.
-                if field_access
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = field_access.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    field_access.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut field_access_target = self.field_access_target.write().unwrap();
-        other
-            .field_access_target
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
+        if self.body.read().unwrap().len() != other.body.read().unwrap().len() {
+            let mut body = self.body.write().unwrap();
+            other.body.read().unwrap().iter().for_each(|x| {
                 if let Some(x) = x {
-                    // Look for other in field_access_target, if it's not there add it to field_access_target.
-                    if field_access_target
+                    // Look for other in body, if it's not there add it to body.
+                    if body
                         .iter()
                         .find(|&y| {
                             if let Some(y) = y {
@@ -1155,265 +707,23 @@ impl ObjectStore {
                         })
                         .is_none()
                     {
-                        let _index_ = field_access_target.len();
+                        let _index_ = body.len();
                         if x.read().unwrap().id != _index_ {
                             x.write().unwrap().id = _index_;
                         }
-                        field_access_target.push(Some(x.clone()));
+                        body.push(Some(x.clone()));
                     }
                 }
             });
+        }
 
-        let mut field_expression = self.field_expression.write().unwrap();
-        other.field_expression.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in field_expression, if it's not there add it to field_expression.
-                if field_expression
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = field_expression.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    field_expression.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut float_literal = self.float_literal.write().unwrap();
-        other.float_literal.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in float_literal, if it's not there add it to float_literal.
-                if float_literal
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = float_literal.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    float_literal.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut for_loop = self.for_loop.write().unwrap();
-        other.for_loop.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in for_loop, if it's not there add it to for_loop.
-                if for_loop
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = for_loop.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    for_loop.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut format_bit = self.format_bit.write().unwrap();
-        other.format_bit.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in format_bit, if it's not there add it to format_bit.
-                if format_bit
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = format_bit.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    format_bit.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut format_string = self.format_string.write().unwrap();
-        other.format_string.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in format_string, if it's not there add it to format_string.
-                if format_string
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = format_string.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    format_string.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut func_generic = self.func_generic.write().unwrap();
-        other.func_generic.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in func_generic, if it's not there add it to func_generic.
-                if func_generic
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = func_generic.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    func_generic.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut function = self.function.write().unwrap();
-        other.function.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in function, if it's not there add it to function.
-                if function
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = function.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    function.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut function_call = self.function_call.write().unwrap();
-        other.function_call.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in function_call, if it's not there add it to function_call.
-                if function_call
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = function_call.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    function_call.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut x_future = self.x_future.write().unwrap();
-        other.x_future.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_future, if it's not there add it to x_future.
-                if x_future
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = x_future.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    x_future.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut grouped = self.grouped.write().unwrap();
-        other.grouped.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in grouped, if it's not there add it to grouped.
-                if grouped
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = grouped.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    grouped.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut halt_and_catch_fire = self.halt_and_catch_fire.write().unwrap();
-        other
-            .halt_and_catch_fire
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
+        if self.boolean_literal.read().unwrap().len() != other.boolean_literal.read().unwrap().len()
+        {
+            let mut boolean_literal = self.boolean_literal.write().unwrap();
+            other.boolean_literal.read().unwrap().iter().for_each(|x| {
                 if let Some(x) = x {
-                    // Look for other in halt_and_catch_fire, if it's not there add it to halt_and_catch_fire.
-                    if halt_and_catch_fire
+                    // Look for other in boolean_literal, if it's not there add it to boolean_literal.
+                    if boolean_literal
                         .iter()
                         .find(|&y| {
                             if let Some(y) = y {
@@ -1424,49 +734,24 @@ impl ObjectStore {
                         })
                         .is_none()
                     {
-                        let _index_ = halt_and_catch_fire.len();
+                        let _index_ = boolean_literal.len();
                         if x.read().unwrap().id != _index_ {
                             x.write().unwrap().id = _index_;
                         }
-                        halt_and_catch_fire.push(Some(x.clone()));
+                        boolean_literal.push(Some(x.clone()));
                     }
                 }
             });
+        }
 
-        let mut x_if = self.x_if.write().unwrap();
-        other.x_if.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_if, if it's not there add it to x_if.
-                if x_if
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = x_if.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    x_if.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut implementation_block = self.implementation_block.write().unwrap();
-        other
-            .implementation_block
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
+        if self.boolean_operator.read().unwrap().len()
+            != other.boolean_operator.read().unwrap().len()
+        {
+            let mut boolean_operator = self.boolean_operator.write().unwrap();
+            other.boolean_operator.read().unwrap().iter().for_each(|x| {
                 if let Some(x) = x {
-                    // Look for other in implementation_block, if it's not there add it to implementation_block.
-                    if implementation_block
+                    // Look for other in boolean_operator, if it's not there add it to boolean_operator.
+                    if boolean_operator
                         .iter()
                         .find(|&y| {
                             if let Some(y) = y {
@@ -1477,457 +762,22 @@ impl ObjectStore {
                         })
                         .is_none()
                     {
-                        let _index_ = implementation_block.len();
+                        let _index_ = boolean_operator.len();
                         if x.read().unwrap().id != _index_ {
                             x.write().unwrap().id = _index_;
                         }
-                        implementation_block.push(Some(x.clone()));
+                        boolean_operator.push(Some(x.clone()));
                     }
                 }
             });
+        }
 
-        let mut import = self.import.write().unwrap();
-        other.import.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in import, if it's not there add it to import.
-                if import
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = import.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    import.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut index = self.index.write().unwrap();
-        other.index.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in index, if it's not there add it to index.
-                if index
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = index.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    index.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut integer_literal = self.integer_literal.write().unwrap();
-        other.integer_literal.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in integer_literal, if it's not there add it to integer_literal.
-                if integer_literal
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = integer_literal.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    integer_literal.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut item = self.item.write().unwrap();
-        other.item.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in item, if it's not there add it to item.
-                if item
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = item.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    item.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut lambda = self.lambda.write().unwrap();
-        other.lambda.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in lambda, if it's not there add it to lambda.
-                if lambda
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = lambda.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    lambda.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut lambda_parameter = self.lambda_parameter.write().unwrap();
-        other.lambda_parameter.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in lambda_parameter, if it's not there add it to lambda_parameter.
-                if lambda_parameter
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = lambda_parameter.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    lambda_parameter.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut let_statement = self.let_statement.write().unwrap();
-        other.let_statement.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in let_statement, if it's not there add it to let_statement.
-                if let_statement
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = let_statement.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    let_statement.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut list = self.list.write().unwrap();
-        other.list.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in list, if it's not there add it to list.
-                if list
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = list.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    list.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut list_element = self.list_element.write().unwrap();
-        other.list_element.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in list_element, if it's not there add it to list_element.
-                if list_element
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = list_element.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    list_element.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut list_expression = self.list_expression.write().unwrap();
-        other.list_expression.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in list_expression, if it's not there add it to list_expression.
-                if list_expression
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = list_expression.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    list_expression.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut literal = self.literal.write().unwrap();
-        other.literal.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in literal, if it's not there add it to literal.
-                if literal
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = literal.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    literal.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut local_variable = self.local_variable.write().unwrap();
-        other.local_variable.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in local_variable, if it's not there add it to local_variable.
-                if local_variable
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = local_variable.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    local_variable.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut x_macro = self.x_macro.write().unwrap();
-        other.x_macro.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_macro, if it's not there add it to x_macro.
-                if x_macro
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = x_macro.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    x_macro.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut map = self.map.write().unwrap();
-        other.map.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in map, if it's not there add it to map.
-                if map
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = map.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    map.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut map_element = self.map_element.write().unwrap();
-        other.map_element.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in map_element, if it's not there add it to map_element.
-                if map_element
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = map_element.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    map_element.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut map_expression = self.map_expression.write().unwrap();
-        other.map_expression.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in map_expression, if it's not there add it to map_expression.
-                if map_expression
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = map_expression.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    map_expression.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut x_match = self.x_match.write().unwrap();
-        other.x_match.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_match, if it's not there add it to x_match.
-                if x_match
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = x_match.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    x_match.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut method_call = self.method_call.write().unwrap();
-        other.method_call.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in method_call, if it's not there add it to method_call.
-                if method_call
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = method_call.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    method_call.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut named_field_expression = self.named_field_expression.write().unwrap();
-        other
-            .named_field_expression
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
+        if self.call.read().unwrap().len() != other.call.read().unwrap().len() {
+            let mut call = self.call.write().unwrap();
+            other.call.read().unwrap().iter().for_each(|x| {
                 if let Some(x) = x {
-                    // Look for other in named_field_expression, if it's not there add it to named_field_expression.
-                    if named_field_expression
+                    // Look for other in call, if it's not there add it to call.
+                    if call
                         .iter()
                         .find(|&y| {
                             if let Some(y) = y {
@@ -1938,361 +788,22 @@ impl ObjectStore {
                         })
                         .is_none()
                     {
-                        let _index_ = named_field_expression.len();
+                        let _index_ = call.len();
                         if x.read().unwrap().id != _index_ {
                             x.write().unwrap().id = _index_;
                         }
-                        named_field_expression.push(Some(x.clone()));
+                        call.push(Some(x.clone()));
                     }
                 }
             });
+        }
 
-        let mut z_object_store = self.z_object_store.write().unwrap();
-        other.z_object_store.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in z_object_store, if it's not there add it to z_object_store.
-                if z_object_store
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = z_object_store.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    z_object_store.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut object_wrapper = self.object_wrapper.write().unwrap();
-        other.object_wrapper.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in object_wrapper, if it's not there add it to object_wrapper.
-                if object_wrapper
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = object_wrapper.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    object_wrapper.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut operator = self.operator.write().unwrap();
-        other.operator.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in operator, if it's not there add it to operator.
-                if operator
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = operator.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    operator.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut parameter = self.parameter.write().unwrap();
-        other.parameter.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in parameter, if it's not there add it to parameter.
-                if parameter
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = parameter.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    parameter.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut x_path = self.x_path.write().unwrap();
-        other.x_path.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_path, if it's not there add it to x_path.
-                if x_path
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = x_path.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    x_path.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut path_element = self.path_element.write().unwrap();
-        other.path_element.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in path_element, if it's not there add it to path_element.
-                if path_element
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = path_element.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    path_element.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut pattern = self.pattern.write().unwrap();
-        other.pattern.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in pattern, if it's not there add it to pattern.
-                if pattern
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = pattern.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    pattern.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut x_plugin = self.x_plugin.write().unwrap();
-        other.x_plugin.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_plugin, if it's not there add it to x_plugin.
-                if x_plugin
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = x_plugin.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    x_plugin.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut x_print = self.x_print.write().unwrap();
-        other.x_print.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_print, if it's not there add it to x_print.
-                if x_print
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = x_print.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    x_print.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut range_expression = self.range_expression.write().unwrap();
-        other.range_expression.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in range_expression, if it's not there add it to range_expression.
-                if range_expression
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = range_expression.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    range_expression.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut result_statement = self.result_statement.write().unwrap();
-        other.result_statement.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in result_statement, if it's not there add it to result_statement.
-                if result_statement
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = result_statement.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    result_statement.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut x_return = self.x_return.write().unwrap();
-        other.x_return.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_return, if it's not there add it to x_return.
-                if x_return
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = x_return.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    x_return.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut span = self.span.write().unwrap();
-        other.span.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in span, if it's not there add it to span.
-                if span
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = span.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    span.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut statement = self.statement.write().unwrap();
-        other.statement.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in statement, if it's not there add it to statement.
-                if statement
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = statement.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    statement.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut static_method_call = self.static_method_call.write().unwrap();
-        other
-            .static_method_call
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
+        if self.char_literal.read().unwrap().len() != other.char_literal.read().unwrap().len() {
+            let mut char_literal = self.char_literal.write().unwrap();
+            other.char_literal.read().unwrap().iter().for_each(|x| {
                 if let Some(x) = x {
-                    // Look for other in static_method_call, if it's not there add it to static_method_call.
-                    if static_method_call
+                    // Look for other in char_literal, if it's not there add it to char_literal.
+                    if char_literal
                         .iter()
                         .find(|&y| {
                             if let Some(y) = y {
@@ -2303,97 +814,22 @@ impl ObjectStore {
                         })
                         .is_none()
                     {
-                        let _index_ = static_method_call.len();
+                        let _index_ = char_literal.len();
                         if x.read().unwrap().id != _index_ {
                             x.write().unwrap().id = _index_;
                         }
-                        static_method_call.push(Some(x.clone()));
+                        char_literal.push(Some(x.clone()));
                     }
                 }
             });
+        }
 
-        let mut string_bit = self.string_bit.write().unwrap();
-        other.string_bit.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in string_bit, if it's not there add it to string_bit.
-                if string_bit
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = string_bit.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    string_bit.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut string_literal = self.string_literal.write().unwrap();
-        other.string_literal.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in string_literal, if it's not there add it to string_literal.
-                if string_literal
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = string_literal.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    string_literal.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut woog_struct = self.woog_struct.write().unwrap();
-        other.woog_struct.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in woog_struct, if it's not there add it to woog_struct.
-                if woog_struct
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = woog_struct.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    woog_struct.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut struct_expression = self.struct_expression.write().unwrap();
-        other
-            .struct_expression
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
+        if self.comparison.read().unwrap().len() != other.comparison.read().unwrap().len() {
+            let mut comparison = self.comparison.write().unwrap();
+            other.comparison.read().unwrap().iter().for_each(|x| {
                 if let Some(x) = x {
-                    // Look for other in struct_expression, if it's not there add it to struct_expression.
-                    if struct_expression
+                    // Look for other in comparison, if it's not there add it to comparison.
+                    if comparison
                         .iter()
                         .find(|&y| {
                             if let Some(y) = y {
@@ -2404,169 +840,22 @@ impl ObjectStore {
                         })
                         .is_none()
                     {
-                        let _index_ = struct_expression.len();
+                        let _index_ = comparison.len();
                         if x.read().unwrap().id != _index_ {
                             x.write().unwrap().id = _index_;
                         }
-                        struct_expression.push(Some(x.clone()));
+                        comparison.push(Some(x.clone()));
                     }
                 }
             });
+        }
 
-        let mut struct_field = self.struct_field.write().unwrap();
-        other.struct_field.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in struct_field, if it's not there add it to struct_field.
-                if struct_field
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = struct_field.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    struct_field.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut struct_generic = self.struct_generic.write().unwrap();
-        other.struct_generic.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in struct_generic, if it's not there add it to struct_generic.
-                if struct_generic
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = struct_generic.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    struct_generic.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut tuple_field = self.tuple_field.write().unwrap();
-        other.tuple_field.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in tuple_field, if it's not there add it to tuple_field.
-                if tuple_field
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = tuple_field.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    tuple_field.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut type_cast = self.type_cast.write().unwrap();
-        other.type_cast.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in type_cast, if it's not there add it to type_cast.
-                if type_cast
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = type_cast.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    type_cast.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut unary = self.unary.write().unwrap();
-        other.unary.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in unary, if it's not there add it to unary.
-                if unary
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = unary.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    unary.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut unit = self.unit.write().unwrap();
-        other.unit.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in unit, if it's not there add it to unit.
-                if unit
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = unit.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    unit.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut unnamed_field_expression = self.unnamed_field_expression.write().unwrap();
-        other
-            .unnamed_field_expression
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
+        if self.data_structure.read().unwrap().len() != other.data_structure.read().unwrap().len() {
+            let mut data_structure = self.data_structure.write().unwrap();
+            other.data_structure.read().unwrap().iter().for_each(|x| {
                 if let Some(x) = x {
-                    // Look for other in unnamed_field_expression, if it's not there add it to unnamed_field_expression.
-                    if unnamed_field_expression
+                    // Look for other in data_structure, if it's not there add it to data_structure.
+                    if data_structure
                         .iter()
                         .find(|&y| {
                             if let Some(y) = y {
@@ -2577,97 +866,55 @@ impl ObjectStore {
                         })
                         .is_none()
                     {
-                        let _index_ = unnamed_field_expression.len();
+                        let _index_ = data_structure.len();
                         if x.read().unwrap().id != _index_ {
                             x.write().unwrap().id = _index_;
                         }
-                        unnamed_field_expression.push(Some(x.clone()));
+                        data_structure.push(Some(x.clone()));
                     }
                 }
             });
+        }
 
-        let mut x_value = self.x_value.write().unwrap();
-        other.x_value.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_value, if it's not there add it to x_value.
-                if x_value
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
+        if self.dwarf_source_file.read().unwrap().len()
+            != other.dwarf_source_file.read().unwrap().len()
+        {
+            let mut dwarf_source_file = self.dwarf_source_file.write().unwrap();
+            other
+                .dwarf_source_file
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in dwarf_source_file, if it's not there add it to dwarf_source_file.
+                        if dwarf_source_file
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            let _index_ = dwarf_source_file.len();
+                            if x.read().unwrap().id != _index_ {
+                                x.write().unwrap().id = _index_;
+                            }
+                            dwarf_source_file.push(Some(x.clone()));
                         }
-                    })
-                    .is_none()
-                {
-                    let _index_ = x_value.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
                     }
-                    x_value.push(Some(x.clone()));
-                }
-            }
-        });
+                });
+        }
 
-        let mut value_type = self.value_type.write().unwrap();
-        other.value_type.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in value_type, if it's not there add it to value_type.
-                if value_type
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = value_type.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    value_type.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut variable = self.variable.write().unwrap();
-        other.variable.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in variable, if it's not there add it to variable.
-                if variable
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    let _index_ = variable.len();
-                    if x.read().unwrap().id != _index_ {
-                        x.write().unwrap().id = _index_;
-                    }
-                    variable.push(Some(x.clone()));
-                }
-            }
-        });
-
-        let mut variable_expression = self.variable_expression.write().unwrap();
-        other
-            .variable_expression
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
+        if self.enum_field.read().unwrap().len() != other.enum_field.read().unwrap().len() {
+            let mut enum_field = self.enum_field.write().unwrap();
+            other.enum_field.read().unwrap().iter().for_each(|x| {
                 if let Some(x) = x {
-                    // Look for other in variable_expression, if it's not there add it to variable_expression.
-                    if variable_expression
+                    // Look for other in enum_field, if it's not there add it to enum_field.
+                    if enum_field
                         .iter()
                         .find(|&y| {
                             if let Some(y) = y {
@@ -2678,14 +925,1974 @@ impl ObjectStore {
                         })
                         .is_none()
                     {
-                        let _index_ = variable_expression.len();
+                        let _index_ = enum_field.len();
                         if x.read().unwrap().id != _index_ {
                             x.write().unwrap().id = _index_;
                         }
-                        variable_expression.push(Some(x.clone()));
+                        enum_field.push(Some(x.clone()));
                     }
                 }
             });
+        }
+
+        if self.enum_generic.read().unwrap().len() != other.enum_generic.read().unwrap().len() {
+            let mut enum_generic = self.enum_generic.write().unwrap();
+            other.enum_generic.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in enum_generic, if it's not there add it to enum_generic.
+                    if enum_generic
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = enum_generic.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        enum_generic.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.enum_generic_type.read().unwrap().len()
+            != other.enum_generic_type.read().unwrap().len()
+        {
+            let mut enum_generic_type = self.enum_generic_type.write().unwrap();
+            other
+                .enum_generic_type
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in enum_generic_type, if it's not there add it to enum_generic_type.
+                        if enum_generic_type
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            let _index_ = enum_generic_type.len();
+                            if x.read().unwrap().id != _index_ {
+                                x.write().unwrap().id = _index_;
+                            }
+                            enum_generic_type.push(Some(x.clone()));
+                        }
+                    }
+                });
+        }
+
+        if self.enumeration.read().unwrap().len() != other.enumeration.read().unwrap().len() {
+            let mut enumeration = self.enumeration.write().unwrap();
+            other.enumeration.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in enumeration, if it's not there add it to enumeration.
+                    if enumeration
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = enumeration.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        enumeration.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.expression.read().unwrap().len() != other.expression.read().unwrap().len() {
+            let mut expression = self.expression.write().unwrap();
+            other.expression.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in expression, if it's not there add it to expression.
+                    if expression
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = expression.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        expression.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.expression_bit.read().unwrap().len() != other.expression_bit.read().unwrap().len() {
+            let mut expression_bit = self.expression_bit.write().unwrap();
+            other.expression_bit.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in expression_bit, if it's not there add it to expression_bit.
+                    if expression_bit
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = expression_bit.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        expression_bit.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.expression_statement.read().unwrap().len()
+            != other.expression_statement.read().unwrap().len()
+        {
+            let mut expression_statement = self.expression_statement.write().unwrap();
+            other
+                .expression_statement
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in expression_statement, if it's not there add it to expression_statement.
+                        if expression_statement
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            let _index_ = expression_statement.len();
+                            if x.read().unwrap().id != _index_ {
+                                x.write().unwrap().id = _index_;
+                            }
+                            expression_statement.push(Some(x.clone()));
+                        }
+                    }
+                });
+        }
+
+        if self.external_implementation.read().unwrap().len()
+            != other.external_implementation.read().unwrap().len()
+        {
+            let mut external_implementation = self.external_implementation.write().unwrap();
+            other
+                .external_implementation
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in external_implementation, if it's not there add it to external_implementation.
+                        if external_implementation
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            let _index_ = external_implementation.len();
+                            if x.read().unwrap().id != _index_ {
+                                x.write().unwrap().id = _index_;
+                            }
+                            external_implementation.push(Some(x.clone()));
+                        }
+                    }
+                });
+        }
+
+        if self.field.read().unwrap().len() != other.field.read().unwrap().len() {
+            let mut field = self.field.write().unwrap();
+            other.field.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in field, if it's not there add it to field.
+                    if field
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = field.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        field.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.field_access.read().unwrap().len() != other.field_access.read().unwrap().len() {
+            let mut field_access = self.field_access.write().unwrap();
+            other.field_access.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in field_access, if it's not there add it to field_access.
+                    if field_access
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = field_access.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        field_access.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.field_access_target.read().unwrap().len()
+            != other.field_access_target.read().unwrap().len()
+        {
+            let mut field_access_target = self.field_access_target.write().unwrap();
+            other
+                .field_access_target
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in field_access_target, if it's not there add it to field_access_target.
+                        if field_access_target
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            let _index_ = field_access_target.len();
+                            if x.read().unwrap().id != _index_ {
+                                x.write().unwrap().id = _index_;
+                            }
+                            field_access_target.push(Some(x.clone()));
+                        }
+                    }
+                });
+        }
+
+        if self.field_expression.read().unwrap().len()
+            != other.field_expression.read().unwrap().len()
+        {
+            let mut field_expression = self.field_expression.write().unwrap();
+            other.field_expression.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in field_expression, if it's not there add it to field_expression.
+                    if field_expression
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = field_expression.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        field_expression.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.float_literal.read().unwrap().len() != other.float_literal.read().unwrap().len() {
+            let mut float_literal = self.float_literal.write().unwrap();
+            other.float_literal.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in float_literal, if it's not there add it to float_literal.
+                    if float_literal
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = float_literal.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        float_literal.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.for_loop.read().unwrap().len() != other.for_loop.read().unwrap().len() {
+            let mut for_loop = self.for_loop.write().unwrap();
+            other.for_loop.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in for_loop, if it's not there add it to for_loop.
+                    if for_loop
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = for_loop.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        for_loop.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.format_bit.read().unwrap().len() != other.format_bit.read().unwrap().len() {
+            let mut format_bit = self.format_bit.write().unwrap();
+            other.format_bit.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in format_bit, if it's not there add it to format_bit.
+                    if format_bit
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = format_bit.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        format_bit.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.format_string.read().unwrap().len() != other.format_string.read().unwrap().len() {
+            let mut format_string = self.format_string.write().unwrap();
+            other.format_string.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in format_string, if it's not there add it to format_string.
+                    if format_string
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = format_string.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        format_string.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.func_generic.read().unwrap().len() != other.func_generic.read().unwrap().len() {
+            let mut func_generic = self.func_generic.write().unwrap();
+            other.func_generic.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in func_generic, if it's not there add it to func_generic.
+                    if func_generic
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = func_generic.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        func_generic.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.function.read().unwrap().len() != other.function.read().unwrap().len() {
+            let mut function = self.function.write().unwrap();
+            other.function.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in function, if it's not there add it to function.
+                    if function
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = function.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        function.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.function_call.read().unwrap().len() != other.function_call.read().unwrap().len() {
+            let mut function_call = self.function_call.write().unwrap();
+            other.function_call.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in function_call, if it's not there add it to function_call.
+                    if function_call
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = function_call.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        function_call.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.x_future.read().unwrap().len() != other.x_future.read().unwrap().len() {
+            let mut x_future = self.x_future.write().unwrap();
+            other.x_future.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_future, if it's not there add it to x_future.
+                    if x_future
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = x_future.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        x_future.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.grouped.read().unwrap().len() != other.grouped.read().unwrap().len() {
+            let mut grouped = self.grouped.write().unwrap();
+            other.grouped.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in grouped, if it's not there add it to grouped.
+                    if grouped
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = grouped.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        grouped.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.halt_and_catch_fire.read().unwrap().len()
+            != other.halt_and_catch_fire.read().unwrap().len()
+        {
+            let mut halt_and_catch_fire = self.halt_and_catch_fire.write().unwrap();
+            other
+                .halt_and_catch_fire
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in halt_and_catch_fire, if it's not there add it to halt_and_catch_fire.
+                        if halt_and_catch_fire
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            let _index_ = halt_and_catch_fire.len();
+                            if x.read().unwrap().id != _index_ {
+                                x.write().unwrap().id = _index_;
+                            }
+                            halt_and_catch_fire.push(Some(x.clone()));
+                        }
+                    }
+                });
+        }
+
+        if self.x_if.read().unwrap().len() != other.x_if.read().unwrap().len() {
+            let mut x_if = self.x_if.write().unwrap();
+            other.x_if.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_if, if it's not there add it to x_if.
+                    if x_if
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = x_if.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        x_if.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.implementation_block.read().unwrap().len()
+            != other.implementation_block.read().unwrap().len()
+        {
+            let mut implementation_block = self.implementation_block.write().unwrap();
+            other
+                .implementation_block
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in implementation_block, if it's not there add it to implementation_block.
+                        if implementation_block
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            let _index_ = implementation_block.len();
+                            if x.read().unwrap().id != _index_ {
+                                x.write().unwrap().id = _index_;
+                            }
+                            implementation_block.push(Some(x.clone()));
+                        }
+                    }
+                });
+        }
+
+        if self.import.read().unwrap().len() != other.import.read().unwrap().len() {
+            let mut import = self.import.write().unwrap();
+            other.import.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in import, if it's not there add it to import.
+                    if import
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = import.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        import.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.index.read().unwrap().len() != other.index.read().unwrap().len() {
+            let mut index = self.index.write().unwrap();
+            other.index.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in index, if it's not there add it to index.
+                    if index
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = index.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        index.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.integer_literal.read().unwrap().len() != other.integer_literal.read().unwrap().len()
+        {
+            let mut integer_literal = self.integer_literal.write().unwrap();
+            other.integer_literal.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in integer_literal, if it's not there add it to integer_literal.
+                    if integer_literal
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = integer_literal.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        integer_literal.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.item.read().unwrap().len() != other.item.read().unwrap().len() {
+            let mut item = self.item.write().unwrap();
+            other.item.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in item, if it's not there add it to item.
+                    if item
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = item.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        item.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.lambda.read().unwrap().len() != other.lambda.read().unwrap().len() {
+            let mut lambda = self.lambda.write().unwrap();
+            other.lambda.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in lambda, if it's not there add it to lambda.
+                    if lambda
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = lambda.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        lambda.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.lambda_parameter.read().unwrap().len()
+            != other.lambda_parameter.read().unwrap().len()
+        {
+            let mut lambda_parameter = self.lambda_parameter.write().unwrap();
+            other.lambda_parameter.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in lambda_parameter, if it's not there add it to lambda_parameter.
+                    if lambda_parameter
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = lambda_parameter.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        lambda_parameter.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.let_statement.read().unwrap().len() != other.let_statement.read().unwrap().len() {
+            let mut let_statement = self.let_statement.write().unwrap();
+            other.let_statement.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in let_statement, if it's not there add it to let_statement.
+                    if let_statement
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = let_statement.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        let_statement.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.list.read().unwrap().len() != other.list.read().unwrap().len() {
+            let mut list = self.list.write().unwrap();
+            other.list.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in list, if it's not there add it to list.
+                    if list
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = list.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        list.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.list_element.read().unwrap().len() != other.list_element.read().unwrap().len() {
+            let mut list_element = self.list_element.write().unwrap();
+            other.list_element.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in list_element, if it's not there add it to list_element.
+                    if list_element
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = list_element.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        list_element.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.list_expression.read().unwrap().len() != other.list_expression.read().unwrap().len()
+        {
+            let mut list_expression = self.list_expression.write().unwrap();
+            other.list_expression.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in list_expression, if it's not there add it to list_expression.
+                    if list_expression
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = list_expression.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        list_expression.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.literal.read().unwrap().len() != other.literal.read().unwrap().len() {
+            let mut literal = self.literal.write().unwrap();
+            other.literal.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in literal, if it's not there add it to literal.
+                    if literal
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = literal.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        literal.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.local_variable.read().unwrap().len() != other.local_variable.read().unwrap().len() {
+            let mut local_variable = self.local_variable.write().unwrap();
+            other.local_variable.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in local_variable, if it's not there add it to local_variable.
+                    if local_variable
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = local_variable.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        local_variable.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.x_macro.read().unwrap().len() != other.x_macro.read().unwrap().len() {
+            let mut x_macro = self.x_macro.write().unwrap();
+            other.x_macro.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_macro, if it's not there add it to x_macro.
+                    if x_macro
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = x_macro.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        x_macro.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.map.read().unwrap().len() != other.map.read().unwrap().len() {
+            let mut map = self.map.write().unwrap();
+            other.map.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in map, if it's not there add it to map.
+                    if map
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = map.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        map.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.map_element.read().unwrap().len() != other.map_element.read().unwrap().len() {
+            let mut map_element = self.map_element.write().unwrap();
+            other.map_element.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in map_element, if it's not there add it to map_element.
+                    if map_element
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = map_element.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        map_element.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.map_expression.read().unwrap().len() != other.map_expression.read().unwrap().len() {
+            let mut map_expression = self.map_expression.write().unwrap();
+            other.map_expression.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in map_expression, if it's not there add it to map_expression.
+                    if map_expression
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = map_expression.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        map_expression.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.x_match.read().unwrap().len() != other.x_match.read().unwrap().len() {
+            let mut x_match = self.x_match.write().unwrap();
+            other.x_match.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_match, if it's not there add it to x_match.
+                    if x_match
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = x_match.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        x_match.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.method_call.read().unwrap().len() != other.method_call.read().unwrap().len() {
+            let mut method_call = self.method_call.write().unwrap();
+            other.method_call.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in method_call, if it's not there add it to method_call.
+                    if method_call
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = method_call.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        method_call.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.named_field_expression.read().unwrap().len()
+            != other.named_field_expression.read().unwrap().len()
+        {
+            let mut named_field_expression = self.named_field_expression.write().unwrap();
+            other
+                .named_field_expression
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in named_field_expression, if it's not there add it to named_field_expression.
+                        if named_field_expression
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            let _index_ = named_field_expression.len();
+                            if x.read().unwrap().id != _index_ {
+                                x.write().unwrap().id = _index_;
+                            }
+                            named_field_expression.push(Some(x.clone()));
+                        }
+                    }
+                });
+        }
+
+        if self.z_object_store.read().unwrap().len() != other.z_object_store.read().unwrap().len() {
+            let mut z_object_store = self.z_object_store.write().unwrap();
+            other.z_object_store.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in z_object_store, if it's not there add it to z_object_store.
+                    if z_object_store
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = z_object_store.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        z_object_store.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.object_wrapper.read().unwrap().len() != other.object_wrapper.read().unwrap().len() {
+            let mut object_wrapper = self.object_wrapper.write().unwrap();
+            other.object_wrapper.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in object_wrapper, if it's not there add it to object_wrapper.
+                    if object_wrapper
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = object_wrapper.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        object_wrapper.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.operator.read().unwrap().len() != other.operator.read().unwrap().len() {
+            let mut operator = self.operator.write().unwrap();
+            other.operator.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in operator, if it's not there add it to operator.
+                    if operator
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = operator.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        operator.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.parameter.read().unwrap().len() != other.parameter.read().unwrap().len() {
+            let mut parameter = self.parameter.write().unwrap();
+            other.parameter.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in parameter, if it's not there add it to parameter.
+                    if parameter
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = parameter.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        parameter.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.x_path.read().unwrap().len() != other.x_path.read().unwrap().len() {
+            let mut x_path = self.x_path.write().unwrap();
+            other.x_path.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_path, if it's not there add it to x_path.
+                    if x_path
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = x_path.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        x_path.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.path_element.read().unwrap().len() != other.path_element.read().unwrap().len() {
+            let mut path_element = self.path_element.write().unwrap();
+            other.path_element.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in path_element, if it's not there add it to path_element.
+                    if path_element
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = path_element.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        path_element.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.pattern.read().unwrap().len() != other.pattern.read().unwrap().len() {
+            let mut pattern = self.pattern.write().unwrap();
+            other.pattern.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in pattern, if it's not there add it to pattern.
+                    if pattern
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = pattern.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        pattern.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.x_plugin.read().unwrap().len() != other.x_plugin.read().unwrap().len() {
+            let mut x_plugin = self.x_plugin.write().unwrap();
+            other.x_plugin.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_plugin, if it's not there add it to x_plugin.
+                    if x_plugin
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = x_plugin.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        x_plugin.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.x_print.read().unwrap().len() != other.x_print.read().unwrap().len() {
+            let mut x_print = self.x_print.write().unwrap();
+            other.x_print.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_print, if it's not there add it to x_print.
+                    if x_print
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = x_print.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        x_print.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.range_expression.read().unwrap().len()
+            != other.range_expression.read().unwrap().len()
+        {
+            let mut range_expression = self.range_expression.write().unwrap();
+            other.range_expression.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in range_expression, if it's not there add it to range_expression.
+                    if range_expression
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = range_expression.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        range_expression.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.result_statement.read().unwrap().len()
+            != other.result_statement.read().unwrap().len()
+        {
+            let mut result_statement = self.result_statement.write().unwrap();
+            other.result_statement.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in result_statement, if it's not there add it to result_statement.
+                    if result_statement
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = result_statement.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        result_statement.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.x_return.read().unwrap().len() != other.x_return.read().unwrap().len() {
+            let mut x_return = self.x_return.write().unwrap();
+            other.x_return.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_return, if it's not there add it to x_return.
+                    if x_return
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = x_return.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        x_return.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.span.read().unwrap().len() != other.span.read().unwrap().len() {
+            let mut span = self.span.write().unwrap();
+            other.span.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in span, if it's not there add it to span.
+                    if span
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = span.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        span.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.statement.read().unwrap().len() != other.statement.read().unwrap().len() {
+            let mut statement = self.statement.write().unwrap();
+            other.statement.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in statement, if it's not there add it to statement.
+                    if statement
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = statement.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        statement.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.static_method_call.read().unwrap().len()
+            != other.static_method_call.read().unwrap().len()
+        {
+            let mut static_method_call = self.static_method_call.write().unwrap();
+            other
+                .static_method_call
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in static_method_call, if it's not there add it to static_method_call.
+                        if static_method_call
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            let _index_ = static_method_call.len();
+                            if x.read().unwrap().id != _index_ {
+                                x.write().unwrap().id = _index_;
+                            }
+                            static_method_call.push(Some(x.clone()));
+                        }
+                    }
+                });
+        }
+
+        if self.string_bit.read().unwrap().len() != other.string_bit.read().unwrap().len() {
+            let mut string_bit = self.string_bit.write().unwrap();
+            other.string_bit.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in string_bit, if it's not there add it to string_bit.
+                    if string_bit
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = string_bit.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        string_bit.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.string_literal.read().unwrap().len() != other.string_literal.read().unwrap().len() {
+            let mut string_literal = self.string_literal.write().unwrap();
+            other.string_literal.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in string_literal, if it's not there add it to string_literal.
+                    if string_literal
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = string_literal.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        string_literal.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.woog_struct.read().unwrap().len() != other.woog_struct.read().unwrap().len() {
+            let mut woog_struct = self.woog_struct.write().unwrap();
+            other.woog_struct.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in woog_struct, if it's not there add it to woog_struct.
+                    if woog_struct
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = woog_struct.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        woog_struct.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.struct_expression.read().unwrap().len()
+            != other.struct_expression.read().unwrap().len()
+        {
+            let mut struct_expression = self.struct_expression.write().unwrap();
+            other
+                .struct_expression
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in struct_expression, if it's not there add it to struct_expression.
+                        if struct_expression
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            let _index_ = struct_expression.len();
+                            if x.read().unwrap().id != _index_ {
+                                x.write().unwrap().id = _index_;
+                            }
+                            struct_expression.push(Some(x.clone()));
+                        }
+                    }
+                });
+        }
+
+        if self.struct_field.read().unwrap().len() != other.struct_field.read().unwrap().len() {
+            let mut struct_field = self.struct_field.write().unwrap();
+            other.struct_field.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in struct_field, if it's not there add it to struct_field.
+                    if struct_field
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = struct_field.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        struct_field.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.struct_generic.read().unwrap().len() != other.struct_generic.read().unwrap().len() {
+            let mut struct_generic = self.struct_generic.write().unwrap();
+            other.struct_generic.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in struct_generic, if it's not there add it to struct_generic.
+                    if struct_generic
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = struct_generic.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        struct_generic.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.tuple_field.read().unwrap().len() != other.tuple_field.read().unwrap().len() {
+            let mut tuple_field = self.tuple_field.write().unwrap();
+            other.tuple_field.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in tuple_field, if it's not there add it to tuple_field.
+                    if tuple_field
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = tuple_field.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        tuple_field.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.type_cast.read().unwrap().len() != other.type_cast.read().unwrap().len() {
+            let mut type_cast = self.type_cast.write().unwrap();
+            other.type_cast.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in type_cast, if it's not there add it to type_cast.
+                    if type_cast
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = type_cast.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        type_cast.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.unary.read().unwrap().len() != other.unary.read().unwrap().len() {
+            let mut unary = self.unary.write().unwrap();
+            other.unary.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in unary, if it's not there add it to unary.
+                    if unary
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = unary.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        unary.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.unit.read().unwrap().len() != other.unit.read().unwrap().len() {
+            let mut unit = self.unit.write().unwrap();
+            other.unit.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in unit, if it's not there add it to unit.
+                    if unit
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = unit.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        unit.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.unnamed_field_expression.read().unwrap().len()
+            != other.unnamed_field_expression.read().unwrap().len()
+        {
+            let mut unnamed_field_expression = self.unnamed_field_expression.write().unwrap();
+            other
+                .unnamed_field_expression
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in unnamed_field_expression, if it's not there add it to unnamed_field_expression.
+                        if unnamed_field_expression
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            let _index_ = unnamed_field_expression.len();
+                            if x.read().unwrap().id != _index_ {
+                                x.write().unwrap().id = _index_;
+                            }
+                            unnamed_field_expression.push(Some(x.clone()));
+                        }
+                    }
+                });
+        }
+
+        if self.x_value.read().unwrap().len() != other.x_value.read().unwrap().len() {
+            let mut x_value = self.x_value.write().unwrap();
+            other.x_value.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_value, if it's not there add it to x_value.
+                    if x_value
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = x_value.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        x_value.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.value_type.read().unwrap().len() != other.value_type.read().unwrap().len() {
+            let mut value_type = self.value_type.write().unwrap();
+            other.value_type.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in value_type, if it's not there add it to value_type.
+                    if value_type
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = value_type.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        value_type.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.variable.read().unwrap().len() != other.variable.read().unwrap().len() {
+            let mut variable = self.variable.write().unwrap();
+            other.variable.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in variable, if it's not there add it to variable.
+                    if variable
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        let _index_ = variable.len();
+                        if x.read().unwrap().id != _index_ {
+                            x.write().unwrap().id = _index_;
+                        }
+                        variable.push(Some(x.clone()));
+                    }
+                }
+            });
+        }
+
+        if self.variable_expression.read().unwrap().len()
+            != other.variable_expression.read().unwrap().len()
+        {
+            let mut variable_expression = self.variable_expression.write().unwrap();
+            other
+                .variable_expression
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in variable_expression, if it's not there add it to variable_expression.
+                        if variable_expression
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            let _index_ = variable_expression.len();
+                            if x.read().unwrap().id != _index_ {
+                                x.write().unwrap().id = _index_;
+                            }
+                            variable_expression.push(Some(x.clone()));
+                        }
+                    }
+                });
+        }
     }
     pub fn new() -> Self {
         let mut store = Self {
