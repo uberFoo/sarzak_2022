@@ -489,1705 +489,2304 @@ impl Clone for ObjectStore {
 }
 impl ObjectStore {
     pub fn merge(&mut self, other: &ObjectStore) {
-        if self.argument.len() != other.argument.len() {
-            let mut argument = &mut self.argument;
-            other.argument.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in argument, if it's not there add it to argument.
-                    if argument
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = argument.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        argument.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.a_wait.len() != other.a_wait.len() {
-            let mut a_wait = &mut self.a_wait;
-            other.a_wait.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in a_wait, if it's not there add it to a_wait.
-                    if a_wait
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = a_wait.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        a_wait.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.binary.len() != other.binary.len() {
-            let mut binary = &mut self.binary;
-            other.binary.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in binary, if it's not there add it to binary.
-                    if binary
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = binary.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        binary.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.block.len() != other.block.len() {
-            let mut block = &mut self.block;
-            other.block.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in block, if it's not there add it to block.
-                    if block
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = block.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        block.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.body.len() != other.body.len() {
-            let mut body = &mut self.body;
-            other.body.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in body, if it's not there add it to body.
-                    if body
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = body.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        body.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.boolean_literal.len() != other.boolean_literal.len() {
-            let mut boolean_literal = &mut self.boolean_literal;
-            other.boolean_literal.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in boolean_literal, if it's not there add it to boolean_literal.
-                    if boolean_literal
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = boolean_literal.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        boolean_literal.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.boolean_operator.len() != other.boolean_operator.len() {
-            let mut boolean_operator = &mut self.boolean_operator;
-            other.boolean_operator.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in boolean_operator, if it's not there add it to boolean_operator.
-                    if boolean_operator
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = boolean_operator.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        boolean_operator.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.call.len() != other.call.len() {
-            let mut call = &mut self.call;
-            other.call.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in call, if it's not there add it to call.
-                    if call
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = call.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        call.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.char_literal.len() != other.char_literal.len() {
-            let mut char_literal = &mut self.char_literal;
-            other.char_literal.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in char_literal, if it's not there add it to char_literal.
-                    if char_literal
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = char_literal.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        char_literal.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.comparison.len() != other.comparison.len() {
-            let mut comparison = &mut self.comparison;
-            other.comparison.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in comparison, if it's not there add it to comparison.
-                    if comparison
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = comparison.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        comparison.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.data_structure.len() != other.data_structure.len() {
-            let mut data_structure = &mut self.data_structure;
-            other.data_structure.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in data_structure, if it's not there add it to data_structure.
-                    if data_structure
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = data_structure.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        data_structure.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.dwarf_source_file.len() != other.dwarf_source_file.len() {
-            let mut dwarf_source_file = &mut self.dwarf_source_file;
-            other.dwarf_source_file.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in dwarf_source_file, if it's not there add it to dwarf_source_file.
-                    if dwarf_source_file
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = dwarf_source_file.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        dwarf_source_file.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.enum_field.len() != other.enum_field.len() {
-            let mut enum_field = &mut self.enum_field;
-            other.enum_field.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in enum_field, if it's not there add it to enum_field.
-                    if enum_field
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = enum_field.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        enum_field.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.enum_generic.len() != other.enum_generic.len() {
-            let mut enum_generic = &mut self.enum_generic;
-            other.enum_generic.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in enum_generic, if it's not there add it to enum_generic.
-                    if enum_generic
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = enum_generic.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        enum_generic.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.enum_generic_type.len() != other.enum_generic_type.len() {
-            let mut enum_generic_type = &mut self.enum_generic_type;
-            other.enum_generic_type.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in enum_generic_type, if it's not there add it to enum_generic_type.
-                    if enum_generic_type
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = enum_generic_type.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        enum_generic_type.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.enumeration.len() != other.enumeration.len() {
-            let mut enumeration = &mut self.enumeration;
-            other.enumeration.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in enumeration, if it's not there add it to enumeration.
-                    if enumeration
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = enumeration.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        enumeration.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.expression.len() != other.expression.len() {
-            let mut expression = &mut self.expression;
-            other.expression.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in expression, if it's not there add it to expression.
-                    if expression
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = expression.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        expression.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.expression_bit.len() != other.expression_bit.len() {
-            let mut expression_bit = &mut self.expression_bit;
-            other.expression_bit.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in expression_bit, if it's not there add it to expression_bit.
-                    if expression_bit
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = expression_bit.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        expression_bit.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.expression_statement.len() != other.expression_statement.len() {
-            let mut expression_statement = &mut self.expression_statement;
-            other.expression_statement.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in expression_statement, if it's not there add it to expression_statement.
-                    if expression_statement
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = expression_statement.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        expression_statement.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.external_implementation.len() != other.external_implementation.len() {
-            let mut external_implementation = &mut self.external_implementation;
-            other.external_implementation.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in external_implementation, if it's not there add it to external_implementation.
-                    if external_implementation
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = external_implementation.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        external_implementation.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.field.len() != other.field.len() {
-            let mut field = &mut self.field;
-            other.field.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in field, if it's not there add it to field.
-                    if field
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = field.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        field.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.field_access.len() != other.field_access.len() {
-            let mut field_access = &mut self.field_access;
-            other.field_access.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in field_access, if it's not there add it to field_access.
-                    if field_access
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = field_access.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        field_access.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.field_access_target.len() != other.field_access_target.len() {
-            let mut field_access_target = &mut self.field_access_target;
-            other.field_access_target.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in field_access_target, if it's not there add it to field_access_target.
-                    if field_access_target
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = field_access_target.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        field_access_target.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.field_expression.len() != other.field_expression.len() {
-            let mut field_expression = &mut self.field_expression;
-            other.field_expression.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in field_expression, if it's not there add it to field_expression.
-                    if field_expression
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = field_expression.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        field_expression.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.float_literal.len() != other.float_literal.len() {
-            let mut float_literal = &mut self.float_literal;
-            other.float_literal.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in float_literal, if it's not there add it to float_literal.
-                    if float_literal
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = float_literal.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        float_literal.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.for_loop.len() != other.for_loop.len() {
-            let mut for_loop = &mut self.for_loop;
-            other.for_loop.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in for_loop, if it's not there add it to for_loop.
-                    if for_loop
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = for_loop.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        for_loop.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.format_bit.len() != other.format_bit.len() {
-            let mut format_bit = &mut self.format_bit;
-            other.format_bit.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in format_bit, if it's not there add it to format_bit.
-                    if format_bit
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = format_bit.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        format_bit.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.format_string.len() != other.format_string.len() {
-            let mut format_string = &mut self.format_string;
-            other.format_string.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in format_string, if it's not there add it to format_string.
-                    if format_string
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = format_string.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        format_string.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.func_generic.len() != other.func_generic.len() {
-            let mut func_generic = &mut self.func_generic;
-            other.func_generic.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in func_generic, if it's not there add it to func_generic.
-                    if func_generic
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = func_generic.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        func_generic.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.function.len() != other.function.len() {
-            let mut function = &mut self.function;
-            other.function.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in function, if it's not there add it to function.
-                    if function
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = function.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        function.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.function_call.len() != other.function_call.len() {
-            let mut function_call = &mut self.function_call;
-            other.function_call.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in function_call, if it's not there add it to function_call.
-                    if function_call
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = function_call.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        function_call.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.x_future.len() != other.x_future.len() {
-            let mut x_future = &mut self.x_future;
-            other.x_future.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in x_future, if it's not there add it to x_future.
-                    if x_future
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = x_future.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        x_future.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.grouped.len() != other.grouped.len() {
-            let mut grouped = &mut self.grouped;
-            other.grouped.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in grouped, if it's not there add it to grouped.
-                    if grouped
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = grouped.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        grouped.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.halt_and_catch_fire.len() != other.halt_and_catch_fire.len() {
-            let mut halt_and_catch_fire = &mut self.halt_and_catch_fire;
-            other.halt_and_catch_fire.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in halt_and_catch_fire, if it's not there add it to halt_and_catch_fire.
-                    if halt_and_catch_fire
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = halt_and_catch_fire.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        halt_and_catch_fire.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.x_if.len() != other.x_if.len() {
-            let mut x_if = &mut self.x_if;
-            other.x_if.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in x_if, if it's not there add it to x_if.
-                    if x_if
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = x_if.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        x_if.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.implementation_block.len() != other.implementation_block.len() {
-            let mut implementation_block = &mut self.implementation_block;
-            other.implementation_block.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in implementation_block, if it's not there add it to implementation_block.
-                    if implementation_block
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = implementation_block.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        implementation_block.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.import.len() != other.import.len() {
-            let mut import = &mut self.import;
-            other.import.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in import, if it's not there add it to import.
-                    if import
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = import.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        import.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.index.len() != other.index.len() {
-            let mut index = &mut self.index;
-            other.index.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in index, if it's not there add it to index.
-                    if index
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = index.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        index.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.integer_literal.len() != other.integer_literal.len() {
-            let mut integer_literal = &mut self.integer_literal;
-            other.integer_literal.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in integer_literal, if it's not there add it to integer_literal.
-                    if integer_literal
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = integer_literal.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        integer_literal.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.item.len() != other.item.len() {
-            let mut item = &mut self.item;
-            other.item.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in item, if it's not there add it to item.
-                    if item
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = item.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        item.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.lambda.len() != other.lambda.len() {
-            let mut lambda = &mut self.lambda;
-            other.lambda.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in lambda, if it's not there add it to lambda.
-                    if lambda
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = lambda.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        lambda.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.lambda_parameter.len() != other.lambda_parameter.len() {
-            let mut lambda_parameter = &mut self.lambda_parameter;
-            other.lambda_parameter.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in lambda_parameter, if it's not there add it to lambda_parameter.
-                    if lambda_parameter
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = lambda_parameter.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        lambda_parameter.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.let_statement.len() != other.let_statement.len() {
-            let mut let_statement = &mut self.let_statement;
-            other.let_statement.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in let_statement, if it's not there add it to let_statement.
-                    if let_statement
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = let_statement.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        let_statement.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.list.len() != other.list.len() {
-            let mut list = &mut self.list;
-            other.list.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in list, if it's not there add it to list.
-                    if list
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = list.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        list.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.list_element.len() != other.list_element.len() {
-            let mut list_element = &mut self.list_element;
-            other.list_element.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in list_element, if it's not there add it to list_element.
-                    if list_element
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = list_element.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        list_element.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.list_expression.len() != other.list_expression.len() {
-            let mut list_expression = &mut self.list_expression;
-            other.list_expression.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in list_expression, if it's not there add it to list_expression.
-                    if list_expression
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = list_expression.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        list_expression.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.literal.len() != other.literal.len() {
-            let mut literal = &mut self.literal;
-            other.literal.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in literal, if it's not there add it to literal.
-                    if literal
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = literal.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        literal.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.local_variable.len() != other.local_variable.len() {
-            let mut local_variable = &mut self.local_variable;
-            other.local_variable.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in local_variable, if it's not there add it to local_variable.
-                    if local_variable
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = local_variable.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        local_variable.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.x_macro.len() != other.x_macro.len() {
-            let mut x_macro = &mut self.x_macro;
-            other.x_macro.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in x_macro, if it's not there add it to x_macro.
-                    if x_macro
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = x_macro.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        x_macro.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.map.len() != other.map.len() {
-            let mut map = &mut self.map;
-            other.map.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in map, if it's not there add it to map.
-                    if map
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = map.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        map.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.map_element.len() != other.map_element.len() {
-            let mut map_element = &mut self.map_element;
-            other.map_element.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in map_element, if it's not there add it to map_element.
-                    if map_element
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = map_element.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        map_element.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.map_expression.len() != other.map_expression.len() {
-            let mut map_expression = &mut self.map_expression;
-            other.map_expression.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in map_expression, if it's not there add it to map_expression.
-                    if map_expression
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = map_expression.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        map_expression.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.x_match.len() != other.x_match.len() {
-            let mut x_match = &mut self.x_match;
-            other.x_match.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in x_match, if it's not there add it to x_match.
-                    if x_match
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = x_match.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        x_match.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.method_call.len() != other.method_call.len() {
-            let mut method_call = &mut self.method_call;
-            other.method_call.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in method_call, if it's not there add it to method_call.
-                    if method_call
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = method_call.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        method_call.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.named_field_expression.len() != other.named_field_expression.len() {
-            let mut named_field_expression = &mut self.named_field_expression;
-            other.named_field_expression.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in named_field_expression, if it's not there add it to named_field_expression.
-                    if named_field_expression
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = named_field_expression.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        named_field_expression.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.z_object_store.len() != other.z_object_store.len() {
-            let mut z_object_store = &mut self.z_object_store;
-            other.z_object_store.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in z_object_store, if it's not there add it to z_object_store.
-                    if z_object_store
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = z_object_store.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        z_object_store.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.object_wrapper.len() != other.object_wrapper.len() {
-            let mut object_wrapper = &mut self.object_wrapper;
-            other.object_wrapper.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in object_wrapper, if it's not there add it to object_wrapper.
-                    if object_wrapper
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = object_wrapper.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        object_wrapper.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.operator.len() != other.operator.len() {
-            let mut operator = &mut self.operator;
-            other.operator.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in operator, if it's not there add it to operator.
-                    if operator
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = operator.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        operator.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.parameter.len() != other.parameter.len() {
-            let mut parameter = &mut self.parameter;
-            other.parameter.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in parameter, if it's not there add it to parameter.
-                    if parameter
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = parameter.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        parameter.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.x_path.len() != other.x_path.len() {
-            let mut x_path = &mut self.x_path;
-            other.x_path.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in x_path, if it's not there add it to x_path.
-                    if x_path
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = x_path.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        x_path.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.path_element.len() != other.path_element.len() {
-            let mut path_element = &mut self.path_element;
-            other.path_element.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in path_element, if it's not there add it to path_element.
-                    if path_element
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = path_element.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        path_element.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.pattern.len() != other.pattern.len() {
-            let mut pattern = &mut self.pattern;
-            other.pattern.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in pattern, if it's not there add it to pattern.
-                    if pattern
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = pattern.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        pattern.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.x_plugin.len() != other.x_plugin.len() {
-            let mut x_plugin = &mut self.x_plugin;
-            other.x_plugin.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in x_plugin, if it's not there add it to x_plugin.
-                    if x_plugin
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = x_plugin.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        x_plugin.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.x_print.len() != other.x_print.len() {
-            let mut x_print = &mut self.x_print;
-            other.x_print.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in x_print, if it's not there add it to x_print.
-                    if x_print
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = x_print.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        x_print.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.range_expression.len() != other.range_expression.len() {
-            let mut range_expression = &mut self.range_expression;
-            other.range_expression.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in range_expression, if it's not there add it to range_expression.
-                    if range_expression
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = range_expression.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        range_expression.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.result_statement.len() != other.result_statement.len() {
-            let mut result_statement = &mut self.result_statement;
-            other.result_statement.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in result_statement, if it's not there add it to result_statement.
-                    if result_statement
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = result_statement.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        result_statement.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.x_return.len() != other.x_return.len() {
-            let mut x_return = &mut self.x_return;
-            other.x_return.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in x_return, if it's not there add it to x_return.
-                    if x_return
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = x_return.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        x_return.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.span.len() != other.span.len() {
-            let mut span = &mut self.span;
-            other.span.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in span, if it's not there add it to span.
-                    if span
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = span.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        span.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.statement.len() != other.statement.len() {
-            let mut statement = &mut self.statement;
-            other.statement.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in statement, if it's not there add it to statement.
-                    if statement
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = statement.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        statement.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.static_method_call.len() != other.static_method_call.len() {
-            let mut static_method_call = &mut self.static_method_call;
-            other.static_method_call.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in static_method_call, if it's not there add it to static_method_call.
-                    if static_method_call
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = static_method_call.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        static_method_call.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.string_bit.len() != other.string_bit.len() {
-            let mut string_bit = &mut self.string_bit;
-            other.string_bit.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in string_bit, if it's not there add it to string_bit.
-                    if string_bit
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = string_bit.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        string_bit.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.string_literal.len() != other.string_literal.len() {
-            let mut string_literal = &mut self.string_literal;
-            other.string_literal.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in string_literal, if it's not there add it to string_literal.
-                    if string_literal
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = string_literal.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        string_literal.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.woog_struct.len() != other.woog_struct.len() {
-            let mut woog_struct = &mut self.woog_struct;
-            other.woog_struct.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in woog_struct, if it's not there add it to woog_struct.
-                    if woog_struct
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = woog_struct.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        woog_struct.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.struct_expression.len() != other.struct_expression.len() {
-            let mut struct_expression = &mut self.struct_expression;
-            other.struct_expression.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in struct_expression, if it's not there add it to struct_expression.
-                    if struct_expression
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = struct_expression.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        struct_expression.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.struct_field.len() != other.struct_field.len() {
-            let mut struct_field = &mut self.struct_field;
-            other.struct_field.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in struct_field, if it's not there add it to struct_field.
-                    if struct_field
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = struct_field.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        struct_field.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.struct_generic.len() != other.struct_generic.len() {
-            let mut struct_generic = &mut self.struct_generic;
-            other.struct_generic.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in struct_generic, if it's not there add it to struct_generic.
-                    if struct_generic
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = struct_generic.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        struct_generic.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.tuple_field.len() != other.tuple_field.len() {
-            let mut tuple_field = &mut self.tuple_field;
-            other.tuple_field.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in tuple_field, if it's not there add it to tuple_field.
-                    if tuple_field
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = tuple_field.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        tuple_field.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.type_cast.len() != other.type_cast.len() {
-            let mut type_cast = &mut self.type_cast;
-            other.type_cast.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in type_cast, if it's not there add it to type_cast.
-                    if type_cast
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = type_cast.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        type_cast.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.unary.len() != other.unary.len() {
-            let mut unary = &mut self.unary;
-            other.unary.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in unary, if it's not there add it to unary.
-                    if unary
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = unary.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        unary.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.unit.len() != other.unit.len() {
-            let mut unit = &mut self.unit;
-            other.unit.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in unit, if it's not there add it to unit.
-                    if unit
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = unit.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        unit.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.unnamed_field_expression.len() != other.unnamed_field_expression.len() {
-            let mut unnamed_field_expression = &mut self.unnamed_field_expression;
-            other.unnamed_field_expression.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in unnamed_field_expression, if it's not there add it to unnamed_field_expression.
-                    if unnamed_field_expression
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = unnamed_field_expression.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        unnamed_field_expression.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.x_value.len() != other.x_value.len() {
-            let mut x_value = &mut self.x_value;
-            other.x_value.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in x_value, if it's not there add it to x_value.
-                    if x_value
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = x_value.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        x_value.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.value_type.len() != other.value_type.len() {
-            let mut value_type = &mut self.value_type;
-            other.value_type.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in value_type, if it's not there add it to value_type.
-                    if value_type
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = value_type.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        value_type.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.variable.len() != other.variable.len() {
-            let mut variable = &mut self.variable;
-            other.variable.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in variable, if it's not there add it to variable.
-                    if variable
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = variable.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        variable.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
-
-        if self.variable_expression.len() != other.variable_expression.len() {
-            let mut variable_expression = &mut self.variable_expression;
-            other.variable_expression.iter().for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in variable_expression, if it's not there add it to variable_expression.
-                    if variable_expression
-                        .iter()
-                        .find(|&y| if let Some(y) = y { *y == *x } else { false })
-                        .is_none()
-                    {
-                        let _index_ = variable_expression.len();
-                        if x.borrow().id != _index_ {
-                            x.borrow_mut().id = _index_;
-                        }
-                        variable_expression.push(Some(x.clone()));
-                    }
-                }
-            });
-        }
+        // if self.argument.len() != other.argument.len() {
+        other.argument.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in argument, if it's not there add it to argument.
+                if self
+                    .argument
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.argument.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_argument(|id| -> Rc<RefCell<Argument>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.a_wait.len() != other.a_wait.len() {
+        other.a_wait.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in a_wait, if it's not there add it to a_wait.
+                if self
+                    .a_wait
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.a_wait.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_a_wait(|id| -> Rc<RefCell<AWait>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.binary.len() != other.binary.len() {
+        other.binary.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in binary, if it's not there add it to binary.
+                if self
+                    .binary
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.binary.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_binary(|id| -> Rc<RefCell<Binary>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.block.len() != other.block.len() {
+        other.block.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in block, if it's not there add it to block.
+                if self
+                    .block
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.block.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_block(|id| -> Rc<RefCell<Block>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.body.len() != other.body.len() {
+        other.body.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in body, if it's not there add it to body.
+                if self
+                    .body
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.body.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_body(|id| -> Rc<RefCell<Body>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.boolean_literal.len() != other.boolean_literal.len() {
+        other.boolean_literal.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in boolean_literal, if it's not there add it to boolean_literal.
+                if self
+                    .boolean_literal
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.boolean_literal.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_boolean_literal(|id| -> Rc<RefCell<BooleanLiteral>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.boolean_operator.len() != other.boolean_operator.len() {
+        other.boolean_operator.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in boolean_operator, if it's not there add it to boolean_operator.
+                if self
+                    .boolean_operator
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.boolean_operator.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_boolean_operator(|id| -> Rc<RefCell<BooleanOperator>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.call.len() != other.call.len() {
+        other.call.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in call, if it's not there add it to call.
+                if self
+                    .call
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.call.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_call(|id| -> Rc<RefCell<Call>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.char_literal.len() != other.char_literal.len() {
+        other.char_literal.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in char_literal, if it's not there add it to char_literal.
+                if self
+                    .char_literal
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.char_literal.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_char_literal(|id| -> Rc<RefCell<CharLiteral>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.comparison.len() != other.comparison.len() {
+        other.comparison.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in comparison, if it's not there add it to comparison.
+                if self
+                    .comparison
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.comparison.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_comparison(|id| -> Rc<RefCell<Comparison>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.data_structure.len() != other.data_structure.len() {
+        other.data_structure.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in data_structure, if it's not there add it to data_structure.
+                if self
+                    .data_structure
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.data_structure.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_data_structure(|id| -> Rc<RefCell<DataStructure>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.dwarf_source_file.len() != other.dwarf_source_file.len() {
+        other.dwarf_source_file.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in dwarf_source_file, if it's not there add it to dwarf_source_file.
+                if self
+                    .dwarf_source_file
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.dwarf_source_file.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_dwarf_source_file(|id| -> Rc<RefCell<DwarfSourceFile>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.enum_field.len() != other.enum_field.len() {
+        other.enum_field.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in enum_field, if it's not there add it to enum_field.
+                if self
+                    .enum_field
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.enum_field.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_enum_field(|id| -> Rc<RefCell<EnumField>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.enum_generic.len() != other.enum_generic.len() {
+        other.enum_generic.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in enum_generic, if it's not there add it to enum_generic.
+                if self
+                    .enum_generic
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.enum_generic.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_enum_generic(|id| -> Rc<RefCell<EnumGeneric>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.enum_generic_type.len() != other.enum_generic_type.len() {
+        other.enum_generic_type.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in enum_generic_type, if it's not there add it to enum_generic_type.
+                if self
+                    .enum_generic_type
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.enum_generic_type.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_enum_generic_type(|id| -> Rc<RefCell<EnumGenericType>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.enumeration.len() != other.enumeration.len() {
+        other.enumeration.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in enumeration, if it's not there add it to enumeration.
+                if self
+                    .enumeration
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.enumeration.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_enumeration(|id| -> Rc<RefCell<Enumeration>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.expression.len() != other.expression.len() {
+        other.expression.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in expression, if it's not there add it to expression.
+                if self
+                    .expression
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.expression.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_expression(|id| -> Rc<RefCell<Expression>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.expression_bit.len() != other.expression_bit.len() {
+        other.expression_bit.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in expression_bit, if it's not there add it to expression_bit.
+                if self
+                    .expression_bit
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.expression_bit.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_expression_bit(|id| -> Rc<RefCell<ExpressionBit>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.expression_statement.len() != other.expression_statement.len() {
+        other.expression_statement.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in expression_statement, if it's not there add it to expression_statement.
+                if self
+                    .expression_statement
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.expression_statement.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_expression_statement(|id| -> Rc<RefCell<ExpressionStatement>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.external_implementation.len() != other.external_implementation.len() {
+        other.external_implementation.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in external_implementation, if it's not there add it to external_implementation.
+                if self
+                    .external_implementation
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.external_implementation.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_external_implementation(
+                        |id| -> Rc<RefCell<ExternalImplementation>> {
+                            if x.borrow().id != id {
+                                panic!("id mismatch");
+                            }
+
+                            x.clone()
+                        },
+                    );
+                }
+            }
+        });
+        // }
+
+        // if self.field.len() != other.field.len() {
+        other.field.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in field, if it's not there add it to field.
+                if self
+                    .field
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.field.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_field(|id| -> Rc<RefCell<Field>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.field_access.len() != other.field_access.len() {
+        other.field_access.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in field_access, if it's not there add it to field_access.
+                if self
+                    .field_access
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.field_access.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_field_access(|id| -> Rc<RefCell<FieldAccess>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.field_access_target.len() != other.field_access_target.len() {
+        other.field_access_target.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in field_access_target, if it's not there add it to field_access_target.
+                if self
+                    .field_access_target
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.field_access_target.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_field_access_target(|id| -> Rc<RefCell<FieldAccessTarget>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.field_expression.len() != other.field_expression.len() {
+        other.field_expression.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in field_expression, if it's not there add it to field_expression.
+                if self
+                    .field_expression
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.field_expression.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_field_expression(|id| -> Rc<RefCell<FieldExpression>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.float_literal.len() != other.float_literal.len() {
+        other.float_literal.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in float_literal, if it's not there add it to float_literal.
+                if self
+                    .float_literal
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.float_literal.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_float_literal(|id| -> Rc<RefCell<FloatLiteral>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.for_loop.len() != other.for_loop.len() {
+        other.for_loop.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in for_loop, if it's not there add it to for_loop.
+                if self
+                    .for_loop
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.for_loop.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_for_loop(|id| -> Rc<RefCell<ForLoop>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.format_bit.len() != other.format_bit.len() {
+        other.format_bit.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in format_bit, if it's not there add it to format_bit.
+                if self
+                    .format_bit
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.format_bit.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_format_bit(|id| -> Rc<RefCell<FormatBit>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.format_string.len() != other.format_string.len() {
+        other.format_string.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in format_string, if it's not there add it to format_string.
+                if self
+                    .format_string
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.format_string.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_format_string(|id| -> Rc<RefCell<FormatString>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.func_generic.len() != other.func_generic.len() {
+        other.func_generic.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in func_generic, if it's not there add it to func_generic.
+                if self
+                    .func_generic
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.func_generic.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_func_generic(|id| -> Rc<RefCell<FuncGeneric>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.function.len() != other.function.len() {
+        other.function.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in function, if it's not there add it to function.
+                if self
+                    .function
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.function.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_function(|id| -> Rc<RefCell<Function>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.function_call.len() != other.function_call.len() {
+        other.function_call.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in function_call, if it's not there add it to function_call.
+                if self
+                    .function_call
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.function_call.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_function_call(|id| -> Rc<RefCell<FunctionCall>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.x_future.len() != other.x_future.len() {
+        other.x_future.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in x_future, if it's not there add it to x_future.
+                if self
+                    .x_future
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.x_future.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_x_future(|id| -> Rc<RefCell<XFuture>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.grouped.len() != other.grouped.len() {
+        other.grouped.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in grouped, if it's not there add it to grouped.
+                if self
+                    .grouped
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.grouped.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_grouped(|id| -> Rc<RefCell<Grouped>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.halt_and_catch_fire.len() != other.halt_and_catch_fire.len() {
+        other.halt_and_catch_fire.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in halt_and_catch_fire, if it's not there add it to halt_and_catch_fire.
+                if self
+                    .halt_and_catch_fire
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.halt_and_catch_fire.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_halt_and_catch_fire(|id| -> Rc<RefCell<HaltAndCatchFire>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.x_if.len() != other.x_if.len() {
+        other.x_if.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in x_if, if it's not there add it to x_if.
+                if self
+                    .x_if
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.x_if.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_x_if(|id| -> Rc<RefCell<XIf>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.implementation_block.len() != other.implementation_block.len() {
+        other.implementation_block.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in implementation_block, if it's not there add it to implementation_block.
+                if self
+                    .implementation_block
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.implementation_block.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_implementation_block(|id| -> Rc<RefCell<ImplementationBlock>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.import.len() != other.import.len() {
+        other.import.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in import, if it's not there add it to import.
+                if self
+                    .import
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.import.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_import(|id| -> Rc<RefCell<Import>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.index.len() != other.index.len() {
+        other.index.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in index, if it's not there add it to index.
+                if self
+                    .index
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.index.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_index(|id| -> Rc<RefCell<Index>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.integer_literal.len() != other.integer_literal.len() {
+        other.integer_literal.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in integer_literal, if it's not there add it to integer_literal.
+                if self
+                    .integer_literal
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.integer_literal.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_integer_literal(|id| -> Rc<RefCell<IntegerLiteral>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.item.len() != other.item.len() {
+        other.item.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in item, if it's not there add it to item.
+                if self
+                    .item
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.item.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_item(|id| -> Rc<RefCell<Item>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.lambda.len() != other.lambda.len() {
+        other.lambda.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in lambda, if it's not there add it to lambda.
+                if self
+                    .lambda
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.lambda.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_lambda(|id| -> Rc<RefCell<Lambda>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.lambda_parameter.len() != other.lambda_parameter.len() {
+        other.lambda_parameter.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in lambda_parameter, if it's not there add it to lambda_parameter.
+                if self
+                    .lambda_parameter
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.lambda_parameter.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_lambda_parameter(|id| -> Rc<RefCell<LambdaParameter>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.let_statement.len() != other.let_statement.len() {
+        other.let_statement.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in let_statement, if it's not there add it to let_statement.
+                if self
+                    .let_statement
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.let_statement.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_let_statement(|id| -> Rc<RefCell<LetStatement>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.list.len() != other.list.len() {
+        other.list.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in list, if it's not there add it to list.
+                if self
+                    .list
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.list.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_list(|id| -> Rc<RefCell<List>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.list_element.len() != other.list_element.len() {
+        other.list_element.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in list_element, if it's not there add it to list_element.
+                if self
+                    .list_element
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.list_element.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_list_element(|id| -> Rc<RefCell<ListElement>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.list_expression.len() != other.list_expression.len() {
+        other.list_expression.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in list_expression, if it's not there add it to list_expression.
+                if self
+                    .list_expression
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.list_expression.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_list_expression(|id| -> Rc<RefCell<ListExpression>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.literal.len() != other.literal.len() {
+        other.literal.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in literal, if it's not there add it to literal.
+                if self
+                    .literal
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.literal.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_literal(|id| -> Rc<RefCell<Literal>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.local_variable.len() != other.local_variable.len() {
+        other.local_variable.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in local_variable, if it's not there add it to local_variable.
+                if self
+                    .local_variable
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.local_variable.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_local_variable(|id| -> Rc<RefCell<LocalVariable>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.x_macro.len() != other.x_macro.len() {
+        other.x_macro.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in x_macro, if it's not there add it to x_macro.
+                if self
+                    .x_macro
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.x_macro.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_x_macro(|id| -> Rc<RefCell<XMacro>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.map.len() != other.map.len() {
+        other.map.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in map, if it's not there add it to map.
+                if self
+                    .map
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.map.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_map(|id| -> Rc<RefCell<Map>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.map_element.len() != other.map_element.len() {
+        other.map_element.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in map_element, if it's not there add it to map_element.
+                if self
+                    .map_element
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.map_element.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_map_element(|id| -> Rc<RefCell<MapElement>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.map_expression.len() != other.map_expression.len() {
+        other.map_expression.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in map_expression, if it's not there add it to map_expression.
+                if self
+                    .map_expression
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.map_expression.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_map_expression(|id| -> Rc<RefCell<MapExpression>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.x_match.len() != other.x_match.len() {
+        other.x_match.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in x_match, if it's not there add it to x_match.
+                if self
+                    .x_match
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.x_match.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_x_match(|id| -> Rc<RefCell<XMatch>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.method_call.len() != other.method_call.len() {
+        other.method_call.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in method_call, if it's not there add it to method_call.
+                if self
+                    .method_call
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.method_call.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_method_call(|id| -> Rc<RefCell<MethodCall>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.named_field_expression.len() != other.named_field_expression.len() {
+        other.named_field_expression.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in named_field_expression, if it's not there add it to named_field_expression.
+                if self
+                    .named_field_expression
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.named_field_expression.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_named_field_expression(|id| -> Rc<RefCell<NamedFieldExpression>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.z_object_store.len() != other.z_object_store.len() {
+        other.z_object_store.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in z_object_store, if it's not there add it to z_object_store.
+                if self
+                    .z_object_store
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.z_object_store.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_z_object_store(|id| -> Rc<RefCell<ZObjectStore>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.object_wrapper.len() != other.object_wrapper.len() {
+        other.object_wrapper.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in object_wrapper, if it's not there add it to object_wrapper.
+                if self
+                    .object_wrapper
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.object_wrapper.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_object_wrapper(|id| -> Rc<RefCell<ObjectWrapper>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.operator.len() != other.operator.len() {
+        other.operator.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in operator, if it's not there add it to operator.
+                if self
+                    .operator
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.operator.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_operator(|id| -> Rc<RefCell<Operator>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.parameter.len() != other.parameter.len() {
+        other.parameter.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in parameter, if it's not there add it to parameter.
+                if self
+                    .parameter
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.parameter.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_parameter(|id| -> Rc<RefCell<Parameter>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.x_path.len() != other.x_path.len() {
+        other.x_path.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in x_path, if it's not there add it to x_path.
+                if self
+                    .x_path
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.x_path.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_x_path(|id| -> Rc<RefCell<XPath>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.path_element.len() != other.path_element.len() {
+        other.path_element.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in path_element, if it's not there add it to path_element.
+                if self
+                    .path_element
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.path_element.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_path_element(|id| -> Rc<RefCell<PathElement>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.pattern.len() != other.pattern.len() {
+        other.pattern.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in pattern, if it's not there add it to pattern.
+                if self
+                    .pattern
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.pattern.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_pattern(|id| -> Rc<RefCell<Pattern>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.x_plugin.len() != other.x_plugin.len() {
+        other.x_plugin.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in x_plugin, if it's not there add it to x_plugin.
+                if self
+                    .x_plugin
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.x_plugin.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_x_plugin(|id| -> Rc<RefCell<XPlugin>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.x_print.len() != other.x_print.len() {
+        other.x_print.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in x_print, if it's not there add it to x_print.
+                if self
+                    .x_print
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.x_print.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_x_print(|id| -> Rc<RefCell<XPrint>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.range_expression.len() != other.range_expression.len() {
+        other.range_expression.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in range_expression, if it's not there add it to range_expression.
+                if self
+                    .range_expression
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.range_expression.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_range_expression(|id| -> Rc<RefCell<RangeExpression>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.result_statement.len() != other.result_statement.len() {
+        other.result_statement.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in result_statement, if it's not there add it to result_statement.
+                if self
+                    .result_statement
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.result_statement.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_result_statement(|id| -> Rc<RefCell<ResultStatement>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.x_return.len() != other.x_return.len() {
+        other.x_return.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in x_return, if it's not there add it to x_return.
+                if self
+                    .x_return
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.x_return.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_x_return(|id| -> Rc<RefCell<XReturn>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.span.len() != other.span.len() {
+        other.span.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in span, if it's not there add it to span.
+                if self
+                    .span
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.span.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_span(|id| -> Rc<RefCell<Span>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.statement.len() != other.statement.len() {
+        other.statement.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in statement, if it's not there add it to statement.
+                if self
+                    .statement
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.statement.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_statement(|id| -> Rc<RefCell<Statement>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.static_method_call.len() != other.static_method_call.len() {
+        other.static_method_call.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in static_method_call, if it's not there add it to static_method_call.
+                if self
+                    .static_method_call
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.static_method_call.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_static_method_call(|id| -> Rc<RefCell<StaticMethodCall>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.string_bit.len() != other.string_bit.len() {
+        other.string_bit.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in string_bit, if it's not there add it to string_bit.
+                if self
+                    .string_bit
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.string_bit.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_string_bit(|id| -> Rc<RefCell<StringBit>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.string_literal.len() != other.string_literal.len() {
+        other.string_literal.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in string_literal, if it's not there add it to string_literal.
+                if self
+                    .string_literal
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.string_literal.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_string_literal(|id| -> Rc<RefCell<StringLiteral>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.woog_struct.len() != other.woog_struct.len() {
+        other.woog_struct.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in woog_struct, if it's not there add it to woog_struct.
+                if self
+                    .woog_struct
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.woog_struct.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_woog_struct(|id| -> Rc<RefCell<WoogStruct>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.struct_expression.len() != other.struct_expression.len() {
+        other.struct_expression.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in struct_expression, if it's not there add it to struct_expression.
+                if self
+                    .struct_expression
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.struct_expression.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_struct_expression(|id| -> Rc<RefCell<StructExpression>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.struct_field.len() != other.struct_field.len() {
+        other.struct_field.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in struct_field, if it's not there add it to struct_field.
+                if self
+                    .struct_field
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.struct_field.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_struct_field(|id| -> Rc<RefCell<StructField>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.struct_generic.len() != other.struct_generic.len() {
+        other.struct_generic.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in struct_generic, if it's not there add it to struct_generic.
+                if self
+                    .struct_generic
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.struct_generic.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_struct_generic(|id| -> Rc<RefCell<StructGeneric>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.tuple_field.len() != other.tuple_field.len() {
+        other.tuple_field.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in tuple_field, if it's not there add it to tuple_field.
+                if self
+                    .tuple_field
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.tuple_field.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_tuple_field(|id| -> Rc<RefCell<TupleField>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.type_cast.len() != other.type_cast.len() {
+        other.type_cast.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in type_cast, if it's not there add it to type_cast.
+                if self
+                    .type_cast
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.type_cast.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_type_cast(|id| -> Rc<RefCell<TypeCast>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.unary.len() != other.unary.len() {
+        other.unary.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in unary, if it's not there add it to unary.
+                if self
+                    .unary
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.unary.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_unary(|id| -> Rc<RefCell<Unary>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.unit.len() != other.unit.len() {
+        other.unit.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in unit, if it's not there add it to unit.
+                if self
+                    .unit
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.unit.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_unit(|id| -> Rc<RefCell<Unit>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.unnamed_field_expression.len() != other.unnamed_field_expression.len() {
+        other.unnamed_field_expression.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in unnamed_field_expression, if it's not there add it to unnamed_field_expression.
+                if self
+                    .unnamed_field_expression
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.unnamed_field_expression.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_unnamed_field_expression(
+                        |id| -> Rc<RefCell<UnnamedFieldExpression>> {
+                            if x.borrow().id != id {
+                                panic!("id mismatch");
+                            }
+
+                            x.clone()
+                        },
+                    );
+                }
+            }
+        });
+        // }
+
+        // if self.x_value.len() != other.x_value.len() {
+        other.x_value.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in x_value, if it's not there add it to x_value.
+                if self
+                    .x_value
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.x_value.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_x_value(|id| -> Rc<RefCell<XValue>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.value_type.len() != other.value_type.len() {
+        other.value_type.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in value_type, if it's not there add it to value_type.
+                if self
+                    .value_type
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.value_type.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_value_type(|id| -> Rc<RefCell<ValueType>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.variable.len() != other.variable.len() {
+        other.variable.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in variable, if it's not there add it to variable.
+                if self
+                    .variable
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.variable.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_variable(|id| -> Rc<RefCell<Variable>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
+
+        // if self.variable_expression.len() != other.variable_expression.len() {
+        other.variable_expression.iter().for_each(|x| {
+            if let Some(x) = x {
+                // Look for other in variable_expression, if it's not there add it to variable_expression.
+                if self
+                    .variable_expression
+                    .borrow()
+                    .iter()
+                    .find(|&y| if let Some(y) = y { *y == *x } else { false })
+                    .is_none()
+                {
+                    // let _index_ = self.variable_expression.borrow().len();
+                    // if x.borrow().id != _index_ {
+                    //     x.borrow_mut().id = _index_;
+                    // }
+                    self.inter_variable_expression(|id| -> Rc<RefCell<VariableExpression>> {
+                        if x.borrow().id != id {
+                            panic!("id mismatch");
+                        }
+
+                        x.clone()
+                    });
+                }
+            }
+        });
+        // }
     }
     pub fn new() -> Self {
         let mut store = Self {
