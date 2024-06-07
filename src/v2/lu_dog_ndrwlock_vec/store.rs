@@ -125,180 +125,265 @@ use crate::v2::lu_dog_ndrwlock_vec::types::{
 pub struct ObjectStore {
     argument_free_list: std::sync::Mutex<Vec<usize>>,
     argument: Arc<RwLock<Vec<Option<Arc<RwLock<Argument>>>>>>,
+    argument_dirty: bool,
     a_wait_free_list: std::sync::Mutex<Vec<usize>>,
     a_wait: Arc<RwLock<Vec<Option<Arc<RwLock<AWait>>>>>>,
+    a_wait_dirty: bool,
     binary_free_list: std::sync::Mutex<Vec<usize>>,
     binary: Arc<RwLock<Vec<Option<Arc<RwLock<Binary>>>>>>,
+    binary_dirty: bool,
     block_free_list: std::sync::Mutex<Vec<usize>>,
     block: Arc<RwLock<Vec<Option<Arc<RwLock<Block>>>>>>,
+    block_dirty: bool,
     body_free_list: std::sync::Mutex<Vec<usize>>,
     body: Arc<RwLock<Vec<Option<Arc<RwLock<Body>>>>>>,
+    body_dirty: bool,
     boolean_literal_free_list: std::sync::Mutex<Vec<usize>>,
     boolean_literal: Arc<RwLock<Vec<Option<Arc<RwLock<BooleanLiteral>>>>>>,
+    boolean_literal_dirty: bool,
     boolean_operator_free_list: std::sync::Mutex<Vec<usize>>,
     boolean_operator: Arc<RwLock<Vec<Option<Arc<RwLock<BooleanOperator>>>>>>,
+    boolean_operator_dirty: bool,
     call_free_list: std::sync::Mutex<Vec<usize>>,
     call: Arc<RwLock<Vec<Option<Arc<RwLock<Call>>>>>>,
+    call_dirty: bool,
     char_literal_free_list: std::sync::Mutex<Vec<usize>>,
     char_literal: Arc<RwLock<Vec<Option<Arc<RwLock<CharLiteral>>>>>>,
+    char_literal_dirty: bool,
     comparison_free_list: std::sync::Mutex<Vec<usize>>,
     comparison: Arc<RwLock<Vec<Option<Arc<RwLock<Comparison>>>>>>,
+    comparison_dirty: bool,
     data_structure_free_list: std::sync::Mutex<Vec<usize>>,
     data_structure: Arc<RwLock<Vec<Option<Arc<RwLock<DataStructure>>>>>>,
+    data_structure_dirty: bool,
     dwarf_source_file_free_list: std::sync::Mutex<Vec<usize>>,
     dwarf_source_file: Arc<RwLock<Vec<Option<Arc<RwLock<DwarfSourceFile>>>>>>,
+    dwarf_source_file_dirty: bool,
     enum_field_free_list: std::sync::Mutex<Vec<usize>>,
     enum_field: Arc<RwLock<Vec<Option<Arc<RwLock<EnumField>>>>>>,
+    enum_field_dirty: bool,
     enum_generic_free_list: std::sync::Mutex<Vec<usize>>,
     enum_generic: Arc<RwLock<Vec<Option<Arc<RwLock<EnumGeneric>>>>>>,
+    enum_generic_dirty: bool,
     enum_generic_type_free_list: std::sync::Mutex<Vec<usize>>,
     enum_generic_type: Arc<RwLock<Vec<Option<Arc<RwLock<EnumGenericType>>>>>>,
+    enum_generic_type_dirty: bool,
     enumeration_free_list: std::sync::Mutex<Vec<usize>>,
     enumeration: Arc<RwLock<Vec<Option<Arc<RwLock<Enumeration>>>>>>,
     enumeration_id_by_name: Arc<RwLock<HashMap<String, usize>>>,
+    enumeration_dirty: bool,
     expression_free_list: std::sync::Mutex<Vec<usize>>,
     expression: Arc<RwLock<Vec<Option<Arc<RwLock<Expression>>>>>>,
+    expression_dirty: bool,
     expression_bit_free_list: std::sync::Mutex<Vec<usize>>,
     expression_bit: Arc<RwLock<Vec<Option<Arc<RwLock<ExpressionBit>>>>>>,
+    expression_bit_dirty: bool,
     expression_statement_free_list: std::sync::Mutex<Vec<usize>>,
     expression_statement: Arc<RwLock<Vec<Option<Arc<RwLock<ExpressionStatement>>>>>>,
+    expression_statement_dirty: bool,
     external_implementation_free_list: std::sync::Mutex<Vec<usize>>,
     external_implementation: Arc<RwLock<Vec<Option<Arc<RwLock<ExternalImplementation>>>>>>,
+    external_implementation_dirty: bool,
     field_free_list: std::sync::Mutex<Vec<usize>>,
     field: Arc<RwLock<Vec<Option<Arc<RwLock<Field>>>>>>,
     field_id_by_name: Arc<RwLock<HashMap<String, usize>>>,
+    field_dirty: bool,
     field_access_free_list: std::sync::Mutex<Vec<usize>>,
     field_access: Arc<RwLock<Vec<Option<Arc<RwLock<FieldAccess>>>>>>,
+    field_access_dirty: bool,
     field_access_target_free_list: std::sync::Mutex<Vec<usize>>,
     field_access_target: Arc<RwLock<Vec<Option<Arc<RwLock<FieldAccessTarget>>>>>>,
+    field_access_target_dirty: bool,
     field_expression_free_list: std::sync::Mutex<Vec<usize>>,
     field_expression: Arc<RwLock<Vec<Option<Arc<RwLock<FieldExpression>>>>>>,
+    field_expression_dirty: bool,
     float_literal_free_list: std::sync::Mutex<Vec<usize>>,
     float_literal: Arc<RwLock<Vec<Option<Arc<RwLock<FloatLiteral>>>>>>,
+    float_literal_dirty: bool,
     for_loop_free_list: std::sync::Mutex<Vec<usize>>,
     for_loop: Arc<RwLock<Vec<Option<Arc<RwLock<ForLoop>>>>>>,
+    for_loop_dirty: bool,
     format_bit_free_list: std::sync::Mutex<Vec<usize>>,
     format_bit: Arc<RwLock<Vec<Option<Arc<RwLock<FormatBit>>>>>>,
+    format_bit_dirty: bool,
     format_string_free_list: std::sync::Mutex<Vec<usize>>,
     format_string: Arc<RwLock<Vec<Option<Arc<RwLock<FormatString>>>>>>,
+    format_string_dirty: bool,
     func_generic_free_list: std::sync::Mutex<Vec<usize>>,
     func_generic: Arc<RwLock<Vec<Option<Arc<RwLock<FuncGeneric>>>>>>,
+    func_generic_dirty: bool,
     function_free_list: std::sync::Mutex<Vec<usize>>,
     function: Arc<RwLock<Vec<Option<Arc<RwLock<Function>>>>>>,
     function_id_by_name: Arc<RwLock<HashMap<String, usize>>>,
+    function_dirty: bool,
     function_call_free_list: std::sync::Mutex<Vec<usize>>,
     function_call: Arc<RwLock<Vec<Option<Arc<RwLock<FunctionCall>>>>>>,
+    function_call_dirty: bool,
     x_future_free_list: std::sync::Mutex<Vec<usize>>,
     x_future: Arc<RwLock<Vec<Option<Arc<RwLock<XFuture>>>>>>,
+    x_future_dirty: bool,
     grouped_free_list: std::sync::Mutex<Vec<usize>>,
     grouped: Arc<RwLock<Vec<Option<Arc<RwLock<Grouped>>>>>>,
+    grouped_dirty: bool,
     halt_and_catch_fire_free_list: std::sync::Mutex<Vec<usize>>,
     halt_and_catch_fire: Arc<RwLock<Vec<Option<Arc<RwLock<HaltAndCatchFire>>>>>>,
+    halt_and_catch_fire_dirty: bool,
     x_if_free_list: std::sync::Mutex<Vec<usize>>,
     x_if: Arc<RwLock<Vec<Option<Arc<RwLock<XIf>>>>>>,
+    x_if_dirty: bool,
     implementation_block_free_list: std::sync::Mutex<Vec<usize>>,
     implementation_block: Arc<RwLock<Vec<Option<Arc<RwLock<ImplementationBlock>>>>>>,
+    implementation_block_dirty: bool,
     import_free_list: std::sync::Mutex<Vec<usize>>,
     import: Arc<RwLock<Vec<Option<Arc<RwLock<Import>>>>>>,
+    import_dirty: bool,
     index_free_list: std::sync::Mutex<Vec<usize>>,
     index: Arc<RwLock<Vec<Option<Arc<RwLock<Index>>>>>>,
+    index_dirty: bool,
     integer_literal_free_list: std::sync::Mutex<Vec<usize>>,
     integer_literal: Arc<RwLock<Vec<Option<Arc<RwLock<IntegerLiteral>>>>>>,
+    integer_literal_dirty: bool,
     item_free_list: std::sync::Mutex<Vec<usize>>,
     item: Arc<RwLock<Vec<Option<Arc<RwLock<Item>>>>>>,
+    item_dirty: bool,
     lambda_free_list: std::sync::Mutex<Vec<usize>>,
     lambda: Arc<RwLock<Vec<Option<Arc<RwLock<Lambda>>>>>>,
+    lambda_dirty: bool,
     lambda_parameter_free_list: std::sync::Mutex<Vec<usize>>,
     lambda_parameter: Arc<RwLock<Vec<Option<Arc<RwLock<LambdaParameter>>>>>>,
+    lambda_parameter_dirty: bool,
     let_statement_free_list: std::sync::Mutex<Vec<usize>>,
     let_statement: Arc<RwLock<Vec<Option<Arc<RwLock<LetStatement>>>>>>,
+    let_statement_dirty: bool,
     list_free_list: std::sync::Mutex<Vec<usize>>,
     list: Arc<RwLock<Vec<Option<Arc<RwLock<List>>>>>>,
+    list_dirty: bool,
     list_element_free_list: std::sync::Mutex<Vec<usize>>,
     list_element: Arc<RwLock<Vec<Option<Arc<RwLock<ListElement>>>>>>,
+    list_element_dirty: bool,
     list_expression_free_list: std::sync::Mutex<Vec<usize>>,
     list_expression: Arc<RwLock<Vec<Option<Arc<RwLock<ListExpression>>>>>>,
+    list_expression_dirty: bool,
     literal_free_list: std::sync::Mutex<Vec<usize>>,
     literal: Arc<RwLock<Vec<Option<Arc<RwLock<Literal>>>>>>,
+    literal_dirty: bool,
     local_variable_free_list: std::sync::Mutex<Vec<usize>>,
     local_variable: Arc<RwLock<Vec<Option<Arc<RwLock<LocalVariable>>>>>>,
+    local_variable_dirty: bool,
     x_macro_free_list: std::sync::Mutex<Vec<usize>>,
     x_macro: Arc<RwLock<Vec<Option<Arc<RwLock<XMacro>>>>>>,
+    x_macro_dirty: bool,
     map_free_list: std::sync::Mutex<Vec<usize>>,
     map: Arc<RwLock<Vec<Option<Arc<RwLock<Map>>>>>>,
+    map_dirty: bool,
     map_element_free_list: std::sync::Mutex<Vec<usize>>,
     map_element: Arc<RwLock<Vec<Option<Arc<RwLock<MapElement>>>>>>,
+    map_element_dirty: bool,
     map_expression_free_list: std::sync::Mutex<Vec<usize>>,
     map_expression: Arc<RwLock<Vec<Option<Arc<RwLock<MapExpression>>>>>>,
+    map_expression_dirty: bool,
     x_match_free_list: std::sync::Mutex<Vec<usize>>,
     x_match: Arc<RwLock<Vec<Option<Arc<RwLock<XMatch>>>>>>,
+    x_match_dirty: bool,
     method_call_free_list: std::sync::Mutex<Vec<usize>>,
     method_call: Arc<RwLock<Vec<Option<Arc<RwLock<MethodCall>>>>>>,
+    method_call_dirty: bool,
     named_field_expression_free_list: std::sync::Mutex<Vec<usize>>,
     named_field_expression: Arc<RwLock<Vec<Option<Arc<RwLock<NamedFieldExpression>>>>>>,
+    named_field_expression_dirty: bool,
     z_object_store_free_list: std::sync::Mutex<Vec<usize>>,
     z_object_store: Arc<RwLock<Vec<Option<Arc<RwLock<ZObjectStore>>>>>>,
     z_object_store_id_by_name: Arc<RwLock<HashMap<String, usize>>>,
+    z_object_store_dirty: bool,
     object_wrapper_free_list: std::sync::Mutex<Vec<usize>>,
     object_wrapper: Arc<RwLock<Vec<Option<Arc<RwLock<ObjectWrapper>>>>>>,
+    object_wrapper_dirty: bool,
     operator_free_list: std::sync::Mutex<Vec<usize>>,
     operator: Arc<RwLock<Vec<Option<Arc<RwLock<Operator>>>>>>,
+    operator_dirty: bool,
     parameter_free_list: std::sync::Mutex<Vec<usize>>,
     parameter: Arc<RwLock<Vec<Option<Arc<RwLock<Parameter>>>>>>,
+    parameter_dirty: bool,
     x_path_free_list: std::sync::Mutex<Vec<usize>>,
     x_path: Arc<RwLock<Vec<Option<Arc<RwLock<XPath>>>>>>,
+    x_path_dirty: bool,
     path_element_free_list: std::sync::Mutex<Vec<usize>>,
     path_element: Arc<RwLock<Vec<Option<Arc<RwLock<PathElement>>>>>>,
+    path_element_dirty: bool,
     pattern_free_list: std::sync::Mutex<Vec<usize>>,
     pattern: Arc<RwLock<Vec<Option<Arc<RwLock<Pattern>>>>>>,
+    pattern_dirty: bool,
     x_plugin_free_list: std::sync::Mutex<Vec<usize>>,
     x_plugin: Arc<RwLock<Vec<Option<Arc<RwLock<XPlugin>>>>>>,
     x_plugin_id_by_name: Arc<RwLock<HashMap<String, usize>>>,
+    x_plugin_dirty: bool,
     x_print_free_list: std::sync::Mutex<Vec<usize>>,
     x_print: Arc<RwLock<Vec<Option<Arc<RwLock<XPrint>>>>>>,
+    x_print_dirty: bool,
     range_expression_free_list: std::sync::Mutex<Vec<usize>>,
     range_expression: Arc<RwLock<Vec<Option<Arc<RwLock<RangeExpression>>>>>>,
+    range_expression_dirty: bool,
     result_statement_free_list: std::sync::Mutex<Vec<usize>>,
     result_statement: Arc<RwLock<Vec<Option<Arc<RwLock<ResultStatement>>>>>>,
+    result_statement_dirty: bool,
     x_return_free_list: std::sync::Mutex<Vec<usize>>,
     x_return: Arc<RwLock<Vec<Option<Arc<RwLock<XReturn>>>>>>,
+    x_return_dirty: bool,
     span_free_list: std::sync::Mutex<Vec<usize>>,
     span: Arc<RwLock<Vec<Option<Arc<RwLock<Span>>>>>>,
+    span_dirty: bool,
     statement_free_list: std::sync::Mutex<Vec<usize>>,
     statement: Arc<RwLock<Vec<Option<Arc<RwLock<Statement>>>>>>,
+    statement_dirty: bool,
     static_method_call_free_list: std::sync::Mutex<Vec<usize>>,
     static_method_call: Arc<RwLock<Vec<Option<Arc<RwLock<StaticMethodCall>>>>>>,
+    static_method_call_dirty: bool,
     string_bit_free_list: std::sync::Mutex<Vec<usize>>,
     string_bit: Arc<RwLock<Vec<Option<Arc<RwLock<StringBit>>>>>>,
+    string_bit_dirty: bool,
     string_literal_free_list: std::sync::Mutex<Vec<usize>>,
     string_literal: Arc<RwLock<Vec<Option<Arc<RwLock<StringLiteral>>>>>>,
+    string_literal_dirty: bool,
     woog_struct_free_list: std::sync::Mutex<Vec<usize>>,
     woog_struct: Arc<RwLock<Vec<Option<Arc<RwLock<WoogStruct>>>>>>,
     woog_struct_id_by_name: Arc<RwLock<HashMap<String, usize>>>,
+    woog_struct_dirty: bool,
     struct_expression_free_list: std::sync::Mutex<Vec<usize>>,
     struct_expression: Arc<RwLock<Vec<Option<Arc<RwLock<StructExpression>>>>>>,
+    struct_expression_dirty: bool,
     struct_field_free_list: std::sync::Mutex<Vec<usize>>,
     struct_field: Arc<RwLock<Vec<Option<Arc<RwLock<StructField>>>>>>,
+    struct_field_dirty: bool,
     struct_generic_free_list: std::sync::Mutex<Vec<usize>>,
     struct_generic: Arc<RwLock<Vec<Option<Arc<RwLock<StructGeneric>>>>>>,
+    struct_generic_dirty: bool,
     tuple_field_free_list: std::sync::Mutex<Vec<usize>>,
     tuple_field: Arc<RwLock<Vec<Option<Arc<RwLock<TupleField>>>>>>,
+    tuple_field_dirty: bool,
     type_cast_free_list: std::sync::Mutex<Vec<usize>>,
     type_cast: Arc<RwLock<Vec<Option<Arc<RwLock<TypeCast>>>>>>,
+    type_cast_dirty: bool,
     unary_free_list: std::sync::Mutex<Vec<usize>>,
     unary: Arc<RwLock<Vec<Option<Arc<RwLock<Unary>>>>>>,
+    unary_dirty: bool,
     unit_free_list: std::sync::Mutex<Vec<usize>>,
     unit: Arc<RwLock<Vec<Option<Arc<RwLock<Unit>>>>>>,
+    unit_dirty: bool,
     unnamed_field_expression_free_list: std::sync::Mutex<Vec<usize>>,
     unnamed_field_expression: Arc<RwLock<Vec<Option<Arc<RwLock<UnnamedFieldExpression>>>>>>,
+    unnamed_field_expression_dirty: bool,
     x_value_free_list: std::sync::Mutex<Vec<usize>>,
     x_value: Arc<RwLock<Vec<Option<Arc<RwLock<XValue>>>>>>,
+    x_value_dirty: bool,
     value_type_free_list: std::sync::Mutex<Vec<usize>>,
     value_type: Arc<RwLock<Vec<Option<Arc<RwLock<ValueType>>>>>>,
+    value_type_dirty: bool,
     variable_free_list: std::sync::Mutex<Vec<usize>>,
     variable: Arc<RwLock<Vec<Option<Arc<RwLock<Variable>>>>>>,
+    variable_dirty: bool,
     variable_expression_free_list: std::sync::Mutex<Vec<usize>>,
     variable_expression: Arc<RwLock<Vec<Option<Arc<RwLock<VariableExpression>>>>>>,
+    variable_expression_dirty: bool,
 }
 
 impl Clone for ObjectStore {
@@ -306,63 +391,82 @@ impl Clone for ObjectStore {
         ObjectStore {
             argument_free_list: Mutex::new(self.argument_free_list.lock().unwrap().clone()),
             argument: Arc::new(RwLock::new(self.argument.read().unwrap().clone())),
+            argument_dirty: false,
             a_wait_free_list: Mutex::new(self.a_wait_free_list.lock().unwrap().clone()),
             a_wait: Arc::new(RwLock::new(self.a_wait.read().unwrap().clone())),
+            a_wait_dirty: false,
             binary_free_list: Mutex::new(self.binary_free_list.lock().unwrap().clone()),
             binary: Arc::new(RwLock::new(self.binary.read().unwrap().clone())),
+            binary_dirty: false,
             block_free_list: Mutex::new(self.block_free_list.lock().unwrap().clone()),
             block: Arc::new(RwLock::new(self.block.read().unwrap().clone())),
+            block_dirty: false,
             body_free_list: Mutex::new(self.body_free_list.lock().unwrap().clone()),
             body: Arc::new(RwLock::new(self.body.read().unwrap().clone())),
+            body_dirty: false,
             boolean_literal_free_list: Mutex::new(
                 self.boolean_literal_free_list.lock().unwrap().clone(),
             ),
             boolean_literal: Arc::new(RwLock::new(self.boolean_literal.read().unwrap().clone())),
+            boolean_literal_dirty: false,
             boolean_operator_free_list: Mutex::new(
                 self.boolean_operator_free_list.lock().unwrap().clone(),
             ),
             boolean_operator: Arc::new(RwLock::new(self.boolean_operator.read().unwrap().clone())),
+            boolean_operator_dirty: false,
             call_free_list: Mutex::new(self.call_free_list.lock().unwrap().clone()),
             call: Arc::new(RwLock::new(self.call.read().unwrap().clone())),
+            call_dirty: false,
             char_literal_free_list: Mutex::new(self.char_literal_free_list.lock().unwrap().clone()),
             char_literal: Arc::new(RwLock::new(self.char_literal.read().unwrap().clone())),
+            char_literal_dirty: false,
             comparison_free_list: Mutex::new(self.comparison_free_list.lock().unwrap().clone()),
             comparison: Arc::new(RwLock::new(self.comparison.read().unwrap().clone())),
+            comparison_dirty: false,
             data_structure_free_list: Mutex::new(
                 self.data_structure_free_list.lock().unwrap().clone(),
             ),
             data_structure: Arc::new(RwLock::new(self.data_structure.read().unwrap().clone())),
+            data_structure_dirty: false,
             dwarf_source_file_free_list: Mutex::new(
                 self.dwarf_source_file_free_list.lock().unwrap().clone(),
             ),
             dwarf_source_file: Arc::new(RwLock::new(
                 self.dwarf_source_file.read().unwrap().clone(),
             )),
+            dwarf_source_file_dirty: false,
             enum_field_free_list: Mutex::new(self.enum_field_free_list.lock().unwrap().clone()),
             enum_field: Arc::new(RwLock::new(self.enum_field.read().unwrap().clone())),
+            enum_field_dirty: false,
             enum_generic_free_list: Mutex::new(self.enum_generic_free_list.lock().unwrap().clone()),
             enum_generic: Arc::new(RwLock::new(self.enum_generic.read().unwrap().clone())),
+            enum_generic_dirty: false,
             enum_generic_type_free_list: Mutex::new(
                 self.enum_generic_type_free_list.lock().unwrap().clone(),
             ),
             enum_generic_type: Arc::new(RwLock::new(
                 self.enum_generic_type.read().unwrap().clone(),
             )),
+            enum_generic_type_dirty: false,
             enumeration_free_list: Mutex::new(self.enumeration_free_list.lock().unwrap().clone()),
             enumeration: Arc::new(RwLock::new(self.enumeration.read().unwrap().clone())),
             enumeration_id_by_name: self.enumeration_id_by_name.clone(),
+            enumeration_dirty: false,
             expression_free_list: Mutex::new(self.expression_free_list.lock().unwrap().clone()),
             expression: Arc::new(RwLock::new(self.expression.read().unwrap().clone())),
+            expression_dirty: false,
             expression_bit_free_list: Mutex::new(
                 self.expression_bit_free_list.lock().unwrap().clone(),
             ),
             expression_bit: Arc::new(RwLock::new(self.expression_bit.read().unwrap().clone())),
+            expression_bit_dirty: false,
             expression_statement_free_list: Mutex::new(
                 self.expression_statement_free_list.lock().unwrap().clone(),
             ),
             expression_statement: Arc::new(RwLock::new(
                 self.expression_statement.read().unwrap().clone(),
             )),
+            expression_statement_dirty: false,
             external_implementation_free_list: Mutex::new(
                 self.external_implementation_free_list
                     .lock()
@@ -372,108 +476,143 @@ impl Clone for ObjectStore {
             external_implementation: Arc::new(RwLock::new(
                 self.external_implementation.read().unwrap().clone(),
             )),
+            external_implementation_dirty: false,
             field_free_list: Mutex::new(self.field_free_list.lock().unwrap().clone()),
             field: Arc::new(RwLock::new(self.field.read().unwrap().clone())),
             field_id_by_name: self.field_id_by_name.clone(),
+            field_dirty: false,
             field_access_free_list: Mutex::new(self.field_access_free_list.lock().unwrap().clone()),
             field_access: Arc::new(RwLock::new(self.field_access.read().unwrap().clone())),
+            field_access_dirty: false,
             field_access_target_free_list: Mutex::new(
                 self.field_access_target_free_list.lock().unwrap().clone(),
             ),
             field_access_target: Arc::new(RwLock::new(
                 self.field_access_target.read().unwrap().clone(),
             )),
+            field_access_target_dirty: false,
             field_expression_free_list: Mutex::new(
                 self.field_expression_free_list.lock().unwrap().clone(),
             ),
             field_expression: Arc::new(RwLock::new(self.field_expression.read().unwrap().clone())),
+            field_expression_dirty: false,
             float_literal_free_list: Mutex::new(
                 self.float_literal_free_list.lock().unwrap().clone(),
             ),
             float_literal: Arc::new(RwLock::new(self.float_literal.read().unwrap().clone())),
+            float_literal_dirty: false,
             for_loop_free_list: Mutex::new(self.for_loop_free_list.lock().unwrap().clone()),
             for_loop: Arc::new(RwLock::new(self.for_loop.read().unwrap().clone())),
+            for_loop_dirty: false,
             format_bit_free_list: Mutex::new(self.format_bit_free_list.lock().unwrap().clone()),
             format_bit: Arc::new(RwLock::new(self.format_bit.read().unwrap().clone())),
+            format_bit_dirty: false,
             format_string_free_list: Mutex::new(
                 self.format_string_free_list.lock().unwrap().clone(),
             ),
             format_string: Arc::new(RwLock::new(self.format_string.read().unwrap().clone())),
+            format_string_dirty: false,
             func_generic_free_list: Mutex::new(self.func_generic_free_list.lock().unwrap().clone()),
             func_generic: Arc::new(RwLock::new(self.func_generic.read().unwrap().clone())),
+            func_generic_dirty: false,
             function_free_list: Mutex::new(self.function_free_list.lock().unwrap().clone()),
             function: Arc::new(RwLock::new(self.function.read().unwrap().clone())),
             function_id_by_name: self.function_id_by_name.clone(),
+            function_dirty: false,
             function_call_free_list: Mutex::new(
                 self.function_call_free_list.lock().unwrap().clone(),
             ),
             function_call: Arc::new(RwLock::new(self.function_call.read().unwrap().clone())),
+            function_call_dirty: false,
             x_future_free_list: Mutex::new(self.x_future_free_list.lock().unwrap().clone()),
             x_future: Arc::new(RwLock::new(self.x_future.read().unwrap().clone())),
+            x_future_dirty: false,
             grouped_free_list: Mutex::new(self.grouped_free_list.lock().unwrap().clone()),
             grouped: Arc::new(RwLock::new(self.grouped.read().unwrap().clone())),
+            grouped_dirty: false,
             halt_and_catch_fire_free_list: Mutex::new(
                 self.halt_and_catch_fire_free_list.lock().unwrap().clone(),
             ),
             halt_and_catch_fire: Arc::new(RwLock::new(
                 self.halt_and_catch_fire.read().unwrap().clone(),
             )),
+            halt_and_catch_fire_dirty: false,
             x_if_free_list: Mutex::new(self.x_if_free_list.lock().unwrap().clone()),
             x_if: Arc::new(RwLock::new(self.x_if.read().unwrap().clone())),
+            x_if_dirty: false,
             implementation_block_free_list: Mutex::new(
                 self.implementation_block_free_list.lock().unwrap().clone(),
             ),
             implementation_block: Arc::new(RwLock::new(
                 self.implementation_block.read().unwrap().clone(),
             )),
+            implementation_block_dirty: false,
             import_free_list: Mutex::new(self.import_free_list.lock().unwrap().clone()),
             import: Arc::new(RwLock::new(self.import.read().unwrap().clone())),
+            import_dirty: false,
             index_free_list: Mutex::new(self.index_free_list.lock().unwrap().clone()),
             index: Arc::new(RwLock::new(self.index.read().unwrap().clone())),
+            index_dirty: false,
             integer_literal_free_list: Mutex::new(
                 self.integer_literal_free_list.lock().unwrap().clone(),
             ),
             integer_literal: Arc::new(RwLock::new(self.integer_literal.read().unwrap().clone())),
+            integer_literal_dirty: false,
             item_free_list: Mutex::new(self.item_free_list.lock().unwrap().clone()),
             item: Arc::new(RwLock::new(self.item.read().unwrap().clone())),
+            item_dirty: false,
             lambda_free_list: Mutex::new(self.lambda_free_list.lock().unwrap().clone()),
             lambda: Arc::new(RwLock::new(self.lambda.read().unwrap().clone())),
+            lambda_dirty: false,
             lambda_parameter_free_list: Mutex::new(
                 self.lambda_parameter_free_list.lock().unwrap().clone(),
             ),
             lambda_parameter: Arc::new(RwLock::new(self.lambda_parameter.read().unwrap().clone())),
+            lambda_parameter_dirty: false,
             let_statement_free_list: Mutex::new(
                 self.let_statement_free_list.lock().unwrap().clone(),
             ),
             let_statement: Arc::new(RwLock::new(self.let_statement.read().unwrap().clone())),
+            let_statement_dirty: false,
             list_free_list: Mutex::new(self.list_free_list.lock().unwrap().clone()),
             list: Arc::new(RwLock::new(self.list.read().unwrap().clone())),
+            list_dirty: false,
             list_element_free_list: Mutex::new(self.list_element_free_list.lock().unwrap().clone()),
             list_element: Arc::new(RwLock::new(self.list_element.read().unwrap().clone())),
+            list_element_dirty: false,
             list_expression_free_list: Mutex::new(
                 self.list_expression_free_list.lock().unwrap().clone(),
             ),
             list_expression: Arc::new(RwLock::new(self.list_expression.read().unwrap().clone())),
+            list_expression_dirty: false,
             literal_free_list: Mutex::new(self.literal_free_list.lock().unwrap().clone()),
             literal: Arc::new(RwLock::new(self.literal.read().unwrap().clone())),
+            literal_dirty: false,
             local_variable_free_list: Mutex::new(
                 self.local_variable_free_list.lock().unwrap().clone(),
             ),
             local_variable: Arc::new(RwLock::new(self.local_variable.read().unwrap().clone())),
+            local_variable_dirty: false,
             x_macro_free_list: Mutex::new(self.x_macro_free_list.lock().unwrap().clone()),
             x_macro: Arc::new(RwLock::new(self.x_macro.read().unwrap().clone())),
+            x_macro_dirty: false,
             map_free_list: Mutex::new(self.map_free_list.lock().unwrap().clone()),
             map: Arc::new(RwLock::new(self.map.read().unwrap().clone())),
+            map_dirty: false,
             map_element_free_list: Mutex::new(self.map_element_free_list.lock().unwrap().clone()),
             map_element: Arc::new(RwLock::new(self.map_element.read().unwrap().clone())),
+            map_element_dirty: false,
             map_expression_free_list: Mutex::new(
                 self.map_expression_free_list.lock().unwrap().clone(),
             ),
             map_expression: Arc::new(RwLock::new(self.map_expression.read().unwrap().clone())),
+            map_expression_dirty: false,
             x_match_free_list: Mutex::new(self.x_match_free_list.lock().unwrap().clone()),
             x_match: Arc::new(RwLock::new(self.x_match.read().unwrap().clone())),
+            x_match_dirty: false,
             method_call_free_list: Mutex::new(self.method_call_free_list.lock().unwrap().clone()),
             method_call: Arc::new(RwLock::new(self.method_call.read().unwrap().clone())),
+            method_call_dirty: false,
             named_field_expression_free_list: Mutex::new(
                 self.named_field_expression_free_list
                     .lock()
@@ -483,79 +622,105 @@ impl Clone for ObjectStore {
             named_field_expression: Arc::new(RwLock::new(
                 self.named_field_expression.read().unwrap().clone(),
             )),
+            named_field_expression_dirty: false,
             z_object_store_free_list: Mutex::new(
                 self.z_object_store_free_list.lock().unwrap().clone(),
             ),
             z_object_store: Arc::new(RwLock::new(self.z_object_store.read().unwrap().clone())),
             z_object_store_id_by_name: self.z_object_store_id_by_name.clone(),
+            z_object_store_dirty: false,
             object_wrapper_free_list: Mutex::new(
                 self.object_wrapper_free_list.lock().unwrap().clone(),
             ),
             object_wrapper: Arc::new(RwLock::new(self.object_wrapper.read().unwrap().clone())),
+            object_wrapper_dirty: false,
             operator_free_list: Mutex::new(self.operator_free_list.lock().unwrap().clone()),
             operator: Arc::new(RwLock::new(self.operator.read().unwrap().clone())),
+            operator_dirty: false,
             parameter_free_list: Mutex::new(self.parameter_free_list.lock().unwrap().clone()),
             parameter: Arc::new(RwLock::new(self.parameter.read().unwrap().clone())),
+            parameter_dirty: false,
             x_path_free_list: Mutex::new(self.x_path_free_list.lock().unwrap().clone()),
             x_path: Arc::new(RwLock::new(self.x_path.read().unwrap().clone())),
+            x_path_dirty: false,
             path_element_free_list: Mutex::new(self.path_element_free_list.lock().unwrap().clone()),
             path_element: Arc::new(RwLock::new(self.path_element.read().unwrap().clone())),
+            path_element_dirty: false,
             pattern_free_list: Mutex::new(self.pattern_free_list.lock().unwrap().clone()),
             pattern: Arc::new(RwLock::new(self.pattern.read().unwrap().clone())),
+            pattern_dirty: false,
             x_plugin_free_list: Mutex::new(self.x_plugin_free_list.lock().unwrap().clone()),
             x_plugin: Arc::new(RwLock::new(self.x_plugin.read().unwrap().clone())),
             x_plugin_id_by_name: self.x_plugin_id_by_name.clone(),
+            x_plugin_dirty: false,
             x_print_free_list: Mutex::new(self.x_print_free_list.lock().unwrap().clone()),
             x_print: Arc::new(RwLock::new(self.x_print.read().unwrap().clone())),
+            x_print_dirty: false,
             range_expression_free_list: Mutex::new(
                 self.range_expression_free_list.lock().unwrap().clone(),
             ),
             range_expression: Arc::new(RwLock::new(self.range_expression.read().unwrap().clone())),
+            range_expression_dirty: false,
             result_statement_free_list: Mutex::new(
                 self.result_statement_free_list.lock().unwrap().clone(),
             ),
             result_statement: Arc::new(RwLock::new(self.result_statement.read().unwrap().clone())),
+            result_statement_dirty: false,
             x_return_free_list: Mutex::new(self.x_return_free_list.lock().unwrap().clone()),
             x_return: Arc::new(RwLock::new(self.x_return.read().unwrap().clone())),
+            x_return_dirty: false,
             span_free_list: Mutex::new(self.span_free_list.lock().unwrap().clone()),
             span: Arc::new(RwLock::new(self.span.read().unwrap().clone())),
+            span_dirty: false,
             statement_free_list: Mutex::new(self.statement_free_list.lock().unwrap().clone()),
             statement: Arc::new(RwLock::new(self.statement.read().unwrap().clone())),
+            statement_dirty: false,
             static_method_call_free_list: Mutex::new(
                 self.static_method_call_free_list.lock().unwrap().clone(),
             ),
             static_method_call: Arc::new(RwLock::new(
                 self.static_method_call.read().unwrap().clone(),
             )),
+            static_method_call_dirty: false,
             string_bit_free_list: Mutex::new(self.string_bit_free_list.lock().unwrap().clone()),
             string_bit: Arc::new(RwLock::new(self.string_bit.read().unwrap().clone())),
+            string_bit_dirty: false,
             string_literal_free_list: Mutex::new(
                 self.string_literal_free_list.lock().unwrap().clone(),
             ),
             string_literal: Arc::new(RwLock::new(self.string_literal.read().unwrap().clone())),
+            string_literal_dirty: false,
             woog_struct_free_list: Mutex::new(self.woog_struct_free_list.lock().unwrap().clone()),
             woog_struct: Arc::new(RwLock::new(self.woog_struct.read().unwrap().clone())),
             woog_struct_id_by_name: self.woog_struct_id_by_name.clone(),
+            woog_struct_dirty: false,
             struct_expression_free_list: Mutex::new(
                 self.struct_expression_free_list.lock().unwrap().clone(),
             ),
             struct_expression: Arc::new(RwLock::new(
                 self.struct_expression.read().unwrap().clone(),
             )),
+            struct_expression_dirty: false,
             struct_field_free_list: Mutex::new(self.struct_field_free_list.lock().unwrap().clone()),
             struct_field: Arc::new(RwLock::new(self.struct_field.read().unwrap().clone())),
+            struct_field_dirty: false,
             struct_generic_free_list: Mutex::new(
                 self.struct_generic_free_list.lock().unwrap().clone(),
             ),
             struct_generic: Arc::new(RwLock::new(self.struct_generic.read().unwrap().clone())),
+            struct_generic_dirty: false,
             tuple_field_free_list: Mutex::new(self.tuple_field_free_list.lock().unwrap().clone()),
             tuple_field: Arc::new(RwLock::new(self.tuple_field.read().unwrap().clone())),
+            tuple_field_dirty: false,
             type_cast_free_list: Mutex::new(self.type_cast_free_list.lock().unwrap().clone()),
             type_cast: Arc::new(RwLock::new(self.type_cast.read().unwrap().clone())),
+            type_cast_dirty: false,
             unary_free_list: Mutex::new(self.unary_free_list.lock().unwrap().clone()),
             unary: Arc::new(RwLock::new(self.unary.read().unwrap().clone())),
+            unary_dirty: false,
             unit_free_list: Mutex::new(self.unit_free_list.lock().unwrap().clone()),
             unit: Arc::new(RwLock::new(self.unit.read().unwrap().clone())),
+            unit_dirty: false,
             unnamed_field_expression_free_list: Mutex::new(
                 self.unnamed_field_expression_free_list
                     .lock()
@@ -565,3327 +730,290 @@ impl Clone for ObjectStore {
             unnamed_field_expression: Arc::new(RwLock::new(
                 self.unnamed_field_expression.read().unwrap().clone(),
             )),
+            unnamed_field_expression_dirty: false,
             x_value_free_list: Mutex::new(self.x_value_free_list.lock().unwrap().clone()),
             x_value: Arc::new(RwLock::new(self.x_value.read().unwrap().clone())),
+            x_value_dirty: false,
             value_type_free_list: Mutex::new(self.value_type_free_list.lock().unwrap().clone()),
             value_type: Arc::new(RwLock::new(self.value_type.read().unwrap().clone())),
+            value_type_dirty: false,
             variable_free_list: Mutex::new(self.variable_free_list.lock().unwrap().clone()),
             variable: Arc::new(RwLock::new(self.variable.read().unwrap().clone())),
+            variable_dirty: false,
             variable_expression_free_list: Mutex::new(
                 self.variable_expression_free_list.lock().unwrap().clone(),
             ),
             variable_expression: Arc::new(RwLock::new(
                 self.variable_expression.read().unwrap().clone(),
             )),
+            variable_expression_dirty: false,
         }
     }
 }
 impl ObjectStore {
-    pub fn merge(&mut self, other: &ObjectStore) {
-        // if self.argument.read().unwrap().len() != other.argument.read().unwrap().len() {
-        other.argument.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in argument, if it's not there add it to argument.
-                if self
-                    .argument
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.argument.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_argument(|id| -> Arc<RwLock<Argument>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.a_wait.read().unwrap().len() != other.a_wait.read().unwrap().len() {
-        other.a_wait.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in a_wait, if it's not there add it to a_wait.
-                if self
-                    .a_wait
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.a_wait.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_a_wait(|id| -> Arc<RwLock<AWait>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.binary.read().unwrap().len() != other.binary.read().unwrap().len() {
-        other.binary.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in binary, if it's not there add it to binary.
-                if self
-                    .binary
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.binary.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_binary(|id| -> Arc<RwLock<Binary>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.block.read().unwrap().len() != other.block.read().unwrap().len() {
-        other.block.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in block, if it's not there add it to block.
-                if self
-                    .block
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.block.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_block(|id| -> Arc<RwLock<Block>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.body.read().unwrap().len() != other.body.read().unwrap().len() {
-        other.body.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in body, if it's not there add it to body.
-                if self
-                    .body
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.body.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_body(|id| -> Arc<RwLock<Body>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.boolean_literal.read().unwrap().len() != other.boolean_literal.read().unwrap().len() {
-        other.boolean_literal.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in boolean_literal, if it's not there add it to boolean_literal.
-                if self
-                    .boolean_literal
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.boolean_literal.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_boolean_literal(|id| -> Arc<RwLock<BooleanLiteral>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.boolean_operator.read().unwrap().len() != other.boolean_operator.read().unwrap().len() {
-        other.boolean_operator.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in boolean_operator, if it's not there add it to boolean_operator.
-                if self
-                    .boolean_operator
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.boolean_operator.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_boolean_operator(|id| -> Arc<RwLock<BooleanOperator>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.call.read().unwrap().len() != other.call.read().unwrap().len() {
-        other.call.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in call, if it's not there add it to call.
-                if self
-                    .call
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.call.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_call(|id| -> Arc<RwLock<Call>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.char_literal.read().unwrap().len() != other.char_literal.read().unwrap().len() {
-        other.char_literal.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in char_literal, if it's not there add it to char_literal.
-                if self
-                    .char_literal
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.char_literal.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_char_literal(|id| -> Arc<RwLock<CharLiteral>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.comparison.read().unwrap().len() != other.comparison.read().unwrap().len() {
-        other.comparison.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in comparison, if it's not there add it to comparison.
-                if self
-                    .comparison
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.comparison.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_comparison(|id| -> Arc<RwLock<Comparison>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.data_structure.read().unwrap().len() != other.data_structure.read().unwrap().len() {
-        other.data_structure.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in data_structure, if it's not there add it to data_structure.
-                if self
-                    .data_structure
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.data_structure.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_data_structure(|id| -> Arc<RwLock<DataStructure>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.dwarf_source_file.read().unwrap().len() != other.dwarf_source_file.read().unwrap().len() {
-        other
-            .dwarf_source_file
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in dwarf_source_file, if it's not there add it to dwarf_source_file.
-                    if self
-                        .dwarf_source_file
-                        .read()
-                        .unwrap()
-                        .iter()
-                        .find(|&y| {
-                            if let Some(y) = y {
-                                *y.read().unwrap() == *x.read().unwrap()
-                            } else {
-                                false
-                            }
-                        })
-                        .is_none()
-                    {
-                        // let _index_ = self.dwarf_source_file.read().unwrap().len();
-                        // if x.read().unwrap().id != _index_ {
-                        //     x.write().unwrap().id = _index_;
-                        // }
-                        self.inter_dwarf_source_file(|id| -> Arc<RwLock<DwarfSourceFile>> {
-                            if x.read().unwrap().id != id {
-                                dbg!(x, id);
-                                // panic!("id mismatch");
-                                x.write().unwrap().id = id;
-                            }
-
-                            x.clone()
-                        });
-                    }
-                }
-            });
-        // }
-
-        // if self.enum_field.read().unwrap().len() != other.enum_field.read().unwrap().len() {
-        other.enum_field.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in enum_field, if it's not there add it to enum_field.
-                if self
-                    .enum_field
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.enum_field.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_enum_field(|id| -> Arc<RwLock<EnumField>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.enum_generic.read().unwrap().len() != other.enum_generic.read().unwrap().len() {
-        other.enum_generic.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in enum_generic, if it's not there add it to enum_generic.
-                if self
-                    .enum_generic
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.enum_generic.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_enum_generic(|id| -> Arc<RwLock<EnumGeneric>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.enum_generic_type.read().unwrap().len() != other.enum_generic_type.read().unwrap().len() {
-        other
-            .enum_generic_type
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in enum_generic_type, if it's not there add it to enum_generic_type.
-                    if self
-                        .enum_generic_type
-                        .read()
-                        .unwrap()
-                        .iter()
-                        .find(|&y| {
-                            if let Some(y) = y {
-                                *y.read().unwrap() == *x.read().unwrap()
-                            } else {
-                                false
-                            }
-                        })
-                        .is_none()
-                    {
-                        // let _index_ = self.enum_generic_type.read().unwrap().len();
-                        // if x.read().unwrap().id != _index_ {
-                        //     x.write().unwrap().id = _index_;
-                        // }
-                        self.inter_enum_generic_type(|id| -> Arc<RwLock<EnumGenericType>> {
-                            if x.read().unwrap().id != id {
-                                dbg!(x, id);
-                                // panic!("id mismatch");
-                                x.write().unwrap().id = id;
-                            }
-
-                            x.clone()
-                        });
-                    }
-                }
-            });
-        // }
-
-        // if self.enumeration.read().unwrap().len() != other.enumeration.read().unwrap().len() {
-        other.enumeration.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in enumeration, if it's not there add it to enumeration.
-                if self
-                    .enumeration
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.enumeration.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_enumeration(|id| -> Arc<RwLock<Enumeration>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.expression.read().unwrap().len() != other.expression.read().unwrap().len() {
-        other.expression.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in expression, if it's not there add it to expression.
-                if self
-                    .expression
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.expression.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_expression(|id| -> Arc<RwLock<Expression>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.expression_bit.read().unwrap().len() != other.expression_bit.read().unwrap().len() {
-        other.expression_bit.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in expression_bit, if it's not there add it to expression_bit.
-                if self
-                    .expression_bit
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.expression_bit.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_expression_bit(|id| -> Arc<RwLock<ExpressionBit>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.expression_statement.read().unwrap().len() != other.expression_statement.read().unwrap().len() {
-        other
-            .expression_statement
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in expression_statement, if it's not there add it to expression_statement.
-                    if self
-                        .expression_statement
-                        .read()
-                        .unwrap()
-                        .iter()
-                        .find(|&y| {
-                            if let Some(y) = y {
-                                *y.read().unwrap() == *x.read().unwrap()
-                            } else {
-                                false
-                            }
-                        })
-                        .is_none()
-                    {
-                        // let _index_ = self.expression_statement.read().unwrap().len();
-                        // if x.read().unwrap().id != _index_ {
-                        //     x.write().unwrap().id = _index_;
-                        // }
-                        self.inter_expression_statement(|id| -> Arc<RwLock<ExpressionStatement>> {
-                            if x.read().unwrap().id != id {
-                                dbg!(x, id);
-                                // panic!("id mismatch");
-                                x.write().unwrap().id = id;
-                            }
-
-                            x.clone()
-                        });
-                    }
-                }
-            });
-        // }
-
-        // if self.external_implementation.read().unwrap().len() != other.external_implementation.read().unwrap().len() {
-        other
-            .external_implementation
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in external_implementation, if it's not there add it to external_implementation.
-                    if self
-                        .external_implementation
-                        .read()
-                        .unwrap()
-                        .iter()
-                        .find(|&y| {
-                            if let Some(y) = y {
-                                *y.read().unwrap() == *x.read().unwrap()
-                            } else {
-                                false
-                            }
-                        })
-                        .is_none()
-                    {
-                        // let _index_ = self.external_implementation.read().unwrap().len();
-                        // if x.read().unwrap().id != _index_ {
-                        //     x.write().unwrap().id = _index_;
-                        // }
-                        self.inter_external_implementation(
-                            |id| -> Arc<RwLock<ExternalImplementation>> {
-                                if x.read().unwrap().id != id {
-                                    dbg!(x, id);
-                                    // panic!("id mismatch");
-                                    x.write().unwrap().id = id;
-                                }
-
-                                x.clone()
-                            },
-                        );
-                    }
-                }
-            });
-        // }
-
-        // if self.field.read().unwrap().len() != other.field.read().unwrap().len() {
-        other.field.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in field, if it's not there add it to field.
-                if self
-                    .field
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.field.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_field(|id| -> Arc<RwLock<Field>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.field_access.read().unwrap().len() != other.field_access.read().unwrap().len() {
-        other.field_access.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in field_access, if it's not there add it to field_access.
-                if self
-                    .field_access
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.field_access.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_field_access(|id| -> Arc<RwLock<FieldAccess>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.field_access_target.read().unwrap().len() != other.field_access_target.read().unwrap().len() {
-        other
-            .field_access_target
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in field_access_target, if it's not there add it to field_access_target.
-                    if self
-                        .field_access_target
-                        .read()
-                        .unwrap()
-                        .iter()
-                        .find(|&y| {
-                            if let Some(y) = y {
-                                *y.read().unwrap() == *x.read().unwrap()
-                            } else {
-                                false
-                            }
-                        })
-                        .is_none()
-                    {
-                        // let _index_ = self.field_access_target.read().unwrap().len();
-                        // if x.read().unwrap().id != _index_ {
-                        //     x.write().unwrap().id = _index_;
-                        // }
-                        self.inter_field_access_target(|id| -> Arc<RwLock<FieldAccessTarget>> {
-                            if x.read().unwrap().id != id {
-                                dbg!(x, id);
-                                // panic!("id mismatch");
-                                x.write().unwrap().id = id;
-                            }
-
-                            x.clone()
-                        });
-                    }
-                }
-            });
-        // }
-
-        // if self.field_expression.read().unwrap().len() != other.field_expression.read().unwrap().len() {
-        other.field_expression.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in field_expression, if it's not there add it to field_expression.
-                if self
-                    .field_expression
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.field_expression.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_field_expression(|id| -> Arc<RwLock<FieldExpression>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.float_literal.read().unwrap().len() != other.float_literal.read().unwrap().len() {
-        other.float_literal.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in float_literal, if it's not there add it to float_literal.
-                if self
-                    .float_literal
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.float_literal.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_float_literal(|id| -> Arc<RwLock<FloatLiteral>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.for_loop.read().unwrap().len() != other.for_loop.read().unwrap().len() {
-        other.for_loop.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in for_loop, if it's not there add it to for_loop.
-                if self
-                    .for_loop
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.for_loop.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_for_loop(|id| -> Arc<RwLock<ForLoop>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.format_bit.read().unwrap().len() != other.format_bit.read().unwrap().len() {
-        other.format_bit.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in format_bit, if it's not there add it to format_bit.
-                if self
-                    .format_bit
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.format_bit.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_format_bit(|id| -> Arc<RwLock<FormatBit>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.format_string.read().unwrap().len() != other.format_string.read().unwrap().len() {
-        other.format_string.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in format_string, if it's not there add it to format_string.
-                if self
-                    .format_string
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.format_string.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_format_string(|id| -> Arc<RwLock<FormatString>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.func_generic.read().unwrap().len() != other.func_generic.read().unwrap().len() {
-        other.func_generic.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in func_generic, if it's not there add it to func_generic.
-                if self
-                    .func_generic
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.func_generic.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_func_generic(|id| -> Arc<RwLock<FuncGeneric>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.function.read().unwrap().len() != other.function.read().unwrap().len() {
-        other.function.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in function, if it's not there add it to function.
-                if self
-                    .function
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.function.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_function(|id| -> Arc<RwLock<Function>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.function_call.read().unwrap().len() != other.function_call.read().unwrap().len() {
-        other.function_call.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in function_call, if it's not there add it to function_call.
-                if self
-                    .function_call
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.function_call.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_function_call(|id| -> Arc<RwLock<FunctionCall>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.x_future.read().unwrap().len() != other.x_future.read().unwrap().len() {
-        other.x_future.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_future, if it's not there add it to x_future.
-                if self
-                    .x_future
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.x_future.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_x_future(|id| -> Arc<RwLock<XFuture>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.grouped.read().unwrap().len() != other.grouped.read().unwrap().len() {
-        other.grouped.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in grouped, if it's not there add it to grouped.
-                if self
-                    .grouped
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.grouped.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_grouped(|id| -> Arc<RwLock<Grouped>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.halt_and_catch_fire.read().unwrap().len() != other.halt_and_catch_fire.read().unwrap().len() {
-        other
-            .halt_and_catch_fire
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in halt_and_catch_fire, if it's not there add it to halt_and_catch_fire.
-                    if self
-                        .halt_and_catch_fire
-                        .read()
-                        .unwrap()
-                        .iter()
-                        .find(|&y| {
-                            if let Some(y) = y {
-                                *y.read().unwrap() == *x.read().unwrap()
-                            } else {
-                                false
-                            }
-                        })
-                        .is_none()
-                    {
-                        // let _index_ = self.halt_and_catch_fire.read().unwrap().len();
-                        // if x.read().unwrap().id != _index_ {
-                        //     x.write().unwrap().id = _index_;
-                        // }
-                        self.inter_halt_and_catch_fire(|id| -> Arc<RwLock<HaltAndCatchFire>> {
-                            if x.read().unwrap().id != id {
-                                dbg!(x, id);
-                                // panic!("id mismatch");
-                                x.write().unwrap().id = id;
-                            }
-
-                            x.clone()
-                        });
-                    }
-                }
-            });
-        // }
-
-        // if self.x_if.read().unwrap().len() != other.x_if.read().unwrap().len() {
-        other.x_if.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_if, if it's not there add it to x_if.
-                if self
-                    .x_if
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.x_if.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_x_if(|id| -> Arc<RwLock<XIf>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.implementation_block.read().unwrap().len() != other.implementation_block.read().unwrap().len() {
-        other
-            .implementation_block
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in implementation_block, if it's not there add it to implementation_block.
-                    if self
-                        .implementation_block
-                        .read()
-                        .unwrap()
-                        .iter()
-                        .find(|&y| {
-                            if let Some(y) = y {
-                                *y.read().unwrap() == *x.read().unwrap()
-                            } else {
-                                false
-                            }
-                        })
-                        .is_none()
-                    {
-                        // let _index_ = self.implementation_block.read().unwrap().len();
-                        // if x.read().unwrap().id != _index_ {
-                        //     x.write().unwrap().id = _index_;
-                        // }
-                        self.inter_implementation_block(|id| -> Arc<RwLock<ImplementationBlock>> {
-                            if x.read().unwrap().id != id {
-                                dbg!(x, id);
-                                // panic!("id mismatch");
-                                x.write().unwrap().id = id;
-                            }
-
-                            x.clone()
-                        });
-                    }
-                }
-            });
-        // }
-
-        // if self.import.read().unwrap().len() != other.import.read().unwrap().len() {
-        other.import.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in import, if it's not there add it to import.
-                if self
-                    .import
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.import.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_import(|id| -> Arc<RwLock<Import>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.index.read().unwrap().len() != other.index.read().unwrap().len() {
-        other.index.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in index, if it's not there add it to index.
-                if self
-                    .index
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.index.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_index(|id| -> Arc<RwLock<Index>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.integer_literal.read().unwrap().len() != other.integer_literal.read().unwrap().len() {
-        other.integer_literal.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in integer_literal, if it's not there add it to integer_literal.
-                if self
-                    .integer_literal
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.integer_literal.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_integer_literal(|id| -> Arc<RwLock<IntegerLiteral>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.item.read().unwrap().len() != other.item.read().unwrap().len() {
-        other.item.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in item, if it's not there add it to item.
-                if self
-                    .item
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.item.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_item(|id| -> Arc<RwLock<Item>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.lambda.read().unwrap().len() != other.lambda.read().unwrap().len() {
-        other.lambda.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in lambda, if it's not there add it to lambda.
-                if self
-                    .lambda
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.lambda.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_lambda(|id| -> Arc<RwLock<Lambda>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.lambda_parameter.read().unwrap().len() != other.lambda_parameter.read().unwrap().len() {
-        other.lambda_parameter.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in lambda_parameter, if it's not there add it to lambda_parameter.
-                if self
-                    .lambda_parameter
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.lambda_parameter.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_lambda_parameter(|id| -> Arc<RwLock<LambdaParameter>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.let_statement.read().unwrap().len() != other.let_statement.read().unwrap().len() {
-        other.let_statement.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in let_statement, if it's not there add it to let_statement.
-                if self
-                    .let_statement
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.let_statement.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_let_statement(|id| -> Arc<RwLock<LetStatement>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.list.read().unwrap().len() != other.list.read().unwrap().len() {
-        other.list.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in list, if it's not there add it to list.
-                if self
-                    .list
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.list.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_list(|id| -> Arc<RwLock<List>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.list_element.read().unwrap().len() != other.list_element.read().unwrap().len() {
-        other.list_element.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in list_element, if it's not there add it to list_element.
-                if self
-                    .list_element
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.list_element.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_list_element(|id| -> Arc<RwLock<ListElement>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.list_expression.read().unwrap().len() != other.list_expression.read().unwrap().len() {
-        other.list_expression.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in list_expression, if it's not there add it to list_expression.
-                if self
-                    .list_expression
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.list_expression.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_list_expression(|id| -> Arc<RwLock<ListExpression>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.literal.read().unwrap().len() != other.literal.read().unwrap().len() {
-        other.literal.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in literal, if it's not there add it to literal.
-                if self
-                    .literal
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.literal.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_literal(|id| -> Arc<RwLock<Literal>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.local_variable.read().unwrap().len() != other.local_variable.read().unwrap().len() {
-        other.local_variable.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in local_variable, if it's not there add it to local_variable.
-                if self
-                    .local_variable
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.local_variable.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_local_variable(|id| -> Arc<RwLock<LocalVariable>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.x_macro.read().unwrap().len() != other.x_macro.read().unwrap().len() {
-        other.x_macro.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_macro, if it's not there add it to x_macro.
-                if self
-                    .x_macro
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.x_macro.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_x_macro(|id| -> Arc<RwLock<XMacro>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.map.read().unwrap().len() != other.map.read().unwrap().len() {
-        other.map.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in map, if it's not there add it to map.
-                if self
-                    .map
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.map.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_map(|id| -> Arc<RwLock<Map>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.map_element.read().unwrap().len() != other.map_element.read().unwrap().len() {
-        other.map_element.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in map_element, if it's not there add it to map_element.
-                if self
-                    .map_element
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.map_element.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_map_element(|id| -> Arc<RwLock<MapElement>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.map_expression.read().unwrap().len() != other.map_expression.read().unwrap().len() {
-        other.map_expression.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in map_expression, if it's not there add it to map_expression.
-                if self
-                    .map_expression
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.map_expression.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_map_expression(|id| -> Arc<RwLock<MapExpression>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.x_match.read().unwrap().len() != other.x_match.read().unwrap().len() {
-        other.x_match.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_match, if it's not there add it to x_match.
-                if self
-                    .x_match
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.x_match.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_x_match(|id| -> Arc<RwLock<XMatch>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.method_call.read().unwrap().len() != other.method_call.read().unwrap().len() {
-        other.method_call.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in method_call, if it's not there add it to method_call.
-                if self
-                    .method_call
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.method_call.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_method_call(|id| -> Arc<RwLock<MethodCall>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.named_field_expression.read().unwrap().len() != other.named_field_expression.read().unwrap().len() {
-        other
-            .named_field_expression
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in named_field_expression, if it's not there add it to named_field_expression.
-                    if self
-                        .named_field_expression
-                        .read()
-                        .unwrap()
-                        .iter()
-                        .find(|&y| {
-                            if let Some(y) = y {
-                                *y.read().unwrap() == *x.read().unwrap()
-                            } else {
-                                false
-                            }
-                        })
-                        .is_none()
-                    {
-                        // let _index_ = self.named_field_expression.read().unwrap().len();
-                        // if x.read().unwrap().id != _index_ {
-                        //     x.write().unwrap().id = _index_;
-                        // }
-                        self.inter_named_field_expression(
-                            |id| -> Arc<RwLock<NamedFieldExpression>> {
-                                if x.read().unwrap().id != id {
-                                    dbg!(x, id);
-                                    // panic!("id mismatch");
-                                    x.write().unwrap().id = id;
-                                }
-
-                                x.clone()
-                            },
-                        );
-                    }
-                }
-            });
-        // }
-
-        // if self.z_object_store.read().unwrap().len() != other.z_object_store.read().unwrap().len() {
-        other.z_object_store.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in z_object_store, if it's not there add it to z_object_store.
-                if self
-                    .z_object_store
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.z_object_store.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_z_object_store(|id| -> Arc<RwLock<ZObjectStore>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.object_wrapper.read().unwrap().len() != other.object_wrapper.read().unwrap().len() {
-        other.object_wrapper.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in object_wrapper, if it's not there add it to object_wrapper.
-                if self
-                    .object_wrapper
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.object_wrapper.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_object_wrapper(|id| -> Arc<RwLock<ObjectWrapper>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.operator.read().unwrap().len() != other.operator.read().unwrap().len() {
-        other.operator.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in operator, if it's not there add it to operator.
-                if self
-                    .operator
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.operator.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_operator(|id| -> Arc<RwLock<Operator>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.parameter.read().unwrap().len() != other.parameter.read().unwrap().len() {
-        other.parameter.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in parameter, if it's not there add it to parameter.
-                if self
-                    .parameter
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.parameter.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_parameter(|id| -> Arc<RwLock<Parameter>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.x_path.read().unwrap().len() != other.x_path.read().unwrap().len() {
-        other.x_path.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_path, if it's not there add it to x_path.
-                if self
-                    .x_path
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.x_path.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_x_path(|id| -> Arc<RwLock<XPath>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.path_element.read().unwrap().len() != other.path_element.read().unwrap().len() {
-        other.path_element.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in path_element, if it's not there add it to path_element.
-                if self
-                    .path_element
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.path_element.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_path_element(|id| -> Arc<RwLock<PathElement>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.pattern.read().unwrap().len() != other.pattern.read().unwrap().len() {
-        other.pattern.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in pattern, if it's not there add it to pattern.
-                if self
-                    .pattern
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.pattern.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_pattern(|id| -> Arc<RwLock<Pattern>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.x_plugin.read().unwrap().len() != other.x_plugin.read().unwrap().len() {
-        other.x_plugin.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_plugin, if it's not there add it to x_plugin.
-                if self
-                    .x_plugin
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.x_plugin.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_x_plugin(|id| -> Arc<RwLock<XPlugin>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.x_print.read().unwrap().len() != other.x_print.read().unwrap().len() {
-        other.x_print.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_print, if it's not there add it to x_print.
-                if self
-                    .x_print
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.x_print.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_x_print(|id| -> Arc<RwLock<XPrint>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.range_expression.read().unwrap().len() != other.range_expression.read().unwrap().len() {
-        other.range_expression.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in range_expression, if it's not there add it to range_expression.
-                if self
-                    .range_expression
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.range_expression.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_range_expression(|id| -> Arc<RwLock<RangeExpression>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.result_statement.read().unwrap().len() != other.result_statement.read().unwrap().len() {
-        other.result_statement.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in result_statement, if it's not there add it to result_statement.
-                if self
-                    .result_statement
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.result_statement.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_result_statement(|id| -> Arc<RwLock<ResultStatement>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.x_return.read().unwrap().len() != other.x_return.read().unwrap().len() {
-        other.x_return.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_return, if it's not there add it to x_return.
-                if self
-                    .x_return
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.x_return.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_x_return(|id| -> Arc<RwLock<XReturn>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.span.read().unwrap().len() != other.span.read().unwrap().len() {
-        other.span.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in span, if it's not there add it to span.
-                if self
-                    .span
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.span.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_span(|id| -> Arc<RwLock<Span>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.statement.read().unwrap().len() != other.statement.read().unwrap().len() {
-        other.statement.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in statement, if it's not there add it to statement.
-                if self
-                    .statement
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.statement.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_statement(|id| -> Arc<RwLock<Statement>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.static_method_call.read().unwrap().len() != other.static_method_call.read().unwrap().len() {
-        other
-            .static_method_call
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in static_method_call, if it's not there add it to static_method_call.
-                    if self
-                        .static_method_call
-                        .read()
-                        .unwrap()
-                        .iter()
-                        .find(|&y| {
-                            if let Some(y) = y {
-                                *y.read().unwrap() == *x.read().unwrap()
-                            } else {
-                                false
-                            }
-                        })
-                        .is_none()
-                    {
-                        // let _index_ = self.static_method_call.read().unwrap().len();
-                        // if x.read().unwrap().id != _index_ {
-                        //     x.write().unwrap().id = _index_;
-                        // }
-                        self.inter_static_method_call(|id| -> Arc<RwLock<StaticMethodCall>> {
-                            if x.read().unwrap().id != id {
-                                dbg!(x, id);
-                                // panic!("id mismatch");
-                                x.write().unwrap().id = id;
-                            }
-
-                            x.clone()
-                        });
-                    }
-                }
-            });
-        // }
-
-        // if self.string_bit.read().unwrap().len() != other.string_bit.read().unwrap().len() {
-        other.string_bit.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in string_bit, if it's not there add it to string_bit.
-                if self
-                    .string_bit
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.string_bit.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_string_bit(|id| -> Arc<RwLock<StringBit>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.string_literal.read().unwrap().len() != other.string_literal.read().unwrap().len() {
-        other.string_literal.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in string_literal, if it's not there add it to string_literal.
-                if self
-                    .string_literal
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.string_literal.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_string_literal(|id| -> Arc<RwLock<StringLiteral>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.woog_struct.read().unwrap().len() != other.woog_struct.read().unwrap().len() {
-        other.woog_struct.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in woog_struct, if it's not there add it to woog_struct.
-                if self
-                    .woog_struct
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.woog_struct.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_woog_struct(|id| -> Arc<RwLock<WoogStruct>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.struct_expression.read().unwrap().len() != other.struct_expression.read().unwrap().len() {
-        other
-            .struct_expression
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in struct_expression, if it's not there add it to struct_expression.
-                    if self
-                        .struct_expression
-                        .read()
-                        .unwrap()
-                        .iter()
-                        .find(|&y| {
-                            if let Some(y) = y {
-                                *y.read().unwrap() == *x.read().unwrap()
-                            } else {
-                                false
-                            }
-                        })
-                        .is_none()
-                    {
-                        // let _index_ = self.struct_expression.read().unwrap().len();
-                        // if x.read().unwrap().id != _index_ {
-                        //     x.write().unwrap().id = _index_;
-                        // }
-                        self.inter_struct_expression(|id| -> Arc<RwLock<StructExpression>> {
-                            if x.read().unwrap().id != id {
-                                dbg!(x, id);
-                                // panic!("id mismatch");
-                                x.write().unwrap().id = id;
-                            }
-
-                            x.clone()
-                        });
-                    }
-                }
-            });
-        // }
-
-        // if self.struct_field.read().unwrap().len() != other.struct_field.read().unwrap().len() {
-        other.struct_field.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in struct_field, if it's not there add it to struct_field.
-                if self
-                    .struct_field
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.struct_field.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_struct_field(|id| -> Arc<RwLock<StructField>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.struct_generic.read().unwrap().len() != other.struct_generic.read().unwrap().len() {
-        other.struct_generic.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in struct_generic, if it's not there add it to struct_generic.
-                if self
-                    .struct_generic
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.struct_generic.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_struct_generic(|id| -> Arc<RwLock<StructGeneric>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.tuple_field.read().unwrap().len() != other.tuple_field.read().unwrap().len() {
-        other.tuple_field.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in tuple_field, if it's not there add it to tuple_field.
-                if self
-                    .tuple_field
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.tuple_field.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_tuple_field(|id| -> Arc<RwLock<TupleField>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.type_cast.read().unwrap().len() != other.type_cast.read().unwrap().len() {
-        other.type_cast.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in type_cast, if it's not there add it to type_cast.
-                if self
-                    .type_cast
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.type_cast.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_type_cast(|id| -> Arc<RwLock<TypeCast>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.unary.read().unwrap().len() != other.unary.read().unwrap().len() {
-        other.unary.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in unary, if it's not there add it to unary.
-                if self
-                    .unary
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.unary.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_unary(|id| -> Arc<RwLock<Unary>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.unit.read().unwrap().len() != other.unit.read().unwrap().len() {
-        other.unit.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in unit, if it's not there add it to unit.
-                if self
-                    .unit
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.unit.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_unit(|id| -> Arc<RwLock<Unit>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.unnamed_field_expression.read().unwrap().len() != other.unnamed_field_expression.read().unwrap().len() {
-        other
-            .unnamed_field_expression
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in unnamed_field_expression, if it's not there add it to unnamed_field_expression.
-                    if self
-                        .unnamed_field_expression
-                        .read()
-                        .unwrap()
-                        .iter()
-                        .find(|&y| {
-                            if let Some(y) = y {
-                                *y.read().unwrap() == *x.read().unwrap()
-                            } else {
-                                false
-                            }
-                        })
-                        .is_none()
-                    {
-                        // let _index_ = self.unnamed_field_expression.read().unwrap().len();
-                        // if x.read().unwrap().id != _index_ {
-                        //     x.write().unwrap().id = _index_;
-                        // }
-                        self.inter_unnamed_field_expression(
-                            |id| -> Arc<RwLock<UnnamedFieldExpression>> {
-                                if x.read().unwrap().id != id {
-                                    dbg!(x, id);
-                                    // panic!("id mismatch");
-                                    x.write().unwrap().id = id;
-                                }
-
-                                x.clone()
-                            },
-                        );
-                    }
-                }
-            });
-        // }
-
-        // if self.x_value.read().unwrap().len() != other.x_value.read().unwrap().len() {
-        other.x_value.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in x_value, if it's not there add it to x_value.
-                if self
-                    .x_value
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.x_value.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_x_value(|id| -> Arc<RwLock<XValue>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.value_type.read().unwrap().len() != other.value_type.read().unwrap().len() {
-        other.value_type.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in value_type, if it's not there add it to value_type.
-                if self
-                    .value_type
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.value_type.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_value_type(|id| -> Arc<RwLock<ValueType>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.variable.read().unwrap().len() != other.variable.read().unwrap().len() {
-        other.variable.read().unwrap().iter().for_each(|x| {
-            if let Some(x) = x {
-                // Look for other in variable, if it's not there add it to variable.
-                if self
-                    .variable
-                    .read()
-                    .unwrap()
-                    .iter()
-                    .find(|&y| {
-                        if let Some(y) = y {
-                            *y.read().unwrap() == *x.read().unwrap()
-                        } else {
-                            false
-                        }
-                    })
-                    .is_none()
-                {
-                    // let _index_ = self.variable.read().unwrap().len();
-                    // if x.read().unwrap().id != _index_ {
-                    //     x.write().unwrap().id = _index_;
-                    // }
-                    self.inter_variable(|id| -> Arc<RwLock<Variable>> {
-                        if x.read().unwrap().id != id {
-                            dbg!(x, id);
-                            // panic!("id mismatch");
-                            x.write().unwrap().id = id;
-                        }
-
-                        x.clone()
-                    });
-                }
-            }
-        });
-        // }
-
-        // if self.variable_expression.read().unwrap().len() != other.variable_expression.read().unwrap().len() {
-        other
-            .variable_expression
-            .read()
-            .unwrap()
-            .iter()
-            .for_each(|x| {
-                if let Some(x) = x {
-                    // Look for other in variable_expression, if it's not there add it to variable_expression.
-                    if self
-                        .variable_expression
-                        .read()
-                        .unwrap()
-                        .iter()
-                        .find(|&y| {
-                            if let Some(y) = y {
-                                *y.read().unwrap() == *x.read().unwrap()
-                            } else {
-                                false
-                            }
-                        })
-                        .is_none()
-                    {
-                        // let _index_ = self.variable_expression.read().unwrap().len();
-                        // if x.read().unwrap().id != _index_ {
-                        //     x.write().unwrap().id = _index_;
-                        // }
-                        self.inter_variable_expression(|id| -> Arc<RwLock<VariableExpression>> {
-                            if x.read().unwrap().id != id {
-                                dbg!(x, id);
-                                // panic!("id mismatch");
-                                x.write().unwrap().id = id;
-                            }
-
-                            x.clone()
-                        });
-                    }
-                }
-            });
-        // }
-    }
     pub fn new() -> Self {
         let mut store = Self {
             argument_free_list: std::sync::Mutex::new(Vec::new()),
             argument: Arc::new(RwLock::new(Vec::new())),
+            argument_dirty: false,
             a_wait_free_list: std::sync::Mutex::new(Vec::new()),
             a_wait: Arc::new(RwLock::new(Vec::new())),
+            a_wait_dirty: false,
             binary_free_list: std::sync::Mutex::new(Vec::new()),
             binary: Arc::new(RwLock::new(Vec::new())),
+            binary_dirty: false,
             block_free_list: std::sync::Mutex::new(Vec::new()),
             block: Arc::new(RwLock::new(Vec::new())),
+            block_dirty: false,
             body_free_list: std::sync::Mutex::new(Vec::new()),
             body: Arc::new(RwLock::new(Vec::new())),
+            body_dirty: false,
             boolean_literal_free_list: std::sync::Mutex::new(Vec::new()),
             boolean_literal: Arc::new(RwLock::new(Vec::new())),
+            boolean_literal_dirty: false,
             boolean_operator_free_list: std::sync::Mutex::new(Vec::new()),
             boolean_operator: Arc::new(RwLock::new(Vec::new())),
+            boolean_operator_dirty: false,
             call_free_list: std::sync::Mutex::new(Vec::new()),
             call: Arc::new(RwLock::new(Vec::new())),
+            call_dirty: false,
             char_literal_free_list: std::sync::Mutex::new(Vec::new()),
             char_literal: Arc::new(RwLock::new(Vec::new())),
+            char_literal_dirty: false,
             comparison_free_list: std::sync::Mutex::new(Vec::new()),
             comparison: Arc::new(RwLock::new(Vec::new())),
+            comparison_dirty: false,
             data_structure_free_list: std::sync::Mutex::new(Vec::new()),
             data_structure: Arc::new(RwLock::new(Vec::new())),
+            data_structure_dirty: false,
             dwarf_source_file_free_list: std::sync::Mutex::new(Vec::new()),
             dwarf_source_file: Arc::new(RwLock::new(Vec::new())),
+            dwarf_source_file_dirty: false,
             enum_field_free_list: std::sync::Mutex::new(Vec::new()),
             enum_field: Arc::new(RwLock::new(Vec::new())),
+            enum_field_dirty: false,
             enum_generic_free_list: std::sync::Mutex::new(Vec::new()),
             enum_generic: Arc::new(RwLock::new(Vec::new())),
+            enum_generic_dirty: false,
             enum_generic_type_free_list: std::sync::Mutex::new(Vec::new()),
             enum_generic_type: Arc::new(RwLock::new(Vec::new())),
+            enum_generic_type_dirty: false,
             enumeration_free_list: std::sync::Mutex::new(Vec::new()),
             enumeration: Arc::new(RwLock::new(Vec::new())),
             enumeration_id_by_name: Arc::new(RwLock::new(HashMap::default())),
+            enumeration_dirty: false,
             expression_free_list: std::sync::Mutex::new(Vec::new()),
             expression: Arc::new(RwLock::new(Vec::new())),
+            expression_dirty: false,
             expression_bit_free_list: std::sync::Mutex::new(Vec::new()),
             expression_bit: Arc::new(RwLock::new(Vec::new())),
+            expression_bit_dirty: false,
             expression_statement_free_list: std::sync::Mutex::new(Vec::new()),
             expression_statement: Arc::new(RwLock::new(Vec::new())),
+            expression_statement_dirty: false,
             external_implementation_free_list: std::sync::Mutex::new(Vec::new()),
             external_implementation: Arc::new(RwLock::new(Vec::new())),
+            external_implementation_dirty: false,
             field_free_list: std::sync::Mutex::new(Vec::new()),
             field: Arc::new(RwLock::new(Vec::new())),
             field_id_by_name: Arc::new(RwLock::new(HashMap::default())),
+            field_dirty: false,
             field_access_free_list: std::sync::Mutex::new(Vec::new()),
             field_access: Arc::new(RwLock::new(Vec::new())),
+            field_access_dirty: false,
             field_access_target_free_list: std::sync::Mutex::new(Vec::new()),
             field_access_target: Arc::new(RwLock::new(Vec::new())),
+            field_access_target_dirty: false,
             field_expression_free_list: std::sync::Mutex::new(Vec::new()),
             field_expression: Arc::new(RwLock::new(Vec::new())),
+            field_expression_dirty: false,
             float_literal_free_list: std::sync::Mutex::new(Vec::new()),
             float_literal: Arc::new(RwLock::new(Vec::new())),
+            float_literal_dirty: false,
             for_loop_free_list: std::sync::Mutex::new(Vec::new()),
             for_loop: Arc::new(RwLock::new(Vec::new())),
+            for_loop_dirty: false,
             format_bit_free_list: std::sync::Mutex::new(Vec::new()),
             format_bit: Arc::new(RwLock::new(Vec::new())),
+            format_bit_dirty: false,
             format_string_free_list: std::sync::Mutex::new(Vec::new()),
             format_string: Arc::new(RwLock::new(Vec::new())),
+            format_string_dirty: false,
             func_generic_free_list: std::sync::Mutex::new(Vec::new()),
             func_generic: Arc::new(RwLock::new(Vec::new())),
+            func_generic_dirty: false,
             function_free_list: std::sync::Mutex::new(Vec::new()),
             function: Arc::new(RwLock::new(Vec::new())),
             function_id_by_name: Arc::new(RwLock::new(HashMap::default())),
+            function_dirty: false,
             function_call_free_list: std::sync::Mutex::new(Vec::new()),
             function_call: Arc::new(RwLock::new(Vec::new())),
+            function_call_dirty: false,
             x_future_free_list: std::sync::Mutex::new(Vec::new()),
             x_future: Arc::new(RwLock::new(Vec::new())),
+            x_future_dirty: false,
             grouped_free_list: std::sync::Mutex::new(Vec::new()),
             grouped: Arc::new(RwLock::new(Vec::new())),
+            grouped_dirty: false,
             halt_and_catch_fire_free_list: std::sync::Mutex::new(Vec::new()),
             halt_and_catch_fire: Arc::new(RwLock::new(Vec::new())),
+            halt_and_catch_fire_dirty: false,
             x_if_free_list: std::sync::Mutex::new(Vec::new()),
             x_if: Arc::new(RwLock::new(Vec::new())),
+            x_if_dirty: false,
             implementation_block_free_list: std::sync::Mutex::new(Vec::new()),
             implementation_block: Arc::new(RwLock::new(Vec::new())),
+            implementation_block_dirty: false,
             import_free_list: std::sync::Mutex::new(Vec::new()),
             import: Arc::new(RwLock::new(Vec::new())),
+            import_dirty: false,
             index_free_list: std::sync::Mutex::new(Vec::new()),
             index: Arc::new(RwLock::new(Vec::new())),
+            index_dirty: false,
             integer_literal_free_list: std::sync::Mutex::new(Vec::new()),
             integer_literal: Arc::new(RwLock::new(Vec::new())),
+            integer_literal_dirty: false,
             item_free_list: std::sync::Mutex::new(Vec::new()),
             item: Arc::new(RwLock::new(Vec::new())),
+            item_dirty: false,
             lambda_free_list: std::sync::Mutex::new(Vec::new()),
             lambda: Arc::new(RwLock::new(Vec::new())),
+            lambda_dirty: false,
             lambda_parameter_free_list: std::sync::Mutex::new(Vec::new()),
             lambda_parameter: Arc::new(RwLock::new(Vec::new())),
+            lambda_parameter_dirty: false,
             let_statement_free_list: std::sync::Mutex::new(Vec::new()),
             let_statement: Arc::new(RwLock::new(Vec::new())),
+            let_statement_dirty: false,
             list_free_list: std::sync::Mutex::new(Vec::new()),
             list: Arc::new(RwLock::new(Vec::new())),
+            list_dirty: false,
             list_element_free_list: std::sync::Mutex::new(Vec::new()),
             list_element: Arc::new(RwLock::new(Vec::new())),
+            list_element_dirty: false,
             list_expression_free_list: std::sync::Mutex::new(Vec::new()),
             list_expression: Arc::new(RwLock::new(Vec::new())),
+            list_expression_dirty: false,
             literal_free_list: std::sync::Mutex::new(Vec::new()),
             literal: Arc::new(RwLock::new(Vec::new())),
+            literal_dirty: false,
             local_variable_free_list: std::sync::Mutex::new(Vec::new()),
             local_variable: Arc::new(RwLock::new(Vec::new())),
+            local_variable_dirty: false,
             x_macro_free_list: std::sync::Mutex::new(Vec::new()),
             x_macro: Arc::new(RwLock::new(Vec::new())),
+            x_macro_dirty: false,
             map_free_list: std::sync::Mutex::new(Vec::new()),
             map: Arc::new(RwLock::new(Vec::new())),
+            map_dirty: false,
             map_element_free_list: std::sync::Mutex::new(Vec::new()),
             map_element: Arc::new(RwLock::new(Vec::new())),
+            map_element_dirty: false,
             map_expression_free_list: std::sync::Mutex::new(Vec::new()),
             map_expression: Arc::new(RwLock::new(Vec::new())),
+            map_expression_dirty: false,
             x_match_free_list: std::sync::Mutex::new(Vec::new()),
             x_match: Arc::new(RwLock::new(Vec::new())),
+            x_match_dirty: false,
             method_call_free_list: std::sync::Mutex::new(Vec::new()),
             method_call: Arc::new(RwLock::new(Vec::new())),
+            method_call_dirty: false,
             named_field_expression_free_list: std::sync::Mutex::new(Vec::new()),
             named_field_expression: Arc::new(RwLock::new(Vec::new())),
+            named_field_expression_dirty: false,
             z_object_store_free_list: std::sync::Mutex::new(Vec::new()),
             z_object_store: Arc::new(RwLock::new(Vec::new())),
             z_object_store_id_by_name: Arc::new(RwLock::new(HashMap::default())),
+            z_object_store_dirty: false,
             object_wrapper_free_list: std::sync::Mutex::new(Vec::new()),
             object_wrapper: Arc::new(RwLock::new(Vec::new())),
+            object_wrapper_dirty: false,
             operator_free_list: std::sync::Mutex::new(Vec::new()),
             operator: Arc::new(RwLock::new(Vec::new())),
+            operator_dirty: false,
             parameter_free_list: std::sync::Mutex::new(Vec::new()),
             parameter: Arc::new(RwLock::new(Vec::new())),
+            parameter_dirty: false,
             x_path_free_list: std::sync::Mutex::new(Vec::new()),
             x_path: Arc::new(RwLock::new(Vec::new())),
+            x_path_dirty: false,
             path_element_free_list: std::sync::Mutex::new(Vec::new()),
             path_element: Arc::new(RwLock::new(Vec::new())),
+            path_element_dirty: false,
             pattern_free_list: std::sync::Mutex::new(Vec::new()),
             pattern: Arc::new(RwLock::new(Vec::new())),
+            pattern_dirty: false,
             x_plugin_free_list: std::sync::Mutex::new(Vec::new()),
             x_plugin: Arc::new(RwLock::new(Vec::new())),
             x_plugin_id_by_name: Arc::new(RwLock::new(HashMap::default())),
+            x_plugin_dirty: false,
             x_print_free_list: std::sync::Mutex::new(Vec::new()),
             x_print: Arc::new(RwLock::new(Vec::new())),
+            x_print_dirty: false,
             range_expression_free_list: std::sync::Mutex::new(Vec::new()),
             range_expression: Arc::new(RwLock::new(Vec::new())),
+            range_expression_dirty: false,
             result_statement_free_list: std::sync::Mutex::new(Vec::new()),
             result_statement: Arc::new(RwLock::new(Vec::new())),
+            result_statement_dirty: false,
             x_return_free_list: std::sync::Mutex::new(Vec::new()),
             x_return: Arc::new(RwLock::new(Vec::new())),
+            x_return_dirty: false,
             span_free_list: std::sync::Mutex::new(Vec::new()),
             span: Arc::new(RwLock::new(Vec::new())),
+            span_dirty: false,
             statement_free_list: std::sync::Mutex::new(Vec::new()),
             statement: Arc::new(RwLock::new(Vec::new())),
+            statement_dirty: false,
             static_method_call_free_list: std::sync::Mutex::new(Vec::new()),
             static_method_call: Arc::new(RwLock::new(Vec::new())),
+            static_method_call_dirty: false,
             string_bit_free_list: std::sync::Mutex::new(Vec::new()),
             string_bit: Arc::new(RwLock::new(Vec::new())),
+            string_bit_dirty: false,
             string_literal_free_list: std::sync::Mutex::new(Vec::new()),
             string_literal: Arc::new(RwLock::new(Vec::new())),
+            string_literal_dirty: false,
             woog_struct_free_list: std::sync::Mutex::new(Vec::new()),
             woog_struct: Arc::new(RwLock::new(Vec::new())),
             woog_struct_id_by_name: Arc::new(RwLock::new(HashMap::default())),
+            woog_struct_dirty: false,
             struct_expression_free_list: std::sync::Mutex::new(Vec::new()),
             struct_expression: Arc::new(RwLock::new(Vec::new())),
+            struct_expression_dirty: false,
             struct_field_free_list: std::sync::Mutex::new(Vec::new()),
             struct_field: Arc::new(RwLock::new(Vec::new())),
+            struct_field_dirty: false,
             struct_generic_free_list: std::sync::Mutex::new(Vec::new()),
             struct_generic: Arc::new(RwLock::new(Vec::new())),
+            struct_generic_dirty: false,
             tuple_field_free_list: std::sync::Mutex::new(Vec::new()),
             tuple_field: Arc::new(RwLock::new(Vec::new())),
+            tuple_field_dirty: false,
             type_cast_free_list: std::sync::Mutex::new(Vec::new()),
             type_cast: Arc::new(RwLock::new(Vec::new())),
+            type_cast_dirty: false,
             unary_free_list: std::sync::Mutex::new(Vec::new()),
             unary: Arc::new(RwLock::new(Vec::new())),
+            unary_dirty: false,
             unit_free_list: std::sync::Mutex::new(Vec::new()),
             unit: Arc::new(RwLock::new(Vec::new())),
+            unit_dirty: false,
             unnamed_field_expression_free_list: std::sync::Mutex::new(Vec::new()),
             unnamed_field_expression: Arc::new(RwLock::new(Vec::new())),
+            unnamed_field_expression_dirty: false,
             x_value_free_list: std::sync::Mutex::new(Vec::new()),
             x_value: Arc::new(RwLock::new(Vec::new())),
+            x_value_dirty: false,
             value_type_free_list: std::sync::Mutex::new(Vec::new()),
             value_type: Arc::new(RwLock::new(Vec::new())),
+            value_type_dirty: false,
             variable_free_list: std::sync::Mutex::new(Vec::new()),
             variable: Arc::new(RwLock::new(Vec::new())),
+            variable_dirty: false,
             variable_expression_free_list: std::sync::Mutex::new(Vec::new()),
             variable_expression: Arc::new(RwLock::new(Vec::new())),
+            variable_expression_dirty: false,
         };
 
         // Initialize Singleton Subtypes
@@ -3896,6 +1024,3141 @@ impl ObjectStore {
         store
     }
 
+    pub fn merge(&mut self, other: &ObjectStore) {
+        if other.argument_dirty {
+            other.argument.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in argument, if it's not there add it to argument.
+                    if self
+                        .argument
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.argument.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_argument(|id| -> Arc<RwLock<Argument>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.a_wait_dirty {
+            other.a_wait.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in a_wait, if it's not there add it to a_wait.
+                    if self
+                        .a_wait
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.a_wait.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_a_wait(|id| -> Arc<RwLock<AWait>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.binary_dirty {
+            other.binary.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in binary, if it's not there add it to binary.
+                    if self
+                        .binary
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.binary.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_binary(|id| -> Arc<RwLock<Binary>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.block_dirty {
+            other.block.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in block, if it's not there add it to block.
+                    if self
+                        .block
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.block.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_block(|id| -> Arc<RwLock<Block>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.body_dirty {
+            other.body.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in body, if it's not there add it to body.
+                    if self
+                        .body
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.body.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_body(|id| -> Arc<RwLock<Body>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.boolean_literal_dirty {
+            other.boolean_literal.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in boolean_literal, if it's not there add it to boolean_literal.
+                    if self
+                        .boolean_literal
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.boolean_literal.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_boolean_literal(|id| -> Arc<RwLock<BooleanLiteral>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.boolean_operator_dirty {
+            other.boolean_operator.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in boolean_operator, if it's not there add it to boolean_operator.
+                    if self
+                        .boolean_operator
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.boolean_operator.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_boolean_operator(|id| -> Arc<RwLock<BooleanOperator>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.call_dirty {
+            other.call.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in call, if it's not there add it to call.
+                    if self
+                        .call
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.call.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_call(|id| -> Arc<RwLock<Call>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.char_literal_dirty {
+            other.char_literal.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in char_literal, if it's not there add it to char_literal.
+                    if self
+                        .char_literal
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.char_literal.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_char_literal(|id| -> Arc<RwLock<CharLiteral>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.comparison_dirty {
+            other.comparison.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in comparison, if it's not there add it to comparison.
+                    if self
+                        .comparison
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.comparison.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_comparison(|id| -> Arc<RwLock<Comparison>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.data_structure_dirty {
+            other.data_structure.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in data_structure, if it's not there add it to data_structure.
+                    if self
+                        .data_structure
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.data_structure.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_data_structure(|id| -> Arc<RwLock<DataStructure>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.dwarf_source_file_dirty {
+            other
+                .dwarf_source_file
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in dwarf_source_file, if it's not there add it to dwarf_source_file.
+                        if self
+                            .dwarf_source_file
+                            .read()
+                            .unwrap()
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            // let _index_ = self.dwarf_source_file.read().unwrap().len();
+                            // if x.read().unwrap().id != _index_ {
+                            //     x.write().unwrap().id = _index_;
+                            // }
+                            self.inter_dwarf_source_file(|id| -> Arc<RwLock<DwarfSourceFile>> {
+                                if x.read().unwrap().id != id {
+                                    dbg!(x, id);
+                                    // panic!("id mismatch");
+                                    x.write().unwrap().id = id;
+                                }
+
+                                x.clone()
+                            });
+                        }
+                    }
+                });
+        }
+
+        if other.enum_field_dirty {
+            other.enum_field.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in enum_field, if it's not there add it to enum_field.
+                    if self
+                        .enum_field
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.enum_field.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_enum_field(|id| -> Arc<RwLock<EnumField>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.enum_generic_dirty {
+            other.enum_generic.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in enum_generic, if it's not there add it to enum_generic.
+                    if self
+                        .enum_generic
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.enum_generic.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_enum_generic(|id| -> Arc<RwLock<EnumGeneric>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.enum_generic_type_dirty {
+            other
+                .enum_generic_type
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in enum_generic_type, if it's not there add it to enum_generic_type.
+                        if self
+                            .enum_generic_type
+                            .read()
+                            .unwrap()
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            // let _index_ = self.enum_generic_type.read().unwrap().len();
+                            // if x.read().unwrap().id != _index_ {
+                            //     x.write().unwrap().id = _index_;
+                            // }
+                            self.inter_enum_generic_type(|id| -> Arc<RwLock<EnumGenericType>> {
+                                if x.read().unwrap().id != id {
+                                    dbg!(x, id);
+                                    // panic!("id mismatch");
+                                    x.write().unwrap().id = id;
+                                }
+
+                                x.clone()
+                            });
+                        }
+                    }
+                });
+        }
+
+        if other.enumeration_dirty {
+            other.enumeration.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in enumeration, if it's not there add it to enumeration.
+                    if self
+                        .enumeration
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.enumeration.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_enumeration(|id| -> Arc<RwLock<Enumeration>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.expression_dirty {
+            other.expression.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in expression, if it's not there add it to expression.
+                    if self
+                        .expression
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.expression.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_expression(|id| -> Arc<RwLock<Expression>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.expression_bit_dirty {
+            other.expression_bit.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in expression_bit, if it's not there add it to expression_bit.
+                    if self
+                        .expression_bit
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.expression_bit.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_expression_bit(|id| -> Arc<RwLock<ExpressionBit>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.expression_statement_dirty {
+            other
+                .expression_statement
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in expression_statement, if it's not there add it to expression_statement.
+                        if self
+                            .expression_statement
+                            .read()
+                            .unwrap()
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            // let _index_ = self.expression_statement.read().unwrap().len();
+                            // if x.read().unwrap().id != _index_ {
+                            //     x.write().unwrap().id = _index_;
+                            // }
+                            self.inter_expression_statement(
+                                |id| -> Arc<RwLock<ExpressionStatement>> {
+                                    if x.read().unwrap().id != id {
+                                        dbg!(x, id);
+                                        // panic!("id mismatch");
+                                        x.write().unwrap().id = id;
+                                    }
+
+                                    x.clone()
+                                },
+                            );
+                        }
+                    }
+                });
+        }
+
+        if other.external_implementation_dirty {
+            other
+                .external_implementation
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in external_implementation, if it's not there add it to external_implementation.
+                        if self
+                            .external_implementation
+                            .read()
+                            .unwrap()
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            // let _index_ = self.external_implementation.read().unwrap().len();
+                            // if x.read().unwrap().id != _index_ {
+                            //     x.write().unwrap().id = _index_;
+                            // }
+                            self.inter_external_implementation(
+                                |id| -> Arc<RwLock<ExternalImplementation>> {
+                                    if x.read().unwrap().id != id {
+                                        dbg!(x, id);
+                                        // panic!("id mismatch");
+                                        x.write().unwrap().id = id;
+                                    }
+
+                                    x.clone()
+                                },
+                            );
+                        }
+                    }
+                });
+        }
+
+        if other.field_dirty {
+            other.field.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in field, if it's not there add it to field.
+                    if self
+                        .field
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.field.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_field(|id| -> Arc<RwLock<Field>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.field_access_dirty {
+            other.field_access.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in field_access, if it's not there add it to field_access.
+                    if self
+                        .field_access
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.field_access.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_field_access(|id| -> Arc<RwLock<FieldAccess>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.field_access_target_dirty {
+            other
+                .field_access_target
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in field_access_target, if it's not there add it to field_access_target.
+                        if self
+                            .field_access_target
+                            .read()
+                            .unwrap()
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            // let _index_ = self.field_access_target.read().unwrap().len();
+                            // if x.read().unwrap().id != _index_ {
+                            //     x.write().unwrap().id = _index_;
+                            // }
+                            self.inter_field_access_target(
+                                |id| -> Arc<RwLock<FieldAccessTarget>> {
+                                    if x.read().unwrap().id != id {
+                                        dbg!(x, id);
+                                        // panic!("id mismatch");
+                                        x.write().unwrap().id = id;
+                                    }
+
+                                    x.clone()
+                                },
+                            );
+                        }
+                    }
+                });
+        }
+
+        if other.field_expression_dirty {
+            other.field_expression.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in field_expression, if it's not there add it to field_expression.
+                    if self
+                        .field_expression
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.field_expression.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_field_expression(|id| -> Arc<RwLock<FieldExpression>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.float_literal_dirty {
+            other.float_literal.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in float_literal, if it's not there add it to float_literal.
+                    if self
+                        .float_literal
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.float_literal.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_float_literal(|id| -> Arc<RwLock<FloatLiteral>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.for_loop_dirty {
+            other.for_loop.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in for_loop, if it's not there add it to for_loop.
+                    if self
+                        .for_loop
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.for_loop.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_for_loop(|id| -> Arc<RwLock<ForLoop>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.format_bit_dirty {
+            other.format_bit.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in format_bit, if it's not there add it to format_bit.
+                    if self
+                        .format_bit
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.format_bit.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_format_bit(|id| -> Arc<RwLock<FormatBit>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.format_string_dirty {
+            other.format_string.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in format_string, if it's not there add it to format_string.
+                    if self
+                        .format_string
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.format_string.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_format_string(|id| -> Arc<RwLock<FormatString>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.func_generic_dirty {
+            other.func_generic.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in func_generic, if it's not there add it to func_generic.
+                    if self
+                        .func_generic
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.func_generic.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_func_generic(|id| -> Arc<RwLock<FuncGeneric>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.function_dirty {
+            other.function.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in function, if it's not there add it to function.
+                    if self
+                        .function
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.function.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_function(|id| -> Arc<RwLock<Function>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.function_call_dirty {
+            other.function_call.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in function_call, if it's not there add it to function_call.
+                    if self
+                        .function_call
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.function_call.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_function_call(|id| -> Arc<RwLock<FunctionCall>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.x_future_dirty {
+            other.x_future.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_future, if it's not there add it to x_future.
+                    if self
+                        .x_future
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.x_future.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_x_future(|id| -> Arc<RwLock<XFuture>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.grouped_dirty {
+            other.grouped.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in grouped, if it's not there add it to grouped.
+                    if self
+                        .grouped
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.grouped.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_grouped(|id| -> Arc<RwLock<Grouped>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.halt_and_catch_fire_dirty {
+            other
+                .halt_and_catch_fire
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in halt_and_catch_fire, if it's not there add it to halt_and_catch_fire.
+                        if self
+                            .halt_and_catch_fire
+                            .read()
+                            .unwrap()
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            // let _index_ = self.halt_and_catch_fire.read().unwrap().len();
+                            // if x.read().unwrap().id != _index_ {
+                            //     x.write().unwrap().id = _index_;
+                            // }
+                            self.inter_halt_and_catch_fire(|id| -> Arc<RwLock<HaltAndCatchFire>> {
+                                if x.read().unwrap().id != id {
+                                    dbg!(x, id);
+                                    // panic!("id mismatch");
+                                    x.write().unwrap().id = id;
+                                }
+
+                                x.clone()
+                            });
+                        }
+                    }
+                });
+        }
+
+        if other.x_if_dirty {
+            other.x_if.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_if, if it's not there add it to x_if.
+                    if self
+                        .x_if
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.x_if.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_x_if(|id| -> Arc<RwLock<XIf>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.implementation_block_dirty {
+            other
+                .implementation_block
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in implementation_block, if it's not there add it to implementation_block.
+                        if self
+                            .implementation_block
+                            .read()
+                            .unwrap()
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            // let _index_ = self.implementation_block.read().unwrap().len();
+                            // if x.read().unwrap().id != _index_ {
+                            //     x.write().unwrap().id = _index_;
+                            // }
+                            self.inter_implementation_block(
+                                |id| -> Arc<RwLock<ImplementationBlock>> {
+                                    if x.read().unwrap().id != id {
+                                        dbg!(x, id);
+                                        // panic!("id mismatch");
+                                        x.write().unwrap().id = id;
+                                    }
+
+                                    x.clone()
+                                },
+                            );
+                        }
+                    }
+                });
+        }
+
+        if other.import_dirty {
+            other.import.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in import, if it's not there add it to import.
+                    if self
+                        .import
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.import.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_import(|id| -> Arc<RwLock<Import>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.index_dirty {
+            other.index.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in index, if it's not there add it to index.
+                    if self
+                        .index
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.index.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_index(|id| -> Arc<RwLock<Index>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.integer_literal_dirty {
+            other.integer_literal.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in integer_literal, if it's not there add it to integer_literal.
+                    if self
+                        .integer_literal
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.integer_literal.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_integer_literal(|id| -> Arc<RwLock<IntegerLiteral>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.item_dirty {
+            other.item.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in item, if it's not there add it to item.
+                    if self
+                        .item
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.item.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_item(|id| -> Arc<RwLock<Item>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.lambda_dirty {
+            other.lambda.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in lambda, if it's not there add it to lambda.
+                    if self
+                        .lambda
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.lambda.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_lambda(|id| -> Arc<RwLock<Lambda>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.lambda_parameter_dirty {
+            other.lambda_parameter.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in lambda_parameter, if it's not there add it to lambda_parameter.
+                    if self
+                        .lambda_parameter
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.lambda_parameter.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_lambda_parameter(|id| -> Arc<RwLock<LambdaParameter>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.let_statement_dirty {
+            other.let_statement.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in let_statement, if it's not there add it to let_statement.
+                    if self
+                        .let_statement
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.let_statement.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_let_statement(|id| -> Arc<RwLock<LetStatement>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.list_dirty {
+            other.list.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in list, if it's not there add it to list.
+                    if self
+                        .list
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.list.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_list(|id| -> Arc<RwLock<List>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.list_element_dirty {
+            other.list_element.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in list_element, if it's not there add it to list_element.
+                    if self
+                        .list_element
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.list_element.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_list_element(|id| -> Arc<RwLock<ListElement>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.list_expression_dirty {
+            other.list_expression.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in list_expression, if it's not there add it to list_expression.
+                    if self
+                        .list_expression
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.list_expression.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_list_expression(|id| -> Arc<RwLock<ListExpression>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.literal_dirty {
+            other.literal.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in literal, if it's not there add it to literal.
+                    if self
+                        .literal
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.literal.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_literal(|id| -> Arc<RwLock<Literal>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.local_variable_dirty {
+            other.local_variable.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in local_variable, if it's not there add it to local_variable.
+                    if self
+                        .local_variable
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.local_variable.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_local_variable(|id| -> Arc<RwLock<LocalVariable>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.x_macro_dirty {
+            other.x_macro.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_macro, if it's not there add it to x_macro.
+                    if self
+                        .x_macro
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.x_macro.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_x_macro(|id| -> Arc<RwLock<XMacro>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.map_dirty {
+            other.map.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in map, if it's not there add it to map.
+                    if self
+                        .map
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.map.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_map(|id| -> Arc<RwLock<Map>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.map_element_dirty {
+            other.map_element.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in map_element, if it's not there add it to map_element.
+                    if self
+                        .map_element
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.map_element.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_map_element(|id| -> Arc<RwLock<MapElement>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.map_expression_dirty {
+            other.map_expression.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in map_expression, if it's not there add it to map_expression.
+                    if self
+                        .map_expression
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.map_expression.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_map_expression(|id| -> Arc<RwLock<MapExpression>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.x_match_dirty {
+            other.x_match.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_match, if it's not there add it to x_match.
+                    if self
+                        .x_match
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.x_match.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_x_match(|id| -> Arc<RwLock<XMatch>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.method_call_dirty {
+            other.method_call.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in method_call, if it's not there add it to method_call.
+                    if self
+                        .method_call
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.method_call.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_method_call(|id| -> Arc<RwLock<MethodCall>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.named_field_expression_dirty {
+            other
+                .named_field_expression
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in named_field_expression, if it's not there add it to named_field_expression.
+                        if self
+                            .named_field_expression
+                            .read()
+                            .unwrap()
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            // let _index_ = self.named_field_expression.read().unwrap().len();
+                            // if x.read().unwrap().id != _index_ {
+                            //     x.write().unwrap().id = _index_;
+                            // }
+                            self.inter_named_field_expression(
+                                |id| -> Arc<RwLock<NamedFieldExpression>> {
+                                    if x.read().unwrap().id != id {
+                                        dbg!(x, id);
+                                        // panic!("id mismatch");
+                                        x.write().unwrap().id = id;
+                                    }
+
+                                    x.clone()
+                                },
+                            );
+                        }
+                    }
+                });
+        }
+
+        if other.z_object_store_dirty {
+            other.z_object_store.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in z_object_store, if it's not there add it to z_object_store.
+                    if self
+                        .z_object_store
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.z_object_store.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_z_object_store(|id| -> Arc<RwLock<ZObjectStore>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.object_wrapper_dirty {
+            other.object_wrapper.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in object_wrapper, if it's not there add it to object_wrapper.
+                    if self
+                        .object_wrapper
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.object_wrapper.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_object_wrapper(|id| -> Arc<RwLock<ObjectWrapper>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.operator_dirty {
+            other.operator.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in operator, if it's not there add it to operator.
+                    if self
+                        .operator
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.operator.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_operator(|id| -> Arc<RwLock<Operator>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.parameter_dirty {
+            other.parameter.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in parameter, if it's not there add it to parameter.
+                    if self
+                        .parameter
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.parameter.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_parameter(|id| -> Arc<RwLock<Parameter>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.x_path_dirty {
+            other.x_path.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_path, if it's not there add it to x_path.
+                    if self
+                        .x_path
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.x_path.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_x_path(|id| -> Arc<RwLock<XPath>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.path_element_dirty {
+            other.path_element.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in path_element, if it's not there add it to path_element.
+                    if self
+                        .path_element
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.path_element.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_path_element(|id| -> Arc<RwLock<PathElement>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.pattern_dirty {
+            other.pattern.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in pattern, if it's not there add it to pattern.
+                    if self
+                        .pattern
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.pattern.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_pattern(|id| -> Arc<RwLock<Pattern>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.x_plugin_dirty {
+            other.x_plugin.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_plugin, if it's not there add it to x_plugin.
+                    if self
+                        .x_plugin
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.x_plugin.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_x_plugin(|id| -> Arc<RwLock<XPlugin>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.x_print_dirty {
+            other.x_print.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_print, if it's not there add it to x_print.
+                    if self
+                        .x_print
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.x_print.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_x_print(|id| -> Arc<RwLock<XPrint>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.range_expression_dirty {
+            other.range_expression.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in range_expression, if it's not there add it to range_expression.
+                    if self
+                        .range_expression
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.range_expression.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_range_expression(|id| -> Arc<RwLock<RangeExpression>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.result_statement_dirty {
+            other.result_statement.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in result_statement, if it's not there add it to result_statement.
+                    if self
+                        .result_statement
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.result_statement.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_result_statement(|id| -> Arc<RwLock<ResultStatement>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.x_return_dirty {
+            other.x_return.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_return, if it's not there add it to x_return.
+                    if self
+                        .x_return
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.x_return.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_x_return(|id| -> Arc<RwLock<XReturn>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.span_dirty {
+            other.span.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in span, if it's not there add it to span.
+                    if self
+                        .span
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.span.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_span(|id| -> Arc<RwLock<Span>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.statement_dirty {
+            other.statement.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in statement, if it's not there add it to statement.
+                    if self
+                        .statement
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.statement.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_statement(|id| -> Arc<RwLock<Statement>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.static_method_call_dirty {
+            other
+                .static_method_call
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in static_method_call, if it's not there add it to static_method_call.
+                        if self
+                            .static_method_call
+                            .read()
+                            .unwrap()
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            // let _index_ = self.static_method_call.read().unwrap().len();
+                            // if x.read().unwrap().id != _index_ {
+                            //     x.write().unwrap().id = _index_;
+                            // }
+                            self.inter_static_method_call(|id| -> Arc<RwLock<StaticMethodCall>> {
+                                if x.read().unwrap().id != id {
+                                    dbg!(x, id);
+                                    // panic!("id mismatch");
+                                    x.write().unwrap().id = id;
+                                }
+
+                                x.clone()
+                            });
+                        }
+                    }
+                });
+        }
+
+        if other.string_bit_dirty {
+            other.string_bit.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in string_bit, if it's not there add it to string_bit.
+                    if self
+                        .string_bit
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.string_bit.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_string_bit(|id| -> Arc<RwLock<StringBit>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.string_literal_dirty {
+            other.string_literal.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in string_literal, if it's not there add it to string_literal.
+                    if self
+                        .string_literal
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.string_literal.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_string_literal(|id| -> Arc<RwLock<StringLiteral>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.woog_struct_dirty {
+            other.woog_struct.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in woog_struct, if it's not there add it to woog_struct.
+                    if self
+                        .woog_struct
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.woog_struct.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_woog_struct(|id| -> Arc<RwLock<WoogStruct>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.struct_expression_dirty {
+            other
+                .struct_expression
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in struct_expression, if it's not there add it to struct_expression.
+                        if self
+                            .struct_expression
+                            .read()
+                            .unwrap()
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            // let _index_ = self.struct_expression.read().unwrap().len();
+                            // if x.read().unwrap().id != _index_ {
+                            //     x.write().unwrap().id = _index_;
+                            // }
+                            self.inter_struct_expression(|id| -> Arc<RwLock<StructExpression>> {
+                                if x.read().unwrap().id != id {
+                                    dbg!(x, id);
+                                    // panic!("id mismatch");
+                                    x.write().unwrap().id = id;
+                                }
+
+                                x.clone()
+                            });
+                        }
+                    }
+                });
+        }
+
+        if other.struct_field_dirty {
+            other.struct_field.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in struct_field, if it's not there add it to struct_field.
+                    if self
+                        .struct_field
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.struct_field.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_struct_field(|id| -> Arc<RwLock<StructField>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.struct_generic_dirty {
+            other.struct_generic.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in struct_generic, if it's not there add it to struct_generic.
+                    if self
+                        .struct_generic
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.struct_generic.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_struct_generic(|id| -> Arc<RwLock<StructGeneric>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.tuple_field_dirty {
+            other.tuple_field.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in tuple_field, if it's not there add it to tuple_field.
+                    if self
+                        .tuple_field
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.tuple_field.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_tuple_field(|id| -> Arc<RwLock<TupleField>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.type_cast_dirty {
+            other.type_cast.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in type_cast, if it's not there add it to type_cast.
+                    if self
+                        .type_cast
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.type_cast.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_type_cast(|id| -> Arc<RwLock<TypeCast>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.unary_dirty {
+            other.unary.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in unary, if it's not there add it to unary.
+                    if self
+                        .unary
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.unary.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_unary(|id| -> Arc<RwLock<Unary>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.unit_dirty {
+            other.unit.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in unit, if it's not there add it to unit.
+                    if self
+                        .unit
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.unit.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_unit(|id| -> Arc<RwLock<Unit>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.unnamed_field_expression_dirty {
+            other
+                .unnamed_field_expression
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in unnamed_field_expression, if it's not there add it to unnamed_field_expression.
+                        if self
+                            .unnamed_field_expression
+                            .read()
+                            .unwrap()
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            // let _index_ = self.unnamed_field_expression.read().unwrap().len();
+                            // if x.read().unwrap().id != _index_ {
+                            //     x.write().unwrap().id = _index_;
+                            // }
+                            self.inter_unnamed_field_expression(
+                                |id| -> Arc<RwLock<UnnamedFieldExpression>> {
+                                    if x.read().unwrap().id != id {
+                                        dbg!(x, id);
+                                        // panic!("id mismatch");
+                                        x.write().unwrap().id = id;
+                                    }
+
+                                    x.clone()
+                                },
+                            );
+                        }
+                    }
+                });
+        }
+
+        if other.x_value_dirty {
+            other.x_value.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in x_value, if it's not there add it to x_value.
+                    if self
+                        .x_value
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.x_value.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_x_value(|id| -> Arc<RwLock<XValue>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.value_type_dirty {
+            other.value_type.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in value_type, if it's not there add it to value_type.
+                    if self
+                        .value_type
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.value_type.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_value_type(|id| -> Arc<RwLock<ValueType>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.variable_dirty {
+            other.variable.read().unwrap().iter().for_each(|x| {
+                if let Some(x) = x {
+                    // Look for other in variable, if it's not there add it to variable.
+                    if self
+                        .variable
+                        .read()
+                        .unwrap()
+                        .iter()
+                        .find(|&y| {
+                            if let Some(y) = y {
+                                *y.read().unwrap() == *x.read().unwrap()
+                            } else {
+                                false
+                            }
+                        })
+                        .is_none()
+                    {
+                        // let _index_ = self.variable.read().unwrap().len();
+                        // if x.read().unwrap().id != _index_ {
+                        //     x.write().unwrap().id = _index_;
+                        // }
+                        self.inter_variable(|id| -> Arc<RwLock<Variable>> {
+                            if x.read().unwrap().id != id {
+                                dbg!(x, id);
+                                // panic!("id mismatch");
+                                x.write().unwrap().id = id;
+                            }
+
+                            x.clone()
+                        });
+                    }
+                }
+            });
+        }
+
+        if other.variable_expression_dirty {
+            other
+                .variable_expression
+                .read()
+                .unwrap()
+                .iter()
+                .for_each(|x| {
+                    if let Some(x) = x {
+                        // Look for other in variable_expression, if it's not there add it to variable_expression.
+                        if self
+                            .variable_expression
+                            .read()
+                            .unwrap()
+                            .iter()
+                            .find(|&y| {
+                                if let Some(y) = y {
+                                    *y.read().unwrap() == *x.read().unwrap()
+                                } else {
+                                    false
+                                }
+                            })
+                            .is_none()
+                        {
+                            // let _index_ = self.variable_expression.read().unwrap().len();
+                            // if x.read().unwrap().id != _index_ {
+                            //     x.write().unwrap().id = _index_;
+                            // }
+                            self.inter_variable_expression(
+                                |id| -> Arc<RwLock<VariableExpression>> {
+                                    if x.read().unwrap().id != id {
+                                        dbg!(x, id);
+                                        // panic!("id mismatch");
+                                        x.write().unwrap().id = id;
+                                    }
+
+                                    x.clone()
+                                },
+                            );
+                        }
+                    }
+                });
+        }
+    }
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"v2::lu_dog_ndrwlock_vec-object-store-methods"}}}
     /// Inter (insert) [`Argument`] into the store.
     ///
@@ -3935,6 +4198,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {argument:?}.");
             self.argument.write().unwrap()[_index] = Some(argument.clone());
+            self.argument_dirty = true;
             argument
         }
     }
@@ -4012,6 +4276,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {a_wait:?}.");
             self.a_wait.write().unwrap()[_index] = Some(a_wait.clone());
+            self.a_wait_dirty = true;
             a_wait
         }
     }
@@ -4089,6 +4354,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {binary:?}.");
             self.binary.write().unwrap()[_index] = Some(binary.clone());
+            self.binary_dirty = true;
             binary
         }
     }
@@ -4166,6 +4432,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {block:?}.");
             self.block.write().unwrap()[_index] = Some(block.clone());
+            self.block_dirty = true;
             block
         }
     }
@@ -4243,6 +4510,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {body:?}.");
             self.body.write().unwrap()[_index] = Some(body.clone());
+            self.body_dirty = true;
             body
         }
     }
@@ -4321,6 +4589,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {boolean_literal:?}.");
             self.boolean_literal.write().unwrap()[_index] = Some(boolean_literal.clone());
+            self.boolean_literal_dirty = true;
             boolean_literal
         }
     }
@@ -4399,6 +4668,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {boolean_operator:?}.");
             self.boolean_operator.write().unwrap()[_index] = Some(boolean_operator.clone());
+            self.boolean_operator_dirty = true;
             boolean_operator
         }
     }
@@ -4479,6 +4749,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {call:?}.");
             self.call.write().unwrap()[_index] = Some(call.clone());
+            self.call_dirty = true;
             call
         }
     }
@@ -4557,6 +4828,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {char_literal:?}.");
             self.char_literal.write().unwrap()[_index] = Some(char_literal.clone());
+            self.char_literal_dirty = true;
             char_literal
         }
     }
@@ -4635,6 +4907,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {comparison:?}.");
             self.comparison.write().unwrap()[_index] = Some(comparison.clone());
+            self.comparison_dirty = true;
             comparison
         }
     }
@@ -4713,6 +4986,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {data_structure:?}.");
             self.data_structure.write().unwrap()[_index] = Some(data_structure.clone());
+            self.data_structure_dirty = true;
             data_structure
         }
     }
@@ -4801,6 +5075,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {dwarf_source_file:?}.");
             self.dwarf_source_file.write().unwrap()[_index] = Some(dwarf_source_file.clone());
+            self.dwarf_source_file_dirty = true;
             dwarf_source_file
         }
     }
@@ -4884,6 +5159,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {enum_field:?}.");
             self.enum_field.write().unwrap()[_index] = Some(enum_field.clone());
+            self.enum_field_dirty = true;
             enum_field
         }
     }
@@ -4962,6 +5238,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {enum_generic:?}.");
             self.enum_generic.write().unwrap()[_index] = Some(enum_generic.clone());
+            self.enum_generic_dirty = true;
             enum_generic
         }
     }
@@ -5050,6 +5327,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {enum_generic_type:?}.");
             self.enum_generic_type.write().unwrap()[_index] = Some(enum_generic_type.clone());
+            self.enum_generic_type_dirty = true;
             enum_generic_type
         }
     }
@@ -5133,6 +5411,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {enumeration:?}.");
             self.enumeration.write().unwrap()[_index] = Some(enumeration.clone());
+            self.enumeration_dirty = true;
             enumeration
         };
         self.enumeration_id_by_name.write().unwrap().insert(
@@ -5227,6 +5506,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {expression:?}.");
             self.expression.write().unwrap()[_index] = Some(expression.clone());
+            self.expression_dirty = true;
             expression
         }
     }
@@ -5305,6 +5585,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {expression_bit:?}.");
             self.expression_bit.write().unwrap()[_index] = Some(expression_bit.clone());
+            self.expression_bit_dirty = true;
             expression_bit
         }
     }
@@ -5394,6 +5675,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {expression_statement:?}.");
             self.expression_statement.write().unwrap()[_index] = Some(expression_statement.clone());
+            self.expression_statement_dirty = true;
             expression_statement
         }
     }
@@ -5495,6 +5777,7 @@ impl ObjectStore {
             tracing::debug!(target: "store", "interring {external_implementation:?}.");
             self.external_implementation.write().unwrap()[_index] =
                 Some(external_implementation.clone());
+            self.external_implementation_dirty = true;
             external_implementation
         }
     }
@@ -5583,6 +5866,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {field:?}.");
             self.field.write().unwrap()[_index] = Some(field.clone());
+            self.field_dirty = true;
             field
         };
         self.field_id_by_name.write().unwrap().insert(
@@ -5677,6 +5961,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {field_access:?}.");
             self.field_access.write().unwrap()[_index] = Some(field_access.clone());
+            self.field_access_dirty = true;
             field_access
         }
     }
@@ -5766,6 +6051,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {field_access_target:?}.");
             self.field_access_target.write().unwrap()[_index] = Some(field_access_target.clone());
+            self.field_access_target_dirty = true;
             field_access_target
         }
     }
@@ -5849,6 +6135,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {field_expression:?}.");
             self.field_expression.write().unwrap()[_index] = Some(field_expression.clone());
+            self.field_expression_dirty = true;
             field_expression
         }
     }
@@ -5930,6 +6217,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {float_literal:?}.");
             self.float_literal.write().unwrap()[_index] = Some(float_literal.clone());
+            self.float_literal_dirty = true;
             float_literal
         }
     }
@@ -6007,6 +6295,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {for_loop:?}.");
             self.for_loop.write().unwrap()[_index] = Some(for_loop.clone());
+            self.for_loop_dirty = true;
             for_loop
         }
     }
@@ -6085,6 +6374,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {format_bit:?}.");
             self.format_bit.write().unwrap()[_index] = Some(format_bit.clone());
+            self.format_bit_dirty = true;
             format_bit
         }
     }
@@ -6163,6 +6453,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {format_string:?}.");
             self.format_string.write().unwrap()[_index] = Some(format_string.clone());
+            self.format_string_dirty = true;
             format_string
         }
     }
@@ -6241,6 +6532,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {func_generic:?}.");
             self.func_generic.write().unwrap()[_index] = Some(func_generic.clone());
+            self.func_generic_dirty = true;
             func_generic
         }
     }
@@ -6318,6 +6610,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {function:?}.");
             self.function.write().unwrap()[_index] = Some(function.clone());
+            self.function_dirty = true;
             function
         };
         self.function_id_by_name.write().unwrap().insert(
@@ -6412,6 +6705,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {function_call:?}.");
             self.function_call.write().unwrap()[_index] = Some(function_call.clone());
+            self.function_call_dirty = true;
             function_call
         }
     }
@@ -6489,6 +6783,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {x_future:?}.");
             self.x_future.write().unwrap()[_index] = Some(x_future.clone());
+            self.x_future_dirty = true;
             x_future
         }
     }
@@ -6566,6 +6861,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {grouped:?}.");
             self.grouped.write().unwrap()[_index] = Some(grouped.clone());
+            self.grouped_dirty = true;
             grouped
         }
     }
@@ -6655,6 +6951,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {halt_and_catch_fire:?}.");
             self.halt_and_catch_fire.write().unwrap()[_index] = Some(halt_and_catch_fire.clone());
+            self.halt_and_catch_fire_dirty = true;
             halt_and_catch_fire
         }
     }
@@ -6737,6 +7034,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {x_if:?}.");
             self.x_if.write().unwrap()[_index] = Some(x_if.clone());
+            self.x_if_dirty = true;
             x_if
         }
     }
@@ -6826,6 +7124,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {implementation_block:?}.");
             self.implementation_block.write().unwrap()[_index] = Some(implementation_block.clone());
+            self.implementation_block_dirty = true;
             implementation_block
         }
     }
@@ -6914,6 +7213,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {import:?}.");
             self.import.write().unwrap()[_index] = Some(import.clone());
+            self.import_dirty = true;
             import
         }
     }
@@ -6991,6 +7291,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {index:?}.");
             self.index.write().unwrap()[_index] = Some(index.clone());
+            self.index_dirty = true;
             index
         }
     }
@@ -7069,6 +7370,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {integer_literal:?}.");
             self.integer_literal.write().unwrap()[_index] = Some(integer_literal.clone());
+            self.integer_literal_dirty = true;
             integer_literal
         }
     }
@@ -7146,6 +7448,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {item:?}.");
             self.item.write().unwrap()[_index] = Some(item.clone());
+            self.item_dirty = true;
             item
         }
     }
@@ -7223,6 +7526,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {lambda:?}.");
             self.lambda.write().unwrap()[_index] = Some(lambda.clone());
+            self.lambda_dirty = true;
             lambda
         }
     }
@@ -7301,6 +7605,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {lambda_parameter:?}.");
             self.lambda_parameter.write().unwrap()[_index] = Some(lambda_parameter.clone());
+            self.lambda_parameter_dirty = true;
             lambda_parameter
         }
     }
@@ -7382,6 +7687,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {let_statement:?}.");
             self.let_statement.write().unwrap()[_index] = Some(let_statement.clone());
+            self.let_statement_dirty = true;
             let_statement
         }
     }
@@ -7459,6 +7765,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {list:?}.");
             self.list.write().unwrap()[_index] = Some(list.clone());
+            self.list_dirty = true;
             list
         }
     }
@@ -7537,6 +7844,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {list_element:?}.");
             self.list_element.write().unwrap()[_index] = Some(list_element.clone());
+            self.list_element_dirty = true;
             list_element
         }
     }
@@ -7615,6 +7923,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {list_expression:?}.");
             self.list_expression.write().unwrap()[_index] = Some(list_expression.clone());
+            self.list_expression_dirty = true;
             list_expression
         }
     }
@@ -7692,6 +8001,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {literal:?}.");
             self.literal.write().unwrap()[_index] = Some(literal.clone());
+            self.literal_dirty = true;
             literal
         }
     }
@@ -7770,6 +8080,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {local_variable:?}.");
             self.local_variable.write().unwrap()[_index] = Some(local_variable.clone());
+            self.local_variable_dirty = true;
             local_variable
         }
     }
@@ -7847,6 +8158,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {x_macro:?}.");
             self.x_macro.write().unwrap()[_index] = Some(x_macro.clone());
+            self.x_macro_dirty = true;
             x_macro
         }
     }
@@ -7924,6 +8236,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {map:?}.");
             self.map.write().unwrap()[_index] = Some(map.clone());
+            self.map_dirty = true;
             map
         }
     }
@@ -8002,6 +8315,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {map_element:?}.");
             self.map_element.write().unwrap()[_index] = Some(map_element.clone());
+            self.map_element_dirty = true;
             map_element
         }
     }
@@ -8080,6 +8394,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {map_expression:?}.");
             self.map_expression.write().unwrap()[_index] = Some(map_expression.clone());
+            self.map_expression_dirty = true;
             map_expression
         }
     }
@@ -8157,6 +8472,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {x_match:?}.");
             self.x_match.write().unwrap()[_index] = Some(x_match.clone());
+            self.x_match_dirty = true;
             x_match
         }
     }
@@ -8235,6 +8551,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {method_call:?}.");
             self.method_call.write().unwrap()[_index] = Some(method_call.clone());
+            self.method_call_dirty = true;
             method_call
         }
     }
@@ -8325,6 +8642,7 @@ impl ObjectStore {
             tracing::debug!(target: "store", "interring {named_field_expression:?}.");
             self.named_field_expression.write().unwrap()[_index] =
                 Some(named_field_expression.clone());
+            self.named_field_expression_dirty = true;
             named_field_expression
         }
     }
@@ -8414,6 +8732,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {z_object_store:?}.");
             self.z_object_store.write().unwrap()[_index] = Some(z_object_store.clone());
+            self.z_object_store_dirty = true;
             z_object_store
         };
         self.z_object_store_id_by_name.write().unwrap().insert(
@@ -8508,6 +8827,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {object_wrapper:?}.");
             self.object_wrapper.write().unwrap()[_index] = Some(object_wrapper.clone());
+            self.object_wrapper_dirty = true;
             object_wrapper
         }
     }
@@ -8585,6 +8905,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {operator:?}.");
             self.operator.write().unwrap()[_index] = Some(operator.clone());
+            self.operator_dirty = true;
             operator
         }
     }
@@ -8662,6 +8983,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {parameter:?}.");
             self.parameter.write().unwrap()[_index] = Some(parameter.clone());
+            self.parameter_dirty = true;
             parameter
         }
     }
@@ -8739,6 +9061,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {x_path:?}.");
             self.x_path.write().unwrap()[_index] = Some(x_path.clone());
+            self.x_path_dirty = true;
             x_path
         }
     }
@@ -8817,6 +9140,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {path_element:?}.");
             self.path_element.write().unwrap()[_index] = Some(path_element.clone());
+            self.path_element_dirty = true;
             path_element
         }
     }
@@ -8894,6 +9218,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {pattern:?}.");
             self.pattern.write().unwrap()[_index] = Some(pattern.clone());
+            self.pattern_dirty = true;
             pattern
         }
     }
@@ -8971,6 +9296,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {x_plugin:?}.");
             self.x_plugin.write().unwrap()[_index] = Some(x_plugin.clone());
+            self.x_plugin_dirty = true;
             x_plugin
         };
         self.x_plugin_id_by_name.write().unwrap().insert(
@@ -9064,6 +9390,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {x_print:?}.");
             self.x_print.write().unwrap()[_index] = Some(x_print.clone());
+            self.x_print_dirty = true;
             x_print
         }
     }
@@ -9142,6 +9469,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {range_expression:?}.");
             self.range_expression.write().unwrap()[_index] = Some(range_expression.clone());
+            self.range_expression_dirty = true;
             range_expression
         }
     }
@@ -9223,6 +9551,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {result_statement:?}.");
             self.result_statement.write().unwrap()[_index] = Some(result_statement.clone());
+            self.result_statement_dirty = true;
             result_statement
         }
     }
@@ -9303,6 +9632,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {x_return:?}.");
             self.x_return.write().unwrap()[_index] = Some(x_return.clone());
+            self.x_return_dirty = true;
             x_return
         }
     }
@@ -9380,6 +9710,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {span:?}.");
             self.span.write().unwrap()[_index] = Some(span.clone());
+            self.span_dirty = true;
             span
         }
     }
@@ -9457,6 +9788,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {statement:?}.");
             self.statement.write().unwrap()[_index] = Some(statement.clone());
+            self.statement_dirty = true;
             statement
         }
     }
@@ -9545,6 +9877,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {static_method_call:?}.");
             self.static_method_call.write().unwrap()[_index] = Some(static_method_call.clone());
+            self.static_method_call_dirty = true;
             static_method_call
         }
     }
@@ -9628,6 +9961,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {string_bit:?}.");
             self.string_bit.write().unwrap()[_index] = Some(string_bit.clone());
+            self.string_bit_dirty = true;
             string_bit
         }
     }
@@ -9706,6 +10040,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {string_literal:?}.");
             self.string_literal.write().unwrap()[_index] = Some(string_literal.clone());
+            self.string_literal_dirty = true;
             string_literal
         }
     }
@@ -9784,6 +10119,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {woog_struct:?}.");
             self.woog_struct.write().unwrap()[_index] = Some(woog_struct.clone());
+            self.woog_struct_dirty = true;
             woog_struct
         };
         self.woog_struct_id_by_name.write().unwrap().insert(
@@ -9888,6 +10224,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {struct_expression:?}.");
             self.struct_expression.write().unwrap()[_index] = Some(struct_expression.clone());
+            self.struct_expression_dirty = true;
             struct_expression
         }
     }
@@ -9971,6 +10308,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {struct_field:?}.");
             self.struct_field.write().unwrap()[_index] = Some(struct_field.clone());
+            self.struct_field_dirty = true;
             struct_field
         }
     }
@@ -10049,6 +10387,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {struct_generic:?}.");
             self.struct_generic.write().unwrap()[_index] = Some(struct_generic.clone());
+            self.struct_generic_dirty = true;
             struct_generic
         }
     }
@@ -10127,6 +10466,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {tuple_field:?}.");
             self.tuple_field.write().unwrap()[_index] = Some(tuple_field.clone());
+            self.tuple_field_dirty = true;
             tuple_field
         }
     }
@@ -10204,6 +10544,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {type_cast:?}.");
             self.type_cast.write().unwrap()[_index] = Some(type_cast.clone());
+            self.type_cast_dirty = true;
             type_cast
         }
     }
@@ -10281,6 +10622,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {unary:?}.");
             self.unary.write().unwrap()[_index] = Some(unary.clone());
+            self.unary_dirty = true;
             unary
         }
     }
@@ -10358,6 +10700,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {unit:?}.");
             self.unit.write().unwrap()[_index] = Some(unit.clone());
+            self.unit_dirty = true;
             unit
         }
     }
@@ -10452,6 +10795,7 @@ impl ObjectStore {
             tracing::debug!(target: "store", "interring {unnamed_field_expression:?}.");
             self.unnamed_field_expression.write().unwrap()[_index] =
                 Some(unnamed_field_expression.clone());
+            self.unnamed_field_expression_dirty = true;
             unnamed_field_expression
         }
     }
@@ -10540,6 +10884,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {x_value:?}.");
             self.x_value.write().unwrap()[_index] = Some(x_value.clone());
+            self.x_value_dirty = true;
             x_value
         }
     }
@@ -10618,6 +10963,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {value_type:?}.");
             self.value_type.write().unwrap()[_index] = Some(value_type.clone());
+            self.value_type_dirty = true;
             value_type
         }
     }
@@ -10695,6 +11041,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {variable:?}.");
             self.variable.write().unwrap()[_index] = Some(variable.clone());
+            self.variable_dirty = true;
             variable
         }
     }
@@ -10784,6 +11131,7 @@ impl ObjectStore {
         } else {
             tracing::debug!(target: "store", "interring {variable_expression:?}.");
             self.variable_expression.write().unwrap()[_index] = Some(variable_expression.clone());
+            self.variable_expression_dirty = true;
             variable_expression
         }
     }
