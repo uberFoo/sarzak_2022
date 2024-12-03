@@ -101,7 +101,6 @@ use std::{
     path::Path,
 };
 
-use heck::ToUpperCamelCase;
 use rustc_hash::FxHashMap as HashMap;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -121,7 +120,7 @@ use crate::v2::lu_dog_rwlock::types::{
     XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn, XValue, ZObjectStore,
 };
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct ObjectStore {
     argument: Arc<RwLock<HashMap<Uuid, Arc<RwLock<Argument>>>>>,
     a_wait: Arc<RwLock<HashMap<Uuid, Arc<RwLock<AWait>>>>>,
@@ -216,6 +215,127 @@ pub struct ObjectStore {
     variable_expression: Arc<RwLock<HashMap<Uuid, Arc<RwLock<VariableExpression>>>>>,
 }
 
+impl Clone for ObjectStore {
+    fn clone(&self) -> Self {
+        ObjectStore {
+            argument: Arc::new(RwLock::new(self.argument.read().unwrap().clone())),
+            a_wait: Arc::new(RwLock::new(self.a_wait.read().unwrap().clone())),
+            binary: Arc::new(RwLock::new(self.binary.read().unwrap().clone())),
+            block: Arc::new(RwLock::new(self.block.read().unwrap().clone())),
+            body: Arc::new(RwLock::new(self.body.read().unwrap().clone())),
+            boolean_literal: Arc::new(RwLock::new(self.boolean_literal.read().unwrap().clone())),
+            boolean_operator: Arc::new(RwLock::new(self.boolean_operator.read().unwrap().clone())),
+            call: Arc::new(RwLock::new(self.call.read().unwrap().clone())),
+            char_literal: Arc::new(RwLock::new(self.char_literal.read().unwrap().clone())),
+            comparison: Arc::new(RwLock::new(self.comparison.read().unwrap().clone())),
+            data_structure: Arc::new(RwLock::new(self.data_structure.read().unwrap().clone())),
+            dwarf_source_file: Arc::new(RwLock::new(
+                self.dwarf_source_file.read().unwrap().clone(),
+            )),
+            enum_field: Arc::new(RwLock::new(self.enum_field.read().unwrap().clone())),
+            enum_generic: Arc::new(RwLock::new(self.enum_generic.read().unwrap().clone())),
+            enum_generic_type: Arc::new(RwLock::new(
+                self.enum_generic_type.read().unwrap().clone(),
+            )),
+            enumeration: Arc::new(RwLock::new(self.enumeration.read().unwrap().clone())),
+            enumeration_id_by_name: self.enumeration_id_by_name.clone(),
+            expression: Arc::new(RwLock::new(self.expression.read().unwrap().clone())),
+            expression_bit: Arc::new(RwLock::new(self.expression_bit.read().unwrap().clone())),
+            expression_statement: Arc::new(RwLock::new(
+                self.expression_statement.read().unwrap().clone(),
+            )),
+            external_implementation: Arc::new(RwLock::new(
+                self.external_implementation.read().unwrap().clone(),
+            )),
+            field: Arc::new(RwLock::new(self.field.read().unwrap().clone())),
+            field_id_by_name: self.field_id_by_name.clone(),
+            field_access: Arc::new(RwLock::new(self.field_access.read().unwrap().clone())),
+            field_access_target: Arc::new(RwLock::new(
+                self.field_access_target.read().unwrap().clone(),
+            )),
+            field_expression: Arc::new(RwLock::new(self.field_expression.read().unwrap().clone())),
+            float_literal: Arc::new(RwLock::new(self.float_literal.read().unwrap().clone())),
+            for_loop: Arc::new(RwLock::new(self.for_loop.read().unwrap().clone())),
+            format_bit: Arc::new(RwLock::new(self.format_bit.read().unwrap().clone())),
+            format_string: Arc::new(RwLock::new(self.format_string.read().unwrap().clone())),
+            func_generic: Arc::new(RwLock::new(self.func_generic.read().unwrap().clone())),
+            function: Arc::new(RwLock::new(self.function.read().unwrap().clone())),
+            function_id_by_name: self.function_id_by_name.clone(),
+            function_call: Arc::new(RwLock::new(self.function_call.read().unwrap().clone())),
+            x_future: Arc::new(RwLock::new(self.x_future.read().unwrap().clone())),
+            grouped: Arc::new(RwLock::new(self.grouped.read().unwrap().clone())),
+            halt_and_catch_fire: Arc::new(RwLock::new(
+                self.halt_and_catch_fire.read().unwrap().clone(),
+            )),
+            x_if: Arc::new(RwLock::new(self.x_if.read().unwrap().clone())),
+            implementation_block: Arc::new(RwLock::new(
+                self.implementation_block.read().unwrap().clone(),
+            )),
+            import: Arc::new(RwLock::new(self.import.read().unwrap().clone())),
+            index: Arc::new(RwLock::new(self.index.read().unwrap().clone())),
+            integer_literal: Arc::new(RwLock::new(self.integer_literal.read().unwrap().clone())),
+            item: Arc::new(RwLock::new(self.item.read().unwrap().clone())),
+            lambda: Arc::new(RwLock::new(self.lambda.read().unwrap().clone())),
+            lambda_parameter: Arc::new(RwLock::new(self.lambda_parameter.read().unwrap().clone())),
+            let_statement: Arc::new(RwLock::new(self.let_statement.read().unwrap().clone())),
+            list: Arc::new(RwLock::new(self.list.read().unwrap().clone())),
+            list_element: Arc::new(RwLock::new(self.list_element.read().unwrap().clone())),
+            list_expression: Arc::new(RwLock::new(self.list_expression.read().unwrap().clone())),
+            literal: Arc::new(RwLock::new(self.literal.read().unwrap().clone())),
+            local_variable: Arc::new(RwLock::new(self.local_variable.read().unwrap().clone())),
+            x_macro: Arc::new(RwLock::new(self.x_macro.read().unwrap().clone())),
+            map: Arc::new(RwLock::new(self.map.read().unwrap().clone())),
+            map_element: Arc::new(RwLock::new(self.map_element.read().unwrap().clone())),
+            map_expression: Arc::new(RwLock::new(self.map_expression.read().unwrap().clone())),
+            x_match: Arc::new(RwLock::new(self.x_match.read().unwrap().clone())),
+            method_call: Arc::new(RwLock::new(self.method_call.read().unwrap().clone())),
+            named_field_expression: Arc::new(RwLock::new(
+                self.named_field_expression.read().unwrap().clone(),
+            )),
+            z_object_store: Arc::new(RwLock::new(self.z_object_store.read().unwrap().clone())),
+            z_object_store_id_by_name: self.z_object_store_id_by_name.clone(),
+            object_wrapper: Arc::new(RwLock::new(self.object_wrapper.read().unwrap().clone())),
+            operator: Arc::new(RwLock::new(self.operator.read().unwrap().clone())),
+            parameter: Arc::new(RwLock::new(self.parameter.read().unwrap().clone())),
+            x_path: Arc::new(RwLock::new(self.x_path.read().unwrap().clone())),
+            path_element: Arc::new(RwLock::new(self.path_element.read().unwrap().clone())),
+            pattern: Arc::new(RwLock::new(self.pattern.read().unwrap().clone())),
+            x_plugin: Arc::new(RwLock::new(self.x_plugin.read().unwrap().clone())),
+            x_plugin_id_by_name: self.x_plugin_id_by_name.clone(),
+            x_print: Arc::new(RwLock::new(self.x_print.read().unwrap().clone())),
+            range_expression: Arc::new(RwLock::new(self.range_expression.read().unwrap().clone())),
+            result_statement: Arc::new(RwLock::new(self.result_statement.read().unwrap().clone())),
+            x_return: Arc::new(RwLock::new(self.x_return.read().unwrap().clone())),
+            span: Arc::new(RwLock::new(self.span.read().unwrap().clone())),
+            statement: Arc::new(RwLock::new(self.statement.read().unwrap().clone())),
+            static_method_call: Arc::new(RwLock::new(
+                self.static_method_call.read().unwrap().clone(),
+            )),
+            string_bit: Arc::new(RwLock::new(self.string_bit.read().unwrap().clone())),
+            string_literal: Arc::new(RwLock::new(self.string_literal.read().unwrap().clone())),
+            woog_struct: Arc::new(RwLock::new(self.woog_struct.read().unwrap().clone())),
+            woog_struct_id_by_name: self.woog_struct_id_by_name.clone(),
+            struct_expression: Arc::new(RwLock::new(
+                self.struct_expression.read().unwrap().clone(),
+            )),
+            struct_field: Arc::new(RwLock::new(self.struct_field.read().unwrap().clone())),
+            struct_generic: Arc::new(RwLock::new(self.struct_generic.read().unwrap().clone())),
+            tuple_field: Arc::new(RwLock::new(self.tuple_field.read().unwrap().clone())),
+            type_cast: Arc::new(RwLock::new(self.type_cast.read().unwrap().clone())),
+            unary: Arc::new(RwLock::new(self.unary.read().unwrap().clone())),
+            unit: Arc::new(RwLock::new(self.unit.read().unwrap().clone())),
+            unnamed_field_expression: Arc::new(RwLock::new(
+                self.unnamed_field_expression.read().unwrap().clone(),
+            )),
+            x_value: Arc::new(RwLock::new(self.x_value.read().unwrap().clone())),
+            value_type: Arc::new(RwLock::new(self.value_type.read().unwrap().clone())),
+            variable: Arc::new(RwLock::new(self.variable.read().unwrap().clone())),
+            variable_expression: Arc::new(RwLock::new(
+                self.variable_expression.read().unwrap().clone(),
+            )),
+        }
+    }
+}
 impl ObjectStore {
     pub fn new() -> Self {
         let store = Self {
@@ -320,6 +440,736 @@ impl ObjectStore {
         store
     }
 
+    pub fn merge(&mut self, other: &ObjectStore) {
+        self.argument.write().unwrap().extend(
+            other
+                .argument
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.a_wait.write().unwrap().extend(
+            other
+                .a_wait
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.binary.write().unwrap().extend(
+            other
+                .binary
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.block.write().unwrap().extend(
+            other
+                .block
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.body.write().unwrap().extend(
+            other
+                .body
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.boolean_literal.write().unwrap().extend(
+            other
+                .boolean_literal
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.boolean_operator.write().unwrap().extend(
+            other
+                .boolean_operator
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.call.write().unwrap().extend(
+            other
+                .call
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.char_literal.write().unwrap().extend(
+            other
+                .char_literal
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.comparison.write().unwrap().extend(
+            other
+                .comparison
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.data_structure.write().unwrap().extend(
+            other
+                .data_structure
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.dwarf_source_file.write().unwrap().extend(
+            other
+                .dwarf_source_file
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.enum_field.write().unwrap().extend(
+            other
+                .enum_field
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.enum_generic.write().unwrap().extend(
+            other
+                .enum_generic
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.enum_generic_type.write().unwrap().extend(
+            other
+                .enum_generic_type
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.enumeration.write().unwrap().extend(
+            other
+                .enumeration
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.enumeration_id_by_name.write().unwrap().extend(
+            other
+                .enumeration_id_by_name
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (k.clone(), v.clone())),
+        );
+        self.expression.write().unwrap().extend(
+            other
+                .expression
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.expression_bit.write().unwrap().extend(
+            other
+                .expression_bit
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.expression_statement.write().unwrap().extend(
+            other
+                .expression_statement
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.external_implementation.write().unwrap().extend(
+            other
+                .external_implementation
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.field.write().unwrap().extend(
+            other
+                .field
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.field_id_by_name.write().unwrap().extend(
+            other
+                .field_id_by_name
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (k.clone(), v.clone())),
+        );
+        self.field_access.write().unwrap().extend(
+            other
+                .field_access
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.field_access_target.write().unwrap().extend(
+            other
+                .field_access_target
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.field_expression.write().unwrap().extend(
+            other
+                .field_expression
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.float_literal.write().unwrap().extend(
+            other
+                .float_literal
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.for_loop.write().unwrap().extend(
+            other
+                .for_loop
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.format_bit.write().unwrap().extend(
+            other
+                .format_bit
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.format_string.write().unwrap().extend(
+            other
+                .format_string
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.func_generic.write().unwrap().extend(
+            other
+                .func_generic
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.function.write().unwrap().extend(
+            other
+                .function
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.function_id_by_name.write().unwrap().extend(
+            other
+                .function_id_by_name
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (k.clone(), v.clone())),
+        );
+        self.function_call.write().unwrap().extend(
+            other
+                .function_call
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.x_future.write().unwrap().extend(
+            other
+                .x_future
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.grouped.write().unwrap().extend(
+            other
+                .grouped
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.halt_and_catch_fire.write().unwrap().extend(
+            other
+                .halt_and_catch_fire
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.x_if.write().unwrap().extend(
+            other
+                .x_if
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.implementation_block.write().unwrap().extend(
+            other
+                .implementation_block
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.import.write().unwrap().extend(
+            other
+                .import
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.index.write().unwrap().extend(
+            other
+                .index
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.integer_literal.write().unwrap().extend(
+            other
+                .integer_literal
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.item.write().unwrap().extend(
+            other
+                .item
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.lambda.write().unwrap().extend(
+            other
+                .lambda
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.lambda_parameter.write().unwrap().extend(
+            other
+                .lambda_parameter
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.let_statement.write().unwrap().extend(
+            other
+                .let_statement
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.list.write().unwrap().extend(
+            other
+                .list
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.list_element.write().unwrap().extend(
+            other
+                .list_element
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.list_expression.write().unwrap().extend(
+            other
+                .list_expression
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.literal.write().unwrap().extend(
+            other
+                .literal
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.local_variable.write().unwrap().extend(
+            other
+                .local_variable
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.x_macro.write().unwrap().extend(
+            other
+                .x_macro
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.map.write().unwrap().extend(
+            other
+                .map
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.map_element.write().unwrap().extend(
+            other
+                .map_element
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.map_expression.write().unwrap().extend(
+            other
+                .map_expression
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.x_match.write().unwrap().extend(
+            other
+                .x_match
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.method_call.write().unwrap().extend(
+            other
+                .method_call
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.named_field_expression.write().unwrap().extend(
+            other
+                .named_field_expression
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.z_object_store.write().unwrap().extend(
+            other
+                .z_object_store
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.z_object_store_id_by_name.write().unwrap().extend(
+            other
+                .z_object_store_id_by_name
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (k.clone(), v.clone())),
+        );
+        self.object_wrapper.write().unwrap().extend(
+            other
+                .object_wrapper
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.operator.write().unwrap().extend(
+            other
+                .operator
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.parameter.write().unwrap().extend(
+            other
+                .parameter
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.x_path.write().unwrap().extend(
+            other
+                .x_path
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.path_element.write().unwrap().extend(
+            other
+                .path_element
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.pattern.write().unwrap().extend(
+            other
+                .pattern
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.x_plugin.write().unwrap().extend(
+            other
+                .x_plugin
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.x_plugin_id_by_name.write().unwrap().extend(
+            other
+                .x_plugin_id_by_name
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (k.clone(), v.clone())),
+        );
+        self.x_print.write().unwrap().extend(
+            other
+                .x_print
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.range_expression.write().unwrap().extend(
+            other
+                .range_expression
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.result_statement.write().unwrap().extend(
+            other
+                .result_statement
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.x_return.write().unwrap().extend(
+            other
+                .x_return
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.span.write().unwrap().extend(
+            other
+                .span
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.statement.write().unwrap().extend(
+            other
+                .statement
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.static_method_call.write().unwrap().extend(
+            other
+                .static_method_call
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.string_bit.write().unwrap().extend(
+            other
+                .string_bit
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.string_literal.write().unwrap().extend(
+            other
+                .string_literal
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.woog_struct.write().unwrap().extend(
+            other
+                .woog_struct
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.woog_struct_id_by_name.write().unwrap().extend(
+            other
+                .woog_struct_id_by_name
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (k.clone(), v.clone())),
+        );
+        self.struct_expression.write().unwrap().extend(
+            other
+                .struct_expression
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.struct_field.write().unwrap().extend(
+            other
+                .struct_field
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.struct_generic.write().unwrap().extend(
+            other
+                .struct_generic
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.tuple_field.write().unwrap().extend(
+            other
+                .tuple_field
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.type_cast.write().unwrap().extend(
+            other
+                .type_cast
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.unary.write().unwrap().extend(
+            other
+                .unary
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.unit.write().unwrap().extend(
+            other
+                .unit
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.unnamed_field_expression.write().unwrap().extend(
+            other
+                .unnamed_field_expression
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.x_value.write().unwrap().extend(
+            other
+                .x_value
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.value_type.write().unwrap().extend(
+            other
+                .value_type
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.variable.write().unwrap().extend(
+            other
+                .variable
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.variable_expression.write().unwrap().extend(
+            other
+                .variable_expression
+                .read()
+                .unwrap()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+    }
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"v2::lu_dog_rwlock-object-store-methods"}}}
     /// Inter (insert) [`Argument`] into the store.
     ///
@@ -975,7 +1825,7 @@ impl ObjectStore {
         self.enumeration_id_by_name
             .write()
             .unwrap()
-            .insert(read.name.to_upper_camel_case(), read.id);
+            .insert(read.name.clone(), read.id);
         self.enumeration
             .write()
             .unwrap()
@@ -1231,7 +2081,7 @@ impl ObjectStore {
         self.field_id_by_name
             .write()
             .unwrap()
-            .insert(read.name.to_upper_camel_case(), read.id);
+            .insert(read.name.clone(), read.id);
         self.field.write().unwrap().insert(read.id, field.clone());
     }
 
@@ -1646,7 +2496,7 @@ impl ObjectStore {
         self.function_id_by_name
             .write()
             .unwrap()
-            .insert(read.name.to_upper_camel_case(), read.id);
+            .insert(read.name.clone(), read.id);
         self.function
             .write()
             .unwrap()
@@ -2793,7 +3643,7 @@ impl ObjectStore {
         self.z_object_store_id_by_name
             .write()
             .unwrap()
-            .insert(read.name.to_upper_camel_case(), read.id);
+            .insert(read.name.clone(), read.id);
         self.z_object_store
             .write()
             .unwrap()
@@ -3112,7 +3962,7 @@ impl ObjectStore {
         self.x_plugin_id_by_name
             .write()
             .unwrap()
-            .insert(read.name.to_upper_camel_case(), read.id);
+            .insert(read.name.clone(), read.id);
         self.x_plugin
             .write()
             .unwrap()
@@ -3564,7 +4414,7 @@ impl ObjectStore {
         self.woog_struct_id_by_name
             .write()
             .unwrap()
-            .insert(read.name.to_upper_camel_case(), read.id);
+            .insert(read.name.clone(), read.id);
         self.woog_struct
             .write()
             .unwrap()
@@ -5520,7 +6370,7 @@ impl ObjectStore {
                 let reader = io::BufReader::new(file);
                 let enumeration: Arc<RwLock<Enumeration>> = serde_json::from_reader(reader)?;
                 store.enumeration_id_by_name.write().unwrap().insert(
-                    enumeration.read().unwrap().name.to_upper_camel_case(),
+                    enumeration.read().unwrap().name.clone(),
                     enumeration.read().unwrap().id,
                 );
                 store
@@ -5613,10 +6463,11 @@ impl ObjectStore {
                 let file = fs::File::open(path)?;
                 let reader = io::BufReader::new(file);
                 let field: Arc<RwLock<Field>> = serde_json::from_reader(reader)?;
-                store.field_id_by_name.write().unwrap().insert(
-                    field.read().unwrap().name.to_upper_camel_case(),
-                    field.read().unwrap().id,
-                );
+                store
+                    .field_id_by_name
+                    .write()
+                    .unwrap()
+                    .insert(field.read().unwrap().name.clone(), field.read().unwrap().id);
                 store
                     .field
                     .write()
@@ -5780,7 +6631,7 @@ impl ObjectStore {
                 let reader = io::BufReader::new(file);
                 let function: Arc<RwLock<Function>> = serde_json::from_reader(reader)?;
                 store.function_id_by_name.write().unwrap().insert(
-                    function.read().unwrap().name.to_upper_camel_case(),
+                    function.read().unwrap().name.clone(),
                     function.read().unwrap().id,
                 );
                 store
@@ -6252,7 +7103,7 @@ impl ObjectStore {
                 let reader = io::BufReader::new(file);
                 let z_object_store: Arc<RwLock<ZObjectStore>> = serde_json::from_reader(reader)?;
                 store.z_object_store_id_by_name.write().unwrap().insert(
-                    z_object_store.read().unwrap().name.to_upper_camel_case(),
+                    z_object_store.read().unwrap().name.clone(),
                     z_object_store.read().unwrap().id,
                 );
                 store
@@ -6382,7 +7233,7 @@ impl ObjectStore {
                 let reader = io::BufReader::new(file);
                 let x_plugin: Arc<RwLock<XPlugin>> = serde_json::from_reader(reader)?;
                 store.x_plugin_id_by_name.write().unwrap().insert(
-                    x_plugin.read().unwrap().name.to_upper_camel_case(),
+                    x_plugin.read().unwrap().name.clone(),
                     x_plugin.read().unwrap().id,
                 );
                 store
@@ -6566,7 +7417,7 @@ impl ObjectStore {
                 let reader = io::BufReader::new(file);
                 let woog_struct: Arc<RwLock<WoogStruct>> = serde_json::from_reader(reader)?;
                 store.woog_struct_id_by_name.write().unwrap().insert(
-                    woog_struct.read().unwrap().name.to_upper_camel_case(),
+                    woog_struct.read().unwrap().name.clone(),
                     woog_struct.read().unwrap().id,
                 );
                 store

@@ -101,7 +101,6 @@ use std::{
     path::Path,
 };
 
-use heck::ToUpperCamelCase;
 use rustc_hash::FxHashMap as HashMap;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -121,7 +120,7 @@ use crate::v2::lu_dog::types::{
     XFuture, XIf, XMacro, XMatch, XPath, XPlugin, XPrint, XReturn, XValue, ZObjectStore,
 };
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct ObjectStore {
     argument: Rc<RefCell<HashMap<Uuid, Rc<RefCell<Argument>>>>>,
     a_wait: Rc<RefCell<HashMap<Uuid, Rc<RefCell<AWait>>>>>,
@@ -216,6 +215,115 @@ pub struct ObjectStore {
     variable_expression: Rc<RefCell<HashMap<Uuid, Rc<RefCell<VariableExpression>>>>>,
 }
 
+impl Clone for ObjectStore {
+    fn clone(&self) -> Self {
+        ObjectStore {
+            argument: Rc::new(RefCell::new(self.argument.borrow().clone())),
+            a_wait: Rc::new(RefCell::new(self.a_wait.borrow().clone())),
+            binary: Rc::new(RefCell::new(self.binary.borrow().clone())),
+            block: Rc::new(RefCell::new(self.block.borrow().clone())),
+            body: Rc::new(RefCell::new(self.body.borrow().clone())),
+            boolean_literal: Rc::new(RefCell::new(self.boolean_literal.borrow().clone())),
+            boolean_operator: Rc::new(RefCell::new(self.boolean_operator.borrow().clone())),
+            call: Rc::new(RefCell::new(self.call.borrow().clone())),
+            char_literal: Rc::new(RefCell::new(self.char_literal.borrow().clone())),
+            comparison: Rc::new(RefCell::new(self.comparison.borrow().clone())),
+            data_structure: Rc::new(RefCell::new(self.data_structure.borrow().clone())),
+            dwarf_source_file: Rc::new(RefCell::new(self.dwarf_source_file.borrow().clone())),
+            enum_field: Rc::new(RefCell::new(self.enum_field.borrow().clone())),
+            enum_generic: Rc::new(RefCell::new(self.enum_generic.borrow().clone())),
+            enum_generic_type: Rc::new(RefCell::new(self.enum_generic_type.borrow().clone())),
+            enumeration: Rc::new(RefCell::new(self.enumeration.borrow().clone())),
+            enumeration_id_by_name: Rc::new(RefCell::new(
+                self.enumeration_id_by_name.borrow().clone(),
+            )),
+            expression: Rc::new(RefCell::new(self.expression.borrow().clone())),
+            expression_bit: Rc::new(RefCell::new(self.expression_bit.borrow().clone())),
+            expression_statement: Rc::new(RefCell::new(self.expression_statement.borrow().clone())),
+            external_implementation: Rc::new(RefCell::new(
+                self.external_implementation.borrow().clone(),
+            )),
+            field: Rc::new(RefCell::new(self.field.borrow().clone())),
+            field_id_by_name: Rc::new(RefCell::new(self.field_id_by_name.borrow().clone())),
+            field_access: Rc::new(RefCell::new(self.field_access.borrow().clone())),
+            field_access_target: Rc::new(RefCell::new(self.field_access_target.borrow().clone())),
+            field_expression: Rc::new(RefCell::new(self.field_expression.borrow().clone())),
+            float_literal: Rc::new(RefCell::new(self.float_literal.borrow().clone())),
+            for_loop: Rc::new(RefCell::new(self.for_loop.borrow().clone())),
+            format_bit: Rc::new(RefCell::new(self.format_bit.borrow().clone())),
+            format_string: Rc::new(RefCell::new(self.format_string.borrow().clone())),
+            func_generic: Rc::new(RefCell::new(self.func_generic.borrow().clone())),
+            function: Rc::new(RefCell::new(self.function.borrow().clone())),
+            function_id_by_name: Rc::new(RefCell::new(self.function_id_by_name.borrow().clone())),
+            function_call: Rc::new(RefCell::new(self.function_call.borrow().clone())),
+            x_future: Rc::new(RefCell::new(self.x_future.borrow().clone())),
+            grouped: Rc::new(RefCell::new(self.grouped.borrow().clone())),
+            halt_and_catch_fire: Rc::new(RefCell::new(self.halt_and_catch_fire.borrow().clone())),
+            x_if: Rc::new(RefCell::new(self.x_if.borrow().clone())),
+            implementation_block: Rc::new(RefCell::new(self.implementation_block.borrow().clone())),
+            import: Rc::new(RefCell::new(self.import.borrow().clone())),
+            index: Rc::new(RefCell::new(self.index.borrow().clone())),
+            integer_literal: Rc::new(RefCell::new(self.integer_literal.borrow().clone())),
+            item: Rc::new(RefCell::new(self.item.borrow().clone())),
+            lambda: Rc::new(RefCell::new(self.lambda.borrow().clone())),
+            lambda_parameter: Rc::new(RefCell::new(self.lambda_parameter.borrow().clone())),
+            let_statement: Rc::new(RefCell::new(self.let_statement.borrow().clone())),
+            list: Rc::new(RefCell::new(self.list.borrow().clone())),
+            list_element: Rc::new(RefCell::new(self.list_element.borrow().clone())),
+            list_expression: Rc::new(RefCell::new(self.list_expression.borrow().clone())),
+            literal: Rc::new(RefCell::new(self.literal.borrow().clone())),
+            local_variable: Rc::new(RefCell::new(self.local_variable.borrow().clone())),
+            x_macro: Rc::new(RefCell::new(self.x_macro.borrow().clone())),
+            map: Rc::new(RefCell::new(self.map.borrow().clone())),
+            map_element: Rc::new(RefCell::new(self.map_element.borrow().clone())),
+            map_expression: Rc::new(RefCell::new(self.map_expression.borrow().clone())),
+            x_match: Rc::new(RefCell::new(self.x_match.borrow().clone())),
+            method_call: Rc::new(RefCell::new(self.method_call.borrow().clone())),
+            named_field_expression: Rc::new(RefCell::new(
+                self.named_field_expression.borrow().clone(),
+            )),
+            z_object_store: Rc::new(RefCell::new(self.z_object_store.borrow().clone())),
+            z_object_store_id_by_name: Rc::new(RefCell::new(
+                self.z_object_store_id_by_name.borrow().clone(),
+            )),
+            object_wrapper: Rc::new(RefCell::new(self.object_wrapper.borrow().clone())),
+            operator: Rc::new(RefCell::new(self.operator.borrow().clone())),
+            parameter: Rc::new(RefCell::new(self.parameter.borrow().clone())),
+            x_path: Rc::new(RefCell::new(self.x_path.borrow().clone())),
+            path_element: Rc::new(RefCell::new(self.path_element.borrow().clone())),
+            pattern: Rc::new(RefCell::new(self.pattern.borrow().clone())),
+            x_plugin: Rc::new(RefCell::new(self.x_plugin.borrow().clone())),
+            x_plugin_id_by_name: Rc::new(RefCell::new(self.x_plugin_id_by_name.borrow().clone())),
+            x_print: Rc::new(RefCell::new(self.x_print.borrow().clone())),
+            range_expression: Rc::new(RefCell::new(self.range_expression.borrow().clone())),
+            result_statement: Rc::new(RefCell::new(self.result_statement.borrow().clone())),
+            x_return: Rc::new(RefCell::new(self.x_return.borrow().clone())),
+            span: Rc::new(RefCell::new(self.span.borrow().clone())),
+            statement: Rc::new(RefCell::new(self.statement.borrow().clone())),
+            static_method_call: Rc::new(RefCell::new(self.static_method_call.borrow().clone())),
+            string_bit: Rc::new(RefCell::new(self.string_bit.borrow().clone())),
+            string_literal: Rc::new(RefCell::new(self.string_literal.borrow().clone())),
+            woog_struct: Rc::new(RefCell::new(self.woog_struct.borrow().clone())),
+            woog_struct_id_by_name: Rc::new(RefCell::new(
+                self.woog_struct_id_by_name.borrow().clone(),
+            )),
+            struct_expression: Rc::new(RefCell::new(self.struct_expression.borrow().clone())),
+            struct_field: Rc::new(RefCell::new(self.struct_field.borrow().clone())),
+            struct_generic: Rc::new(RefCell::new(self.struct_generic.borrow().clone())),
+            tuple_field: Rc::new(RefCell::new(self.tuple_field.borrow().clone())),
+            type_cast: Rc::new(RefCell::new(self.type_cast.borrow().clone())),
+            unary: Rc::new(RefCell::new(self.unary.borrow().clone())),
+            unit: Rc::new(RefCell::new(self.unit.borrow().clone())),
+            unnamed_field_expression: Rc::new(RefCell::new(
+                self.unnamed_field_expression.borrow().clone(),
+            )),
+            x_value: Rc::new(RefCell::new(self.x_value.borrow().clone())),
+            value_type: Rc::new(RefCell::new(self.value_type.borrow().clone())),
+            variable: Rc::new(RefCell::new(self.variable.borrow().clone())),
+            variable_expression: Rc::new(RefCell::new(self.variable_expression.borrow().clone())),
+        }
+    }
+}
 impl ObjectStore {
     pub fn new() -> Self {
         let store = Self {
@@ -320,6 +428,517 @@ impl ObjectStore {
         store
     }
 
+    pub fn merge(&mut self, other: &ObjectStore) {
+        self.argument
+            .borrow_mut()
+            .extend(other.argument.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.a_wait
+            .borrow_mut()
+            .extend(other.a_wait.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.binary
+            .borrow_mut()
+            .extend(other.binary.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.block
+            .borrow_mut()
+            .extend(other.block.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.body
+            .borrow_mut()
+            .extend(other.body.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.boolean_literal.borrow_mut().extend(
+            other
+                .boolean_literal
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.boolean_operator.borrow_mut().extend(
+            other
+                .boolean_operator
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.call
+            .borrow_mut()
+            .extend(other.call.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.char_literal.borrow_mut().extend(
+            other
+                .char_literal
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.comparison.borrow_mut().extend(
+            other
+                .comparison
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.data_structure.borrow_mut().extend(
+            other
+                .data_structure
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.dwarf_source_file.borrow_mut().extend(
+            other
+                .dwarf_source_file
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.enum_field.borrow_mut().extend(
+            other
+                .enum_field
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.enum_generic.borrow_mut().extend(
+            other
+                .enum_generic
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.enum_generic_type.borrow_mut().extend(
+            other
+                .enum_generic_type
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.enumeration.borrow_mut().extend(
+            other
+                .enumeration
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.enumeration_id_by_name.borrow_mut().extend(
+            other
+                .enumeration_id_by_name
+                .borrow()
+                .iter()
+                .map(|(k, v)| (k.clone(), v.clone())),
+        );
+        self.expression.borrow_mut().extend(
+            other
+                .expression
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.expression_bit.borrow_mut().extend(
+            other
+                .expression_bit
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.expression_statement.borrow_mut().extend(
+            other
+                .expression_statement
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.external_implementation.borrow_mut().extend(
+            other
+                .external_implementation
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.field
+            .borrow_mut()
+            .extend(other.field.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.field_id_by_name.borrow_mut().extend(
+            other
+                .field_id_by_name
+                .borrow()
+                .iter()
+                .map(|(k, v)| (k.clone(), v.clone())),
+        );
+        self.field_access.borrow_mut().extend(
+            other
+                .field_access
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.field_access_target.borrow_mut().extend(
+            other
+                .field_access_target
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.field_expression.borrow_mut().extend(
+            other
+                .field_expression
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.float_literal.borrow_mut().extend(
+            other
+                .float_literal
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.for_loop
+            .borrow_mut()
+            .extend(other.for_loop.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.format_bit.borrow_mut().extend(
+            other
+                .format_bit
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.format_string.borrow_mut().extend(
+            other
+                .format_string
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.func_generic.borrow_mut().extend(
+            other
+                .func_generic
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.function
+            .borrow_mut()
+            .extend(other.function.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.function_id_by_name.borrow_mut().extend(
+            other
+                .function_id_by_name
+                .borrow()
+                .iter()
+                .map(|(k, v)| (k.clone(), v.clone())),
+        );
+        self.function_call.borrow_mut().extend(
+            other
+                .function_call
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.x_future
+            .borrow_mut()
+            .extend(other.x_future.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.grouped
+            .borrow_mut()
+            .extend(other.grouped.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.halt_and_catch_fire.borrow_mut().extend(
+            other
+                .halt_and_catch_fire
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.x_if
+            .borrow_mut()
+            .extend(other.x_if.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.implementation_block.borrow_mut().extend(
+            other
+                .implementation_block
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.import
+            .borrow_mut()
+            .extend(other.import.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.index
+            .borrow_mut()
+            .extend(other.index.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.integer_literal.borrow_mut().extend(
+            other
+                .integer_literal
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.item
+            .borrow_mut()
+            .extend(other.item.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.lambda
+            .borrow_mut()
+            .extend(other.lambda.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.lambda_parameter.borrow_mut().extend(
+            other
+                .lambda_parameter
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.let_statement.borrow_mut().extend(
+            other
+                .let_statement
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.list
+            .borrow_mut()
+            .extend(other.list.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.list_element.borrow_mut().extend(
+            other
+                .list_element
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.list_expression.borrow_mut().extend(
+            other
+                .list_expression
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.literal
+            .borrow_mut()
+            .extend(other.literal.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.local_variable.borrow_mut().extend(
+            other
+                .local_variable
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.x_macro
+            .borrow_mut()
+            .extend(other.x_macro.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.map
+            .borrow_mut()
+            .extend(other.map.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.map_element.borrow_mut().extend(
+            other
+                .map_element
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.map_expression.borrow_mut().extend(
+            other
+                .map_expression
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.x_match
+            .borrow_mut()
+            .extend(other.x_match.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.method_call.borrow_mut().extend(
+            other
+                .method_call
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.named_field_expression.borrow_mut().extend(
+            other
+                .named_field_expression
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.z_object_store.borrow_mut().extend(
+            other
+                .z_object_store
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.z_object_store_id_by_name.borrow_mut().extend(
+            other
+                .z_object_store_id_by_name
+                .borrow()
+                .iter()
+                .map(|(k, v)| (k.clone(), v.clone())),
+        );
+        self.object_wrapper.borrow_mut().extend(
+            other
+                .object_wrapper
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.operator
+            .borrow_mut()
+            .extend(other.operator.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.parameter.borrow_mut().extend(
+            other
+                .parameter
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.x_path
+            .borrow_mut()
+            .extend(other.x_path.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.path_element.borrow_mut().extend(
+            other
+                .path_element
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.pattern
+            .borrow_mut()
+            .extend(other.pattern.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.x_plugin
+            .borrow_mut()
+            .extend(other.x_plugin.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.x_plugin_id_by_name.borrow_mut().extend(
+            other
+                .x_plugin_id_by_name
+                .borrow()
+                .iter()
+                .map(|(k, v)| (k.clone(), v.clone())),
+        );
+        self.x_print
+            .borrow_mut()
+            .extend(other.x_print.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.range_expression.borrow_mut().extend(
+            other
+                .range_expression
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.result_statement.borrow_mut().extend(
+            other
+                .result_statement
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.x_return
+            .borrow_mut()
+            .extend(other.x_return.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.span
+            .borrow_mut()
+            .extend(other.span.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.statement.borrow_mut().extend(
+            other
+                .statement
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.static_method_call.borrow_mut().extend(
+            other
+                .static_method_call
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.string_bit.borrow_mut().extend(
+            other
+                .string_bit
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.string_literal.borrow_mut().extend(
+            other
+                .string_literal
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.woog_struct.borrow_mut().extend(
+            other
+                .woog_struct
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.woog_struct_id_by_name.borrow_mut().extend(
+            other
+                .woog_struct_id_by_name
+                .borrow()
+                .iter()
+                .map(|(k, v)| (k.clone(), v.clone())),
+        );
+        self.struct_expression.borrow_mut().extend(
+            other
+                .struct_expression
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.struct_field.borrow_mut().extend(
+            other
+                .struct_field
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.struct_generic.borrow_mut().extend(
+            other
+                .struct_generic
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.tuple_field.borrow_mut().extend(
+            other
+                .tuple_field
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.type_cast.borrow_mut().extend(
+            other
+                .type_cast
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.unary
+            .borrow_mut()
+            .extend(other.unary.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.unit
+            .borrow_mut()
+            .extend(other.unit.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.unnamed_field_expression.borrow_mut().extend(
+            other
+                .unnamed_field_expression
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.x_value
+            .borrow_mut()
+            .extend(other.x_value.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.value_type.borrow_mut().extend(
+            other
+                .value_type
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+        self.variable
+            .borrow_mut()
+            .extend(other.variable.borrow().iter().map(|(k, v)| (*k, v.clone())));
+        self.variable_expression.borrow_mut().extend(
+            other
+                .variable_expression
+                .borrow()
+                .iter()
+                .map(|(k, v)| (*k, v.clone())),
+        );
+    }
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"v2::lu_dog-object-store-methods"}}}
     /// Inter (insert) [`Argument`] into the store.
     ///
@@ -904,7 +1523,7 @@ impl ObjectStore {
         let read = enumeration.borrow();
         self.enumeration_id_by_name
             .borrow_mut()
-            .insert(read.name.to_upper_camel_case(), read.id);
+            .insert(read.name.clone(), read.id);
         self.enumeration
             .borrow_mut()
             .insert(read.id, enumeration.clone());
@@ -1138,7 +1757,7 @@ impl ObjectStore {
         let read = field.borrow();
         self.field_id_by_name
             .borrow_mut()
-            .insert(read.name.to_upper_camel_case(), read.id);
+            .insert(read.name.clone(), read.id);
         self.field.borrow_mut().insert(read.id, field.clone());
     }
 
@@ -1508,7 +2127,7 @@ impl ObjectStore {
         let read = function.borrow();
         self.function_id_by_name
             .borrow_mut()
-            .insert(read.name.to_upper_camel_case(), read.id);
+            .insert(read.name.clone(), read.id);
         self.function.borrow_mut().insert(read.id, function.clone());
     }
 
@@ -2515,7 +3134,7 @@ impl ObjectStore {
         let read = z_object_store.borrow();
         self.z_object_store_id_by_name
             .borrow_mut()
-            .insert(read.name.to_upper_camel_case(), read.id);
+            .insert(read.name.clone(), read.id);
         self.z_object_store
             .borrow_mut()
             .insert(read.id, z_object_store.clone());
@@ -2795,7 +3414,7 @@ impl ObjectStore {
         let read = x_plugin.borrow();
         self.x_plugin_id_by_name
             .borrow_mut()
-            .insert(read.name.to_upper_camel_case(), read.id);
+            .insert(read.name.clone(), read.id);
         self.x_plugin.borrow_mut().insert(read.id, x_plugin.clone());
     }
 
@@ -3195,7 +3814,7 @@ impl ObjectStore {
         let read = woog_struct.borrow();
         self.woog_struct_id_by_name
             .borrow_mut()
-            .insert(read.name.to_upper_camel_case(), read.id);
+            .insert(read.name.clone(), read.id);
         self.woog_struct
             .borrow_mut()
             .insert(read.id, woog_struct.clone());
@@ -5066,10 +5685,10 @@ impl ObjectStore {
                 let file = fs::File::open(path)?;
                 let reader = io::BufReader::new(file);
                 let enumeration: Rc<RefCell<Enumeration>> = serde_json::from_reader(reader)?;
-                store.enumeration_id_by_name.borrow_mut().insert(
-                    enumeration.borrow().name.to_upper_camel_case(),
-                    enumeration.borrow().id,
-                );
+                store
+                    .enumeration_id_by_name
+                    .borrow_mut()
+                    .insert(enumeration.borrow().name.clone(), enumeration.borrow().id);
                 store
                     .enumeration
                     .borrow_mut()
@@ -5160,7 +5779,7 @@ impl ObjectStore {
                 store
                     .field_id_by_name
                     .borrow_mut()
-                    .insert(field.borrow().name.to_upper_camel_case(), field.borrow().id);
+                    .insert(field.borrow().name.clone(), field.borrow().id);
                 store
                     .field
                     .borrow_mut()
@@ -5316,10 +5935,10 @@ impl ObjectStore {
                 let file = fs::File::open(path)?;
                 let reader = io::BufReader::new(file);
                 let function: Rc<RefCell<Function>> = serde_json::from_reader(reader)?;
-                store.function_id_by_name.borrow_mut().insert(
-                    function.borrow().name.to_upper_camel_case(),
-                    function.borrow().id,
-                );
+                store
+                    .function_id_by_name
+                    .borrow_mut()
+                    .insert(function.borrow().name.clone(), function.borrow().id);
                 store
                     .function
                     .borrow_mut()
@@ -5764,7 +6383,7 @@ impl ObjectStore {
                 let reader = io::BufReader::new(file);
                 let z_object_store: Rc<RefCell<ZObjectStore>> = serde_json::from_reader(reader)?;
                 store.z_object_store_id_by_name.borrow_mut().insert(
-                    z_object_store.borrow().name.to_upper_camel_case(),
+                    z_object_store.borrow().name.clone(),
                     z_object_store.borrow().id,
                 );
                 store
@@ -5886,10 +6505,10 @@ impl ObjectStore {
                 let file = fs::File::open(path)?;
                 let reader = io::BufReader::new(file);
                 let x_plugin: Rc<RefCell<XPlugin>> = serde_json::from_reader(reader)?;
-                store.x_plugin_id_by_name.borrow_mut().insert(
-                    x_plugin.borrow().name.to_upper_camel_case(),
-                    x_plugin.borrow().id,
-                );
+                store
+                    .x_plugin_id_by_name
+                    .borrow_mut()
+                    .insert(x_plugin.borrow().name.clone(), x_plugin.borrow().id);
                 store
                     .x_plugin
                     .borrow_mut()
@@ -6063,10 +6682,10 @@ impl ObjectStore {
                 let file = fs::File::open(path)?;
                 let reader = io::BufReader::new(file);
                 let woog_struct: Rc<RefCell<WoogStruct>> = serde_json::from_reader(reader)?;
-                store.woog_struct_id_by_name.borrow_mut().insert(
-                    woog_struct.borrow().name.to_upper_camel_case(),
-                    woog_struct.borrow().id,
-                );
+                store
+                    .woog_struct_id_by_name
+                    .borrow_mut()
+                    .insert(woog_struct.borrow().name.clone(), woog_struct.borrow().id);
                 store
                     .woog_struct
                     .borrow_mut()
