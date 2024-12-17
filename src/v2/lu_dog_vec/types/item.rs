@@ -70,7 +70,6 @@ impl Item {
         })
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
-    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"item-struct-impl-new_implementation"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"item-struct-impl-new_implementation_block"}}}
     /// Inter a new Item in the store, and return it's `id`.
     pub fn new_implementation_block(

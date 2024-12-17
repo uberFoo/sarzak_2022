@@ -45,7 +45,6 @@ impl ZObjectStore {
         })
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
-    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"z_object_store-struct-impl-nav-forward-cond-to-implementation"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"z_object_store-struct-impl-nav-backward-one-bi-cond-to-implementation_block"}}}
     /// Navigate to [`ImplementationBlock`] across R83(1c-1c)
     pub fn r83c_implementation_block<'a>(

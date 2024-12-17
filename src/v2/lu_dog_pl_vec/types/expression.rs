@@ -790,12 +790,16 @@ impl Expression {
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-nav-backward-assoc-many-to-pattern"}}}
-    /// Navigate to [`Pattern`] across R87(1-M)
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-struct-impl-nav-backward-assoc-one-cond-to-pattern"}}}
+    /// Navigate to [`Pattern`] across R87(1-1c)
     pub fn r87_pattern<'a>(&'a self, store: &'a LuDogPlVecStore) -> Vec<Arc<RwLock<Pattern>>> {
-        store
+        let pattern = store
             .iter_pattern()
-            .filter(|pattern| pattern.read().match_expr == self.id)
-            .collect()
+            .find(|pattern| pattern.read().match_expr == self.id);
+        match pattern {
+            Some(pattern) => vec![pattern],
+            None => Vec::new(),
+        }
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"expression-impl-nav-subtype-to-supertype-x_value"}}}

@@ -55,13 +55,14 @@ impl XMatch {
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"x_match-struct-impl-nav-backward-assoc-many-to-pattern"}}}
-    /// Navigate to [`Pattern`] across R87(1-M)
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"x_match-struct-impl-nav-backward-assoc-one-to-pattern"}}}
+    /// Navigate to [`Pattern`] across R87(1-1)
     pub fn r87_pattern<'a>(&'a self, store: &'a LuDogVecTracyStore) -> Vec<Rc<RefCell<Pattern>>> {
         span!("r87_pattern");
-        store
+        vec![store
             .iter_pattern()
-            .filter(|pattern| pattern.borrow().x_match == self.id)
-            .collect()
+            .find(|pattern| pattern.borrow().x_match == self.id)
+            .unwrap()]
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"x_match-impl-nav-subtype-to-supertype-expression"}}}

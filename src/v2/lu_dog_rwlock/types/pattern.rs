@@ -35,6 +35,8 @@ pub struct Pattern {
     pub id: Uuid,
     /// R92: [`Pattern`] 'executes' [`Expression`]
     pub expression: Uuid,
+    /// R256: [`Pattern`] '' [`Pattern`]
+    pub next: Option<Uuid>,
     /// R87: [`Expression`] '🚧 Comments are out of order — see sarzak#14.' [`Expression`]
     pub match_expr: Uuid,
     /// R87: [`XMatch`] '🚧 Comments are out of order — see sarzak#14.' [`XMatch`]
@@ -47,6 +49,7 @@ impl Pattern {
     /// Inter a new 'Pattern' in the store, and return it's `id`.
     pub fn new(
         expression: &Arc<RwLock<Expression>>,
+        next: Option<&Arc<RwLock<Pattern>>>,
         match_expr: &Arc<RwLock<Expression>>,
         x_match: &Arc<RwLock<XMatch>>,
         store: &mut LuDogRwlockStore,
@@ -55,6 +58,7 @@ impl Pattern {
         let new = Arc::new(RwLock::new(Pattern {
             id,
             expression: expression.read().unwrap().id,
+            next: next.map(|pattern| pattern.read().unwrap().id),
             match_expr: match_expr.read().unwrap().id,
             x_match: x_match.read().unwrap().id,
         }));
@@ -69,6 +73,27 @@ impl Pattern {
         store: &'a LuDogRwlockStore,
     ) -> Vec<Arc<RwLock<Expression>>> {
         vec![store.exhume_expression(&self.expression).unwrap()]
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"pattern-struct-impl-nav-forward-cond-to-next"}}}
+    /// Navigate to [`Pattern`] across R256(1-*c)
+    pub fn r256_pattern<'a>(&'a self, store: &'a LuDogRwlockStore) -> Vec<Arc<RwLock<Pattern>>> {
+        match self.next {
+            Some(ref next) => vec![store.exhume_pattern(&next).unwrap()],
+            None => Vec::new(),
+        }
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"pattern-struct-impl-nav-backward-one-bi-cond-to-pattern"}}}
+    /// Navigate to [`Pattern`] across R256(1c-1c)
+    pub fn r256c_pattern<'a>(&'a self, store: &'a LuDogRwlockStore) -> Vec<Arc<RwLock<Pattern>>> {
+        let pattern = store
+            .iter_pattern()
+            .find(|pattern| pattern.read().unwrap().next == Some(self.id));
+        match pattern {
+            Some(ref pattern) => vec![pattern.clone()],
+            None => Vec::new(),
+        }
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"pattern-struct-impl-nav-forward-assoc-to-match_expr"}}}
