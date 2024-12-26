@@ -27,6 +27,8 @@ pub struct XValue {
     pub id: Uuid,
     /// R33: [`XValue`] '' [`Block`]
     pub block: Uuid,
+    /// R258: [`XValue`] '' [`XValue`]
+    pub next: Option<Uuid>,
     /// R24: [`XValue`] 'is decoded by a' [`ValueType`]
     pub ty: Uuid,
 }
@@ -44,6 +46,7 @@ impl XValue {
     /// Inter a new XValue in the store, and return it's `id`.
     pub fn new_expression(
         block: &Arc<RwLock<Block>>,
+        next: Option<&Arc<RwLock<XValue>>>,
         ty: &Arc<RwLock<ValueType>>,
         subtype: &Arc<RwLock<Expression>>,
         store: &mut LuDogRwlockStore,
@@ -51,6 +54,7 @@ impl XValue {
         let id = Uuid::new_v4();
         let new = Arc::new(RwLock::new(XValue {
             block: block.read().unwrap().id,
+            next: next.map(|x_value| x_value.read().unwrap().id),
             ty: ty.read().unwrap().id,
             subtype: XValueEnum::Expression(subtype.read().unwrap().id), // b
             id,
@@ -63,6 +67,7 @@ impl XValue {
     /// Inter a new XValue in the store, and return it's `id`.
     pub fn new_variable(
         block: &Arc<RwLock<Block>>,
+        next: Option<&Arc<RwLock<XValue>>>,
         ty: &Arc<RwLock<ValueType>>,
         subtype: &Arc<RwLock<Variable>>,
         store: &mut LuDogRwlockStore,
@@ -70,6 +75,7 @@ impl XValue {
         let id = Uuid::new_v4();
         let new = Arc::new(RwLock::new(XValue {
             block: block.read().unwrap().id,
+            next: next.map(|x_value| x_value.read().unwrap().id),
             ty: ty.read().unwrap().id,
             subtype: XValueEnum::Variable(subtype.read().unwrap().id), // b
             id,
@@ -82,6 +88,15 @@ impl XValue {
     /// Navigate to [`Block`] across R33(1-*)
     pub fn r33_block<'a>(&'a self, store: &'a LuDogRwlockStore) -> Vec<Arc<RwLock<Block>>> {
         vec![store.exhume_block(&self.block).unwrap()]
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"x_value-struct-impl-nav-forward-cond-to-next"}}}
+    /// Navigate to [`XValue`] across R258(1-*c)
+    pub fn r258_x_value<'a>(&'a self, store: &'a LuDogRwlockStore) -> Vec<Arc<RwLock<XValue>>> {
+        match self.next {
+            Some(ref next) => vec![store.exhume_x_value(&next).unwrap()],
+            None => Vec::new(),
+        }
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"x_value-struct-impl-nav-forward-to-ty"}}}
@@ -102,6 +117,20 @@ impl XValue {
             .iter_span()
             .filter(|span| span.read().unwrap().x_value == Some(self.id))
             .collect()
+        // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+        // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"x_value-struct-impl-nav-backward-one-bi-cond-to-x_value"}}}
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"x_value-struct-impl-nav-backward-one-bi-cond-to-x_value"}}}
+    /// Navigate to [`XValue`] across R258(1c-1c)
+    pub fn r258c_x_value<'a>(&'a self, store: &'a LuDogRwlockStore) -> Vec<Arc<RwLock<XValue>>> {
+        let x_value = store
+            .iter_x_value()
+            .find(|x_value| x_value.read().unwrap().next == Some(self.id));
+        match x_value {
+            Some(ref x_value) => vec![x_value.clone()],
+            None => Vec::new(),
+        }
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
 }

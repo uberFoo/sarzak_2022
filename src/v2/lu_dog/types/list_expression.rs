@@ -7,6 +7,7 @@ use uuid::Uuid;
 use crate::v2::lu_dog::types::expression::Expression;
 use crate::v2::lu_dog::types::expression::ExpressionEnum;
 use crate::v2::lu_dog::types::list_element::ListElement;
+use crate::v2::lu_dog::types::value_type::ValueType;
 use serde::{Deserialize, Serialize};
 
 use crate::v2::lu_dog::store::ObjectStore as LuDogStore;
@@ -24,6 +25,8 @@ pub struct ListExpression {
     pub id: Uuid,
     /// R54: [`ListExpression`] 'contains' [`ListElement`]
     pub elements: Option<Uuid>,
+    /// R257: [`ListExpression`] '' [`ValueType`]
+    pub ty: Uuid,
 }
 // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
 // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"list_expression-implementation"}}}
@@ -32,12 +35,14 @@ impl ListExpression {
     /// Inter a new 'List Expression' in the store, and return it's `id`.
     pub fn new(
         elements: Option<&Rc<RefCell<ListElement>>>,
+        ty: &Rc<RefCell<ValueType>>,
         store: &mut LuDogStore,
     ) -> Rc<RefCell<ListExpression>> {
         let id = Uuid::new_v4();
         let new = Rc::new(RefCell::new(ListExpression {
             id,
             elements: elements.map(|list_element| list_element.borrow().id),
+            ty: ty.borrow().id,
         }));
         store.inter_list_expression(new.clone());
         new
@@ -52,6 +57,14 @@ impl ListExpression {
             // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"list_expression-struct-impl-nav-backward-one-bi-cond-to-format_string"}}}
             None => Vec::new(),
         }
+        // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+        // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"list_expression-struct-impl-nav-forward-to-ty"}}}
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"list_expression-struct-impl-nav-forward-to-ty"}}}
+    /// Navigate to [`ValueType`] across R257(1-*)
+    pub fn r257_value_type<'a>(&'a self, store: &'a LuDogStore) -> Vec<Rc<RefCell<ValueType>>> {
+        vec![store.exhume_value_type(&self.ty).unwrap()]
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"list_expression-impl-nav-subtype-to-supertype-expression"}}}

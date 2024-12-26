@@ -7,6 +7,7 @@ use uuid::Uuid;
 use crate::v2::lu_dog_rwlock_vec::types::expression::Expression;
 use crate::v2::lu_dog_rwlock_vec::types::expression::ExpressionEnum;
 use crate::v2::lu_dog_rwlock_vec::types::list_element::ListElement;
+use crate::v2::lu_dog_rwlock_vec::types::value_type::ValueType;
 use serde::{Deserialize, Serialize};
 
 use crate::v2::lu_dog_rwlock_vec::store::ObjectStore as LuDogRwlockVecStore;
@@ -24,6 +25,8 @@ pub struct ListExpression {
     pub id: usize,
     /// R54: [`ListExpression`] 'contains' [`ListElement`]
     pub elements: Option<usize>,
+    /// R257: [`ListExpression`] '' [`ValueType`]
+    pub ty: usize,
 }
 // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
 // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"list_expression-implementation"}}}
@@ -32,12 +35,14 @@ impl ListExpression {
     /// Inter a new 'List Expression' in the store, and return it's `id`.
     pub fn new(
         elements: Option<&Arc<RwLock<ListElement>>>,
+        ty: &Arc<RwLock<ValueType>>,
         store: &mut LuDogRwlockVecStore,
     ) -> Arc<RwLock<ListExpression>> {
         store.inter_list_expression(|id| {
             Arc::new(RwLock::new(ListExpression {
                 id,
                 elements: elements.map(|list_element| list_element.read().unwrap().id),
+                ty: ty.read().unwrap().id,
             }))
         })
     }
@@ -54,6 +59,15 @@ impl ListExpression {
             // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"list_expression-struct-impl-nav-backward-one-bi-cond-to-format_string"}}}
             None => Vec::new(),
         }
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"list_expression-struct-impl-nav-forward-to-ty"}}}
+    /// Navigate to [`ValueType`] across R257(1-*)
+    pub fn r257_value_type<'a>(
+        &'a self,
+        store: &'a LuDogRwlockVecStore,
+    ) -> Vec<Arc<RwLock<ValueType>>> {
+        vec![store.exhume_value_type(&self.ty).unwrap()]
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"list_expression-impl-nav-subtype-to-supertype-expression"}}}
@@ -79,7 +93,7 @@ impl ListExpression {
 // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"list_expression-implementation"}}}
 impl PartialEq for ListExpression {
     fn eq(&self, other: &Self) -> bool {
-        self.elements == other.elements
+        self.elements == other.elements && self.ty == other.ty
     }
 }
 // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}

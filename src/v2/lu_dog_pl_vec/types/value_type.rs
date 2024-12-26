@@ -17,6 +17,7 @@ use crate::v2::lu_dog_pl_vec::types::import::Import;
 use crate::v2::lu_dog_pl_vec::types::lambda::Lambda;
 use crate::v2::lu_dog_pl_vec::types::lambda_parameter::LambdaParameter;
 use crate::v2::lu_dog_pl_vec::types::list::List;
+use crate::v2::lu_dog_pl_vec::types::list_expression::ListExpression;
 use crate::v2::lu_dog_pl_vec::types::map::Map;
 use crate::v2::lu_dog_pl_vec::types::parameter::Parameter;
 use crate::v2::lu_dog_pl_vec::types::range::RANGE;
@@ -454,6 +455,20 @@ impl ValueType {
         store
             .iter_list()
             .filter(|list| list.read().ty == self.id)
+            .collect()
+        // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+        // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"value_type-struct-impl-nav-backward-one-to-list_expression"}}}
+    }
+    // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
+    // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"value_type-struct-impl-nav-backward-1_M-to-list_expression"}}}
+    /// Navigate to [`ListExpression`] across R257(1-M)
+    pub fn r257_list_expression<'a>(
+        &'a self,
+        store: &'a LuDogPlVecStore,
+    ) -> Vec<Arc<RwLock<ListExpression>>> {
+        store
+            .iter_list_expression()
+            .filter(|list_expression| list_expression.read().ty == self.id)
             .collect()
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}

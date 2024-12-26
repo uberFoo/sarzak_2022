@@ -11,11 +11,13 @@ use crate::v2::{
     drawing::store::ObjectStore as DrawingStore, merlin::store::ObjectStore as MerlinStore,
 };
 
-#[cfg(feature = "sarzak-rwlock")]
-use crate::v2::sarzak::store::ObjectStore as SarzakStore;
-
-#[cfg(feature = "sarzak-single")]
-use crate::v2::sarzak_single::store::ObjectStore as SarzakStore;
+cfg_if::cfg_if! {
+    if #[cfg(feature = "sarzak-rwlock")] {
+        use crate::v2::sarzak::store::ObjectStore as SarzakStore;
+    } else if #[cfg(feature = "sarzak-single")] {
+        use crate::v2::sarzak_single::store::ObjectStore as SarzakStore;
+    }
+}
 
 use crate::VERSION;
 

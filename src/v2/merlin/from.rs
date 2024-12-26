@@ -21,10 +21,15 @@ use crate::v2::merlin::ObjectStore;
 use crate::v2::drawing::types::{Edge as FromEdge, ObjectUi, Point as FromPoint};
 use crate::v2::drawing::ObjectStore as DrawingStore;
 
-#[cfg(feature = "sarzak-rwlock")]
-use crate::v2::sarzak::{types::Cardinality, ObjectStore as SarzakStore};
-#[cfg(feature = "sarzak-single")]
-use crate::v2::sarzak_single::{types::Cardinality, ObjectStore as SarzakStore};
+cfg_if::cfg_if! {
+    if #[cfg(feature = "sarzak-rwlock")] {
+        use crate::v2::sarzak::types::Cardinality;
+        use crate::v2::sarzak::ObjectStore as SarzakStore;
+    } else if #[cfg(feature = "sarzak-single")] {
+        use crate::v2::sarzak_single::types::Cardinality;
+        use crate::v2::sarzak_single::ObjectStore as SarzakStore;
+    }
+}
 
 /// Convert a v1 Drawing format into a v2 Drawing format
 ///
