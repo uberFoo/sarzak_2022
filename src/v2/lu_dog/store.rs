@@ -101,7 +101,7 @@ use std::{
     path::Path,
 };
 
-use rustc_hash::FxHashMap as HashMap;
+use ordered_hash_map::OrderedHashMap as HashMap;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
