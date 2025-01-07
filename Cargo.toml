@@ -1,6 +1,6 @@
 [package]
 name = "sarzak"
-version = "2.15.0"
+version = "2.15.1"
 edition = "2021"
 authors = ["Keith T. Star <uberfoo@me.com>"]
 categories = ["compilers", "memory-management"]
@@ -41,6 +41,7 @@ serde_json = "1.0.93"
 tracy-client = { version = "0.15.2", optional = true }
 uuid = { version = "1.2.2", features = ["v5", "serde"] }
 tracing = "0.1.40"
+ordered_hash_map = { version = "0.4.0", features = ["serde"] }
 
 [lib]
 doctest = true

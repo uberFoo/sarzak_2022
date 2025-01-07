@@ -27,8 +27,6 @@ pub struct XValue {
     pub id: usize,
     /// R33: [`XValue`] '' [`Block`]
     pub block: usize,
-    /// R258: [`XValue`] '' [`XValue`]
-    pub next: Option<usize>,
     /// R24: [`XValue`] 'is decoded by a' [`ValueType`]
     pub ty: usize,
 }
@@ -46,7 +44,6 @@ impl XValue {
     /// Inter a new XValue in the store, and return it's `id`.
     pub fn new_expression(
         block: &Rc<RefCell<Block>>,
-        next: Option<&Rc<RefCell<XValue>>>,
         ty: &Rc<RefCell<ValueType>>,
         subtype: &Rc<RefCell<Expression>>,
         store: &mut LuDogVecStore,
@@ -54,7 +51,6 @@ impl XValue {
         store.inter_x_value(|id| {
             Rc::new(RefCell::new(XValue {
                 block: block.borrow().id,
-                next: next.map(|x_value| x_value.borrow().id),
                 ty: ty.borrow().id,
                 subtype: XValueEnum::Expression(subtype.borrow().id), // b
                 id,
@@ -66,7 +62,6 @@ impl XValue {
     /// Inter a new XValue in the store, and return it's `id`.
     pub fn new_variable(
         block: &Rc<RefCell<Block>>,
-        next: Option<&Rc<RefCell<XValue>>>,
         ty: &Rc<RefCell<ValueType>>,
         subtype: &Rc<RefCell<Variable>>,
         store: &mut LuDogVecStore,
@@ -74,7 +69,6 @@ impl XValue {
         store.inter_x_value(|id| {
             Rc::new(RefCell::new(XValue {
                 block: block.borrow().id,
-                next: next.map(|x_value| x_value.borrow().id),
                 ty: ty.borrow().id,
                 subtype: XValueEnum::Variable(subtype.borrow().id), // b
                 id,
@@ -89,13 +83,6 @@ impl XValue {
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"x_value-struct-impl-nav-forward-cond-to-next"}}}
-    /// Navigate to [`XValue`] across R258(1-*c)
-    pub fn r258_x_value<'a>(&'a self, store: &'a LuDogVecStore) -> Vec<Rc<RefCell<XValue>>> {
-        match self.next {
-            Some(ref next) => vec![store.exhume_x_value(&next).unwrap()],
-            None => Vec::new(),
-        }
-    }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"x_value-struct-impl-nav-forward-to-ty"}}}
     /// Navigate to [`ValueType`] across R24(1-*)
@@ -115,26 +102,13 @@ impl XValue {
     }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
     // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"x_value-struct-impl-nav-backward-one-bi-cond-to-x_value"}}}
-    /// Navigate to [`XValue`] across R258(1c-1c)
-    pub fn r258c_x_value<'a>(&'a self, store: &'a LuDogVecStore) -> Vec<Rc<RefCell<XValue>>> {
-        let x_value = store
-            .iter_x_value()
-            .find(|x_value| x_value.borrow().next == Some(self.id));
-        match x_value {
-            Some(ref x_value) => vec![x_value.clone()],
-            None => Vec::new(),
-        }
-    }
     // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
 }
 // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
 // {"magic":"","directive":{"Start":{"directive":"ignore-orig","tag":"x_value-implementation"}}}
 impl PartialEq for XValue {
     fn eq(&self, other: &Self) -> bool {
-        self.subtype == other.subtype
-            && self.block == other.block
-            && self.next == other.next
-            && self.ty == other.ty
+        self.subtype == other.subtype && self.block == other.block && self.ty == other.ty
     }
 }
 // {"magic":"","directive":{"End":{"directive":"ignore-orig"}}}
